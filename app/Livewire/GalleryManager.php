@@ -1,0 +1,211 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use App\Models\Gallery;
+use App\Models\Photo;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+
+#[Layout('components.layouts.app')]
+#[Title('Galeri Kegiatan')]
+class GalleryManager extends Component
+{
+    use WithPagination, WithFileUploads;
+
+    public $viewMode = 'albums';
+    public $activeGalleryId = null;
+    public $activeGalleryTitle = '';
+
+    public $isModalOpen = false;
+    public $isDeleteModalOpen = false;
+    public $isDeletePhotoModalOpen = false;
+    public $isEditMode = false;
+    public $selectedId;
+
+    public $nama_kegiatan, $tanggal_kegiatan, $deskripsi, $is_active = true;
+
+    public $photo;
+    public $originalFileName;
+
+    public $selectedPhotos = [];
+    public $photoToDeleteId = null;
+
+    public function render()
+    {
+        if ($this->viewMode == 'albums') {
+            $galleries = Gallery::with('photos')->latest('tanggal_kegiatan')->paginate(9);
+            return view('livewire.gallery-manager', ['galleries' => $galleries]);
+        } else {
+            $photos = Photo::where('gallery_id', $this->activeGalleryId)->latest()->get();
+            return view('livewire.gallery-manager', ['photos' => $photos]);
+        }
+    }
+
+    // --- HELPER UNTUK DATA LIGHTBOX ---
+    // Mengambil data foto terbaru untuk dikirim ke AlpineJS
+    public function getLightboxData()
+    {
+        if (!$this->activeGalleryId) return [];
+
+        return Photo::where('gallery_id', $this->activeGalleryId)
+            ->latest()
+            ->get()
+            ->map(fn($p) => [
+                'id' => $p->id,
+                'url' => Storage::url($p->file_path),
+                'caption' => $p->caption
+            ])
+            ->toArray();
+    }
+
+    // --- NAVIGATION ---
+    public function openGallery($id)
+    {
+        $g = Gallery::find($id);
+        $this->activeGalleryId = $id;
+        $this->activeGalleryTitle = $g->nama_kegiatan;
+        $this->viewMode = 'photos';
+        $this->selectedPhotos = [];
+    }
+
+    public function backToAlbums()
+    {
+        $this->viewMode = 'albums';
+        $this->activeGalleryId = null;
+        $this->photo = null;
+    }
+
+    // --- PHOTO LOGIC ---
+    public function setOriginalFileName($name)
+    {
+        $this->originalFileName = $name;
+    }
+
+    public function savePhoto()
+    {
+        $this->validate(['photo' => 'image|max:10240']);
+
+        if ($this->photo) {
+            $path = $this->photo->store('gallery_photos', 'public');
+            $caption = $this->originalFileName
+                ? pathinfo($this->originalFileName, PATHINFO_FILENAME)
+                : 'Foto Dokumentasi';
+
+            Photo::create([
+                'gallery_id' => $this->activeGalleryId,
+                'file_path' => $path,
+                'caption' => $caption,
+            ]);
+
+            $this->photo = null;
+            $this->originalFileName = null;
+
+            // PENTING: Kirim sinyal ke Frontend untuk update data Lightbox
+            $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
+        }
+    }
+
+    // --- DELETE ACTIONS ---
+    public function confirmDeletePhoto($id)
+    {
+        $this->photoToDeleteId = $id;
+        $this->selectedPhotos = [];
+        $this->isDeletePhotoModalOpen = true;
+    }
+
+    public function confirmBulkDelete()
+    {
+        if (count($this->selectedPhotos) > 0) {
+            $this->photoToDeleteId = null;
+            $this->isDeletePhotoModalOpen = true;
+        }
+    }
+
+    public function deletePhotoAction()
+    {
+        if ($this->photoToDeleteId) {
+            $p = Photo::find($this->photoToDeleteId);
+            if ($p) {
+                if(Storage::disk('public')->exists($p->file_path)) {
+                    Storage::disk('public')->delete($p->file_path);
+                }
+                $p->delete();
+            }
+        }
+        elseif (count($this->selectedPhotos) > 0) {
+            $photos = Photo::whereIn('id', $this->selectedPhotos)->get();
+            foreach ($photos as $p) {
+                if(Storage::disk('public')->exists($p->file_path)) {
+                    Storage::disk('public')->delete($p->file_path);
+                }
+                $p->delete();
+            }
+        }
+
+        $this->isDeletePhotoModalOpen = false;
+        $this->photoToDeleteId = null;
+        $this->selectedPhotos = [];
+
+        // PENTING: Update data Lightbox setelah hapus
+        $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
+        session()->flash('message', 'Foto berhasil dihapus!');
+    }
+
+    public function updateCaption($id, $caption)
+    {
+        Photo::find($id)->update(['caption' => $caption]);
+        // Update lightbox juga biar caption di modal ikut berubah real-time
+        $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
+    }
+
+    public function downloadPhoto($id)
+    {
+        $photo = Photo::find($id);
+        if ($photo && Storage::disk('public')->exists($photo->file_path)) {
+            return response()->download(storage_path('app/public/' . $photo->file_path), $photo->caption . '.jpg');
+        }
+    }
+
+    // --- GALLERY CRUD (Create/Edit/Delete Album - Tetap Sama) ---
+    public function createGallery() { $this->resetInput(); $this->isEditMode = false; $this->isModalOpen = true; }
+
+    public function storeGallery() {
+        $this->validate(['nama_kegiatan' => 'required', 'tanggal_kegiatan' => 'required|date']);
+        Gallery::create(['nama_kegiatan' => $this->nama_kegiatan, 'tanggal_kegiatan' => $this->tanggal_kegiatan, 'deskripsi' => $this->deskripsi, 'is_active' => $this->is_active]);
+        $this->closeModal(); session()->flash('message', 'Album berhasil dibuat!');
+    }
+
+    public function editGallery($id) {
+        $g = Gallery::find($id); $this->selectedId = $id; $this->nama_kegiatan = $g->nama_kegiatan; $this->tanggal_kegiatan = $g->tanggal_kegiatan->format('Y-m-d'); $this->deskripsi = $g->deskripsi; $this->is_active = $g->is_active;
+        $this->isEditMode = true; $this->isModalOpen = true;
+    }
+
+    public function updateGallery() {
+        $this->validate(['nama_kegiatan' => 'required', 'tanggal_kegiatan' => 'required|date']);
+        Gallery::find($this->selectedId)->update(['nama_kegiatan' => $this->nama_kegiatan, 'tanggal_kegiatan' => $this->tanggal_kegiatan, 'deskripsi' => $this->deskripsi, 'is_active' => $this->is_active]);
+        $this->closeModal(); session()->flash('message', 'Album diperbarui!');
+    }
+
+    public function deleteGalleryId($id) { $this->selectedId = $id; $this->isDeleteModalOpen = true; }
+
+    public function deleteGallery() {
+        $g = Gallery::with('photos')->find($this->selectedId);
+        foreach($g->photos as $photo) { if(Storage::disk('public')->exists($photo->file_path)) { Storage::disk('public')->delete($photo->file_path); } }
+        $g->delete();
+        $this->isDeleteModalOpen = false; session()->flash('message', 'Album dihapus!');
+    }
+
+    public function closeModal() {
+        $this->isModalOpen = false;
+        $this->isDeleteModalOpen = false;
+        $this->isDeletePhotoModalOpen = false;
+        $this->resetInput();
+    }
+
+    public function resetInput() { $this->nama_kegiatan = ''; $this->tanggal_kegiatan = date('Y-m-d'); $this->deskripsi = ''; $this->is_active = true; }
+}
