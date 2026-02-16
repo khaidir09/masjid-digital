@@ -22,6 +22,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // 4. Informasi Rekening Masjid
+        Schema::create('rekenings', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_bank');
+            $table->string('nama_akun');
+            $table->string('nomor_rekening');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+
         //Petugas Jumat
         Schema::create('petugas_jumat', function (Blueprint $table) {
             $table->id();
@@ -77,5 +87,6 @@ return new class extends Migration
         Schema::dropIfExists('petugas_ied');
         Schema::dropIfExists('pengajian_rutin');
         Schema::dropIfExists('keuangan');
+        Schema::dropIfExists('rekenings');
     }
 };

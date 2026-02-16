@@ -11,11 +11,14 @@ use App\Livewire\KeuanganMasjid;
 use App\Livewire\RunningTextManager;
 use App\Livewire\ScheduleManager;
 use App\Livewire\UserPengurus;
+use App\Livewire\LiveDisplay;
+use App\Livewire\ThemeColorManager;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; // Tambahkan ini
 
 // Guest Route
 Route::get('/login', Login::class)->name('login')->middleware('guest');
+Route::get('/live-display', LiveDisplay::class)->name('live.display');
 
 // Auth Route
 Route::middleware('auth')->group(function () {
@@ -29,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/schedule', ScheduleManager::class)->name('schedule');
     Route::get('/banner', BannerManager::class)->name('banner');
     Route::get('/doa-hadist', ContentManager::class)->name('doa.hadist');
+    Route::get('/settings/themes', ThemeColorManager::class)->name('settings.themes');
 
     // ROUTE LOGOUT (BARU)
     Route::get('/logout', function () {

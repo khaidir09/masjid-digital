@@ -33,7 +33,7 @@
     </style>
 
     <div class="bg-slate-900 rounded-[3rem] p-2 shadow-2xl border-4 border-slate-800">
-        <div class="bg-black rounded-[2.5rem] py-4 px-10 relative overflow-hidden border border-slate-700 flex items-center min-h-[80px]">
+        <div class="bg-black rounded-[2.5rem] py-4 px-10 relative overflow-hidden border border-slate-700 flex items-center min-h-20">
             <div class="bg-emerald-500 text-black text-[10px] font-black px-4 py-1 rounded-full absolute left-4 z-20 shadow-lg uppercase tracking-tighter">
                 Preview Display
             </div>
@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden min-h-[500px] relative">
+    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden min-h-125 relative">
         <div class="px-12 py-10 flex flex-col md:flex-row justify-between items-center bg-slate-50/50 gap-6 border-b border-slate-50">
             <div>
                 <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none">Running Text</h1>

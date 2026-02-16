@@ -1,4 +1,3 @@
-
 <div class="space-y-8 pb-20">
 
     <div class="flex justify-between items-start">
@@ -263,55 +262,62 @@
                     memundurkan waktu.</p>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden work-sans-all mt-6">
-    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden work-sans-all mt-6">
+                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
 
-    <h3 class="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
-        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-        </svg>
-        Konfigurasi API & Lokasi
-    </h3>
+                <h3 class="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Konfigurasi API & Lokasi
+                </h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="md:col-span-2 space-y-1">
-            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pilih Kota / Kabupaten (MyQuran)</label>
-            <div wire:ignore>
-                <select id="kota-select" class="w-full"></select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pilih Kota
+                            / Kabupaten (MyQuran)</label>
+                        <div wire:ignore>
+                            <select id="kota-select" class="w-full"></select>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2 ml-1">
+                            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
+                                Kota Aktif: <span class="text-emerald-600 font-black">{{ $kota_nama }}
+                                    ({{ $kota_id }})</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <input type="text" wire:model="api_cari_lokasi" id="api_cari_lokasi"
+                            class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
+                            placeholder="API Cari Lokasi" />
+                        <label for="api_cari_lokasi"
+                            class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
+                            Cari Lokasi</label>
+                    </div>
+
+                    <div class="relative">
+                        <input type="text" wire:model="api_jadwal_sholat" id="api_jadwal_sholat"
+                            class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
+                            placeholder="API Jadwal Sholat" />
+                        <label for="api_jadwal_sholat"
+                            class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
+                            Jadwal Sholat / Hari</label>
+                    </div>
+
+                    <div class="md:col-span-2 relative">
+                        <input type="text" wire:model="api_hijriah" id="api_hijriah"
+                            class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
+                            placeholder="API Masehi -> Hijriah" />
+                        <label for="api_hijriah"
+                            class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
+                            Masehi -> Hijriah</label>
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center gap-2 mt-2 ml-1">
-                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
-                    Kota Aktif: <span class="text-emerald-600 font-black">{{ $kota_nama }} ({{ $kota_id }})</span>
-                </p>
-            </div>
-        </div>
-
-        <div class="relative">
-            <input type="text" wire:model="api_cari_lokasi" id="api_cari_lokasi"
-                class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
-                placeholder="API Cari Lokasi" />
-            <label for="api_cari_lokasi"
-                class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API Cari Lokasi</label>
-        </div>
-
-        <div class="relative">
-            <input type="text" wire:model="api_jadwal_sholat" id="api_jadwal_sholat"
-                class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
-                placeholder="API Jadwal Sholat" />
-            <label for="api_jadwal_sholat"
-                class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API Jadwal Sholat / Hari</label>
-        </div>
-
-        <div class="md:col-span-2 relative">
-            <input type="text" wire:model="api_hijriah" id="api_hijriah"
-                class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
-                placeholder="API Masehi -> Hijriah" />
-            <label for="api_hijriah"
-                class="absolute top-3 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API Masehi -> Hijriah</label>
-        </div>
-    </div>
-</div>
 
         </div>
 
@@ -525,57 +531,134 @@
                         </div>
                     @enderror
                 </div>
+                <div class="pt-6 border-t border-slate-100">
+                    <label class="text-sm font-bold text-slate-700 mb-4 block uppercase tracking-widest">Audio
+                        Adzan</label>
+
+                    @if ($old_adzan)
+                        <div class="mb-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-theme-main rounded-full flex items-center justify-center shadow-theme-glow text-white">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">Audio Aktif</p>
+                                <audio controls class="h-8 mt-1 w-full">
+                                    <source src="{{ Storage::url($old_adzan) }}" type="audio/mpeg">
+                                </audio>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="relative flex items-center justify-center w-full">
+                        <label
+                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-2xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-all">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 mb-3 text-slate-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                </svg>
+                                <p class="mb-2 text-sm text-slate-500 font-semibold">Klik untuk ganti file Adzan MP3
+                                </p>
+                                <p class="text-xs text-slate-400">MP3 (Maks. 5MB)</p>
+                            </div>
+                            <input type="file" wire:model="adzan" class="hidden" accept="audio/mpeg" />
+                        </label>
+                    </div>
+                    @error('adzan')
+                        <span class="text-xs text-red-500 mt-2">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-slate-500"></div>
                 <h3 class="font-bold text-lg text-slate-800 mb-6">Pengaturan Layar</h3>
 
-                <div class="space-y-5">
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label class="text-sm font-medium text-slate-700">Kecepatan Teks Berjalan</label>
-                            <span class="text-sm font-bold text-emerald-600">{{ $running_text_speed }}</span>
+                <div class="space-y-8">
+                    <div x-data="{ val: @entangle('running_text_speed').live }">
+                        <div class="flex justify-between mb-2 items-center">
+                            <label class="text-sm font-bold text-slate-700 uppercase tracking-tight">Kecepatan Teks
+                                Berjalan</label>
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-black border border-emerald-100"
+                                x-text="val"></span>
                         </div>
-                        <input type="range" wire:model="running_text_speed" min="1" max="20"
+                        <input type="range" x-model="val" min="1" max="20" step="1"
                             class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                        <div class="flex justify-between mt-1 px-1">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">Lambat</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">Cepat</span>
+                        </div>
                     </div>
 
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label class="text-sm font-medium text-slate-700">Durasi Slide Foto</label>
-                            <span class="text-sm font-bold text-emerald-600">{{ $durasi_slide_foto / 1000 }}
-                                Detik</span>
+                    <div x-data="{ val: @entangle('durasi_slide_foto').live }">
+                        <div class="flex justify-between mb-2 items-center">
+                            <label class="text-sm font-bold text-slate-700 uppercase tracking-tight">Durasi Slide
+                                Foto</label>
+                            <div
+                                class="flex items-baseline gap-1 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100">
+                                <span class="text-emerald-600 text-sm font-black" x-text="val / 1000"></span>
+                                <span class="text-[10px] text-emerald-500 font-bold uppercase">Detik</span>
+                            </div>
                         </div>
-                        <input type="range" wire:model="durasi_slide_foto" min="1000" max="10000"
-                            step="1000"
+                        <input type="range" x-model="val" min="1000" max="10000" step="1000"
                             class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                        <div class="flex justify-between mt-1 px-1">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">1s</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">10s</span>
+                        </div>
                     </div>
-                    <div class="mb-6 pb-6 border-b border-slate-100">
-                        <label class="text-sm font-medium text-slate-700 mb-3 block">Tema Warna Aplikasi</label>
 
-                        <div class="flex items-center gap-4">
-                            @foreach (['emerald', 'blue', 'violet', 'rose', 'amber'] as $color)
-                                <label class="cursor-pointer group relative">
-                                    <input type="radio" wire:model="theme_color" value="{{ $color }}"
+                    <div class="pt-4 border-t border-slate-50">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="text-sm font-bold text-slate-700 uppercase tracking-widest">
+                                Tema Warna Tampilan
+                            </label>
+
+                            <a href="{{ route('settings.themes') }}" wire:navigate
+                                class="group flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-emerald-600 transition-colors bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                                    </path>
+                                </svg>
+                                Kelola Warna
+                            </a>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            @foreach ($availableThemes as $theme)
+                                <label class="relative cursor-pointer group" wire:key="theme-{{ $theme->id }}">
+                                    <input type="radio" wire:model="theme_color" value="{{ $theme->name }}"
                                         class="sr-only peer">
-
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-{{ $color }}-500 peer-checked:ring-4 peer-checked:ring-{{ $color }}-200 peer-checked:scale-110 transition-all shadow-sm flex items-center justify-center">
-                                        <svg class="w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                                    <div class="w-14 h-14 rounded-2xl border-4 border-white shadow-md transition-all peer-checked:ring-4 peer-checked:scale-110 flex items-center justify-center overflow-hidden"
+                                        style="background-color: {{ $theme->main_color }}; --tw-ring-color: {{ $theme->main_color }}80">
+                                        <svg class="w-6 h-6 text-white opacity-0 peer-checked:opacity-100 transition-opacity drop-shadow-sm"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                                 d="M5 13l4 4L19 7"></path>
                                         </svg>
                                     </div>
-
                                     <span
-                                        class="text-xs text-slate-500 mt-1 block text-center capitalize opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-5 left-1/2 -translate-x-1/2">{{ $color }}</span>
+                                        class="text-[10px] font-black uppercase text-center block mt-2 text-slate-500 group-hover:text-slate-800 tracking-tighter transition-colors">
+                                        {{ $theme->label }}
+                                    </span>
                                 </label>
                             @endforeach
+                            <a href="{{ route('settings.themes') }}" wire:navigate
+                                class="w-14 h-14 rounded-2xl border-4 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-300 hover:border-emerald-500 hover:text-emerald-500 transition-all group">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </a>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -583,37 +666,40 @@
     </div>
 </div>
 @push('scripts')
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
-<script>
-    document.addEventListener('livewire:initialized', () => {
-        const select = new TomSelect('#kota-select', {
-            valueField: 'id',
-            labelField: 'lokasi',
-            searchField: 'lokasi',
-            placeholder: 'Ketik nama kota (misal: Pekanbaru)...',
-            load: function(query, callback) {
-                if (!query.length) return callback();
-                // Panggil method di Livewire untuk ambil data kota
-                @this.searchCity(query).then(data => {
-                    callback(data);
-                });
-            },
-            onChange: function(value) {
-                let item = this.options[value];
-                if (item) {
-                    @this.set('kota_id', item.id);
-                    @this.set('kota_nama', item.lokasi);
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            const select = new TomSelect('#kota-select', {
+                valueField: 'id',
+                labelField: 'lokasi',
+                searchField: 'lokasi',
+                placeholder: 'Ketik nama kota (misal: Pekanbaru)...',
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    // Panggil method di Livewire untuk ambil data kota
+                    @this.searchCity(query).then(data => {
+                        callback(data);
+                    });
+                },
+                onChange: function(value) {
+                    let item = this.options[value];
+                    if (item) {
+                        @this.set('kota_id', item.id);
+                        @this.set('kota_nama', item.lokasi);
+                    }
                 }
+            });
+
+            // Set value awal jika sudah ada
+            if ("{{ $kota_id }}") {
+                select.addOption({
+                    id: "{{ $kota_id }}",
+                    lokasi: "{{ $kota_nama }}"
+                });
+                select.setValue("{{ $kota_id }}");
             }
         });
-
-        // Set value awal jika sudah ada
-        if ("{{ $kota_id }}") {
-            select.addOption({id: "{{ $kota_id }}", lokasi: "{{ $kota_nama }}"});
-            select.setValue("{{ $kota_id }}");
-        }
-    });
-</script>
+    </script>
 @endpush

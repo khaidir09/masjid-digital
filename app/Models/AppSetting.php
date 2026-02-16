@@ -25,4 +25,10 @@ class AppSetting extends Model
         'koreksi_magrib'     => 'integer',
         'koreksi_isya'       => 'integer',
     ];
+
+    public function theme()
+    {
+        // AppSetting memiliki kolom 'theme_color' yang mereferensi ke 'name' di tabel theme_colors
+        return $this->belongsTo(ThemeColor::class, 'theme_color', 'name');
+    }
 }

@@ -28,6 +28,7 @@ return new class extends Migration
             // Media
             $table->string('logo_path')->nullable();
             $table->string('background_image')->nullable();   // Default BG kalau tidak ada slide
+            $table->string('path_adzan')->default('sounds/adzan.mp3')->nullable();   // Path suara adzan
             $table->string('video_playlist_url')->nullable(); // Default Jika ada video profil/kajian
 
                                                                  // Konfigurasi Tampilan
@@ -35,7 +36,7 @@ return new class extends Migration
             $table->integer('durasi_slide_foto')->default(5000); // Milidetik
 
             // Timer Iqomah (Menit) - Bisa diset beda tiap waktu
-            $table->integer('iqomah_subuh')->default(10);
+            $table->integer('iqomah_subuh')->default(10);   
             $table->integer('iqomah_dzuhur')->default(10);
             $table->integer('iqomah_ashar')->default(10);
             $table->integer('iqomah_maghrib')->default(10);
