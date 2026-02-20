@@ -26,18 +26,17 @@ class LiveDisplay extends Component
     {
         $today = date('Y-m-d');
         $settings = AppSetting::with('theme')->first();
+        $tipeTempat = $settings->tipe_tempat ?? 'Masjid';
 
         // 1. DATA JADWAL & KOREKSI WAKTU DINAMIS
         $jadwal = JadwalSholat::where('tanggal', $today)->first();
         if ($jadwal && $settings) {
             $waktuSholat = ['subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
             foreach ($waktuSholat as $waktu) {
-                // Ambil nilai koreksi dari setting (misal: koreksi_subuh)
                 $koreksiField = 'koreksi_' . $waktu;
                 $koreksi = (int) ($settings->$koreksiField ?? 0);
 
                 if ($koreksi !== 0 && isset($jadwal->$waktu)) {
-                    // Kalkulasi tambah/kurang menit
                     $jadwal->$waktu = Carbon::parse($jadwal->$waktu)->addMinutes($koreksi)->format('H:i:s');
                 }
             }
@@ -52,10 +51,10 @@ class LiveDisplay extends Component
 
         $contents = Content::where('is_active', true)->get();
 
-        // 2. GABUNGAN 4 TABEL INFO KAJIAN (DENGAN IMAM, MUADZIN, BILAL)
+        // 2. GABUNGAN TABEL INFO KAJIAN (DINAMIS BERDASARKAN TIPE TEMPAT)
         $ceramahList = collect();
 
-        // - Pengajian Rutin (Tidak ada imam/muadzin)
+        // - Pengajian Rutin
         $rutin = PengajianRutin::where('tanggal', '>=', $today)->get()->map(function($item) {
             return (object) [
                 'tanggal' => $item->tanggal, 'kategori' => 'Kajian Rutin',
@@ -65,15 +64,17 @@ class LiveDisplay extends Component
         });
         $ceramahList = $ceramahList->concat($rutin);
 
-        // - Petugas Jumat
-        $jumat = PetugasJumat::where('tanggal', '>=', $today)->get()->map(function($item) {
-            return (object) [
-                'tanggal' => $item->tanggal, 'kategori' => 'Sholat Jumat',
-                'tokoh' => $item->khatib, 'judul' => $item->judul_ceramah ?? 'Khatib Jumat',
-                'imam' => $item->imam, 'muadzin' => $item->muadzin, 'bilal' => $item->bilal
-            ];
-        });
-        $ceramahList = $ceramahList->concat($jumat);
+        // - Petugas Jumat (HANYA MUNCUL JIKA TIPE TEMPAT ADALAH MASJID)
+        if ($tipeTempat !== 'Mushola') {
+            $jumat = PetugasJumat::where('tanggal', '>=', $today)->get()->map(function($item) {
+                return (object) [
+                    'tanggal' => $item->tanggal, 'kategori' => 'Sholat Jumat',
+                    'tokoh' => $item->khatib, 'judul' => $item->judul_ceramah ?? 'Khatib Jumat',
+                    'imam' => $item->imam, 'muadzin' => $item->muadzin, 'bilal' => $item->bilal
+                ];
+            });
+            $ceramahList = $ceramahList->concat($jumat);
+        }
 
         // - Petugas Ramadhan
         $ramadhan = PetugasRamadhan::where('tanggal', '>=', $today)->get()->map(function($item) {
@@ -106,11 +107,12 @@ class LiveDisplay extends Component
 
         return view('livewire.live-display', [
             'settings' => $settings,
+            'tipeTempat' => $tipeTempat,
             'jadwal' => $jadwal,
-            'runningTexts' => RunningText::where('is_active', true)->orderBy('urutan')->get(),
-            'banners' => Banner::where('is_active', true)->whereDate('tgl_mulai', '<=', $today)->whereDate('tgl_selesai', '>=', $today)->get(),
-            'contents' => Content::where('is_active', true)->get(),
-            'ceramah' => $ceramah, // Hasil koleksi 4 tabel
+            'runningTexts' => $runningTexts,
+            'banners' => $banners,
+            'contents' => $contents,
+            'ceramah' => $ceramah,
             'totalSaldo' => $totalSaldo,
             'rekenings' => $rekenings
         ]);

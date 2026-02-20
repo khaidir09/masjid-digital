@@ -30,24 +30,35 @@
         .text-emerald { color: #059669; font-weight: bold; }
         .text-rose { color: #e11d48; font-weight: bold; }
         .text-right { text-align: right; }
+        .text-center { text-align: center; }
         .font-mono { font-family: monospace; }
 
-        .footer { margin-top: 50px; text-align: right; font-size: 12px; }
-        .ttd-box { display: inline-block; text-align: center; width: 200px; margin-top: 20px; }
-        .ttd-line { border-bottom: 1px solid #334155; margin-top: 60px; }
+        /* Footer & TTD */
+        .footer { margin-top: 40px; font-size: 12px; }
+        table.ttd-table { width: 100%; margin-top: 20px; text-align: center; page-break-inside: avoid; }
+        table.ttd-table td { width: 50%; vertical-align: top; padding: 10px; }
+        .ttd-name { margin-top: 70px; font-weight: bold; text-decoration: underline; color: #0f172a; }
     </style>
 </head>
 <body>
     @php
         $setting = \App\Models\AppSetting::first();
         $bulanNama = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+
+        // Tarik data Pengurus untuk tanda tangan
+        // Sesuaikan Model Pengurus dan kolomnya jika nama/jabatan berbeda di database Anda
+        $ketua = \App\Models\Pengurus::where('jabatan', 'Ketua')->first();
+        $bendahara = \App\Models\Pengurus::where('jabatan', 'Bendahara')->first();
     @endphp
 
     <div class="header">
         <h1>{{ $setting->nama_masjid ?? 'MASJID DIGITAL' }}</h1>
         <p>{{ $setting->alamat ?? 'Alamat Masjid Belum Diisi' }}</p>
-        <p style="margin-top: 10px; font-weight: bold; color: #0f172a;">
+        <p style="margin-top: 15px; font-weight: bold; color: #0f172a; font-size: 14px;">
             LAPORAN KEUANGAN PERIODE: {{ strtoupper($bulanNama) }} {{ $tahun }}
+        </p>
+        <p style="margin: 3px 0; font-weight: bold; color: #10b981;">
+            Kategori: {{ empty($sub_kategori_filter) ? 'Semua Jenis Transaksi' : strtoupper($sub_kategori_filter) }}
         </p>
     </div>
 
@@ -75,7 +86,7 @@
             <tr>
                 <th style="width: 15%">Tanggal</th>
                 <th style="width: 35%">Keterangan</th>
-                <th style="width: 15%">Kategori</th>
+                <th style="width: 15%">Kategori / Jenis</th>
                 <th style="width: 20%" class="text-right">Nominal</th>
                 <th style="width: 15%">Admin</th>
             </tr>
@@ -94,6 +105,10 @@
                 <td>
                     <span class="badge {{ $item->kategori == 'pemasukan' ? 'badge-in' : 'badge-out' }}">
                         {{ $item->kategori }}
+                    </span>
+                    <br>
+                    <span style="font-size: 10px; color: #475569; font-weight: bold; display: block; margin-top: 4px;">
+                        {{ $item->sub_kategori }}
                     </span>
                 </td>
                 <td class="text-right font-mono {{ $item->kategori == 'pemasukan' ? 'text-emerald' : 'text-rose' }}">
@@ -114,12 +129,26 @@
     </table>
 
     <div class="footer">
-        <p>Dicetak pada: {{ now()->translatedFormat('d F Y') }}</p>
+        <p style="text-align: right; color: #64748b;">Pekanbaru, {{ now()->translatedFormat('d F Y') }}</p>
 
-        <div class="ttd-box">
-            <p>Mengetahui,<br>Ketua / Bendahara</p>
-            <div class="ttd-line"></div>
-        </div>
+        <table class="ttd-table">
+            <tr>
+                <td>
+                    <p>Mengetahui,<br><strong>Ketua Pengurus</strong></p>
+
+                    <div class="ttd-name">
+                        {{ $ketua ? $ketua->nama : '_______________________' }}
+                    </div>
+                </td>
+                <td>
+                    <p>Dibuat oleh,<br><strong>Bendahara</strong></p>
+
+                    <div class="ttd-name">
+                        {{ $bendahara ? $bendahara->nama : '_______________________' }}
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>

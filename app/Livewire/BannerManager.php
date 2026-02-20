@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
@@ -26,6 +27,15 @@ class BannerManager extends Component
     public $photo; // Untuk upload temporary
     public $existingImage; // Untuk preview saat edit
 
+    // Variabel Pembatas Hak Akses
+    public $canEdit = false;
+
+    public function mount()
+    {
+        // Akses CRUD hanya untuk Superadmin, Operator, dan Humas
+        $this->canEdit = in_array(Auth::user()->role, ['superadmin', 'operator', 'humas']);
+    }
+
     public function render()
     {
         return view('livewire.banner-manager', [
@@ -35,6 +45,8 @@ class BannerManager extends Component
 
     public function create()
     {
+        if (!$this->canEdit) return; // Gembok
+
         $this->resetInput();
         $this->isEditMode = false;
         $this->isModalOpen = true;
@@ -42,6 +54,8 @@ class BannerManager extends Component
 
     public function store()
     {
+        if (!$this->canEdit) return; // Gembok
+
         $this->validate([
             'photo' => 'required|image|max:10240',
             'judul' => 'nullable|min:3',
@@ -63,6 +77,8 @@ class BannerManager extends Component
 
     public function edit($id)
     {
+        if (!$this->canEdit) return; // Gembok
+
         $b = Banner::find($id);
         $this->selectedId = $id;
         $this->judul = $b->judul;
@@ -77,6 +93,8 @@ class BannerManager extends Component
 
     public function update()
     {
+        if (!$this->canEdit) return; // Gembok
+
         $this->validate([
             'judul' => 'nullable|min:3',
         ]);
@@ -104,12 +122,16 @@ class BannerManager extends Component
 
     public function deleteId($id)
     {
+        if (!$this->canEdit) return; // Gembok
+
         $this->selectedId = $id;
         $this->isDeleteModalOpen = true;
     }
 
     public function delete()
     {
+        if (!$this->canEdit) return; // Gembok
+
         $b = Banner::find($this->selectedId);
         if (Storage::disk('public')->exists($b->image_path)) {
             Storage::disk('public')->delete($b->image_path);

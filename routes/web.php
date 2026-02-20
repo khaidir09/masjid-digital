@@ -12,6 +12,7 @@ use App\Livewire\RunningTextManager;
 use App\Livewire\ScheduleManager;
 use App\Livewire\UserPengurus;
 use App\Livewire\LiveDisplay;
+use App\Livewire\PublicKeuangan;
 use App\Livewire\ThemeColorManager;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; // Tambahkan ini
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini
 // Guest Route
 Route::get('/login', Login::class)->name('login')->middleware('guest');
 Route::get('/live-display', LiveDisplay::class)->name('live.display');
+Route::get('/transparansi-keuangan', PublicKeuangan::class)->name('keuangan.publik');
 
 // Auth Route
 Route::middleware('auth')->group(function () {
@@ -27,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/jadwal-sholat', JadwalSholat::class)->name('jadwal.sholat');
     Route::get('/user-pengurus', UserPengurus::class)->name('user.pengurus');
     Route::get('/keuangan-masjid', KeuanganMasjid::class)->name('keuangan.masjid');
-    Route::get('/runnging-text', RunningTextManager::class)->name('running.text');
+    Route::get('/running-text', RunningTextManager::class)->name('running.text');
     Route::get('/gallery', GalleryManager::class)->name('gallery');
     Route::get('/schedule', ScheduleManager::class)->name('schedule');
     Route::get('/banner', BannerManager::class)->name('banner');

@@ -18,7 +18,7 @@ return new class extends Migration
                   ->nullOnDelete();
 
             // Menambah kolom role setelah password
-            $table->enum('role', ['superadmin', 'admin', 'operator'])
+            $table->string('role')
                   ->default('operator')
                   ->after('password');
         });

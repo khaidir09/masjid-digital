@@ -8,6 +8,7 @@ use Livewire\WithFileUploads;
 use App\Models\Gallery;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
@@ -35,6 +36,15 @@ class GalleryManager extends Component
     public $selectedPhotos = [];
     public $photoToDeleteId = null;
 
+    // Variabel Pembatas Hak Akses
+    public $canEdit = false;
+
+    public function mount()
+    {
+        // Hanya Superadmin, Operator, dan Humas yang bisa CRUD Galeri
+        $this->canEdit = in_array(Auth::user()->role, ['superadmin', 'operator', 'humas']);
+    }
+
     public function render()
     {
         if ($this->viewMode == 'albums') {
@@ -47,7 +57,6 @@ class GalleryManager extends Component
     }
 
     // --- HELPER UNTUK DATA LIGHTBOX ---
-    // Mengambil data foto terbaru untuk dikirim ke AlpineJS
     public function getLightboxData()
     {
         if (!$this->activeGalleryId) return [];
@@ -88,6 +97,8 @@ class GalleryManager extends Component
 
     public function savePhoto()
     {
+        if (!$this->canEdit) return; // GEMBOK BACKEND
+
         $this->validate(['photo' => 'image|max:10240']);
 
         if ($this->photo) {
@@ -105,7 +116,6 @@ class GalleryManager extends Component
             $this->photo = null;
             $this->originalFileName = null;
 
-            // PENTING: Kirim sinyal ke Frontend untuk update data Lightbox
             $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
         }
     }
@@ -113,6 +123,7 @@ class GalleryManager extends Component
     // --- DELETE ACTIONS ---
     public function confirmDeletePhoto($id)
     {
+        if (!$this->canEdit) return;
         $this->photoToDeleteId = $id;
         $this->selectedPhotos = [];
         $this->isDeletePhotoModalOpen = true;
@@ -120,6 +131,7 @@ class GalleryManager extends Component
 
     public function confirmBulkDelete()
     {
+        if (!$this->canEdit) return;
         if (count($this->selectedPhotos) > 0) {
             $this->photoToDeleteId = null;
             $this->isDeletePhotoModalOpen = true;
@@ -128,6 +140,8 @@ class GalleryManager extends Component
 
     public function deletePhotoAction()
     {
+        if (!$this->canEdit) return; // GEMBOK BACKEND
+
         if ($this->photoToDeleteId) {
             $p = Photo::find($this->photoToDeleteId);
             if ($p) {
@@ -151,15 +165,14 @@ class GalleryManager extends Component
         $this->photoToDeleteId = null;
         $this->selectedPhotos = [];
 
-        // PENTING: Update data Lightbox setelah hapus
         $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
         session()->flash('message', 'Foto berhasil dihapus!');
     }
 
     public function updateCaption($id, $caption)
     {
+        if (!$this->canEdit) return; // GEMBOK BACKEND
         Photo::find($id)->update(['caption' => $caption]);
-        // Update lightbox juga biar caption di modal ikut berubah real-time
         $this->dispatch('refresh-lightbox', data: $this->getLightboxData());
     }
 
@@ -171,29 +184,41 @@ class GalleryManager extends Component
         }
     }
 
-    // --- GALLERY CRUD (Create/Edit/Delete Album - Tetap Sama) ---
-    public function createGallery() { $this->resetInput(); $this->isEditMode = false; $this->isModalOpen = true; }
+    // --- GALLERY CRUD ---
+    public function createGallery() {
+        if (!$this->canEdit) return;
+        $this->resetInput();
+        $this->isEditMode = false;
+        $this->isModalOpen = true;
+    }
 
     public function storeGallery() {
+        if (!$this->canEdit) return;
         $this->validate(['nama_kegiatan' => 'required', 'tanggal_kegiatan' => 'required|date']);
         Gallery::create(['nama_kegiatan' => $this->nama_kegiatan, 'tanggal_kegiatan' => $this->tanggal_kegiatan, 'deskripsi' => $this->deskripsi, 'is_active' => $this->is_active]);
         $this->closeModal(); session()->flash('message', 'Album berhasil dibuat!');
     }
 
     public function editGallery($id) {
+        if (!$this->canEdit) return;
         $g = Gallery::find($id); $this->selectedId = $id; $this->nama_kegiatan = $g->nama_kegiatan; $this->tanggal_kegiatan = $g->tanggal_kegiatan->format('Y-m-d'); $this->deskripsi = $g->deskripsi; $this->is_active = $g->is_active;
         $this->isEditMode = true; $this->isModalOpen = true;
     }
 
     public function updateGallery() {
+        if (!$this->canEdit) return;
         $this->validate(['nama_kegiatan' => 'required', 'tanggal_kegiatan' => 'required|date']);
         Gallery::find($this->selectedId)->update(['nama_kegiatan' => $this->nama_kegiatan, 'tanggal_kegiatan' => $this->tanggal_kegiatan, 'deskripsi' => $this->deskripsi, 'is_active' => $this->is_active]);
         $this->closeModal(); session()->flash('message', 'Album diperbarui!');
     }
 
-    public function deleteGalleryId($id) { $this->selectedId = $id; $this->isDeleteModalOpen = true; }
+    public function deleteGalleryId($id) {
+        if (!$this->canEdit) return;
+        $this->selectedId = $id; $this->isDeleteModalOpen = true;
+    }
 
     public function deleteGallery() {
+        if (!$this->canEdit) return;
         $g = Gallery::with('photos')->find($this->selectedId);
         foreach($g->photos as $photo) { if(Storage::disk('public')->exists($photo->file_path)) { Storage::disk('public')->delete($photo->file_path); } }
         $g->delete();

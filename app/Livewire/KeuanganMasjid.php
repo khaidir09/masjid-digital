@@ -6,10 +6,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Keuangan;
+use App\Models\Rekening; // <-- MODEL REKENING DITAMBAHKAN
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -25,32 +25,41 @@ class KeuanganMasjid extends Component
     public $tahun_filter;
     public $search = '';
 
+    // Filter Sub Kategori
+    public $sub_kategori_filter = '';
+    public $sub_kategori_table_filter = '';
+
     // --- MODAL STATES ---
     public $isModalOpen = false;
     public $isDeleteModalOpen = false;
     public $isEditMode = false;
-
-    // !!! INI YANG TADI KETINGGALAN !!!
     public $showImageModal = false;
     public $selectedImageUrl;
-
     public $selectedId;
 
-    // --- FORM INPUTS ---
+    // --- FORM INPUTS (KEUANGAN) ---
     public $tanggal;
     public $kategori = 'pemasukan';
+    public $sub_kategori = '';
     public $sumber_atau_tujuan;
     public $nominal;
     public $keterangan;
+
+    // --- FORM INPUTS (REKENING) ---
+    public $rekenings;
+    public $rek_id, $nama_bank, $nama_akun, $nomor_rekening;
+    public $isEditRekening = false;
 
     // --- FILE UPLOAD ---
     public $bukti;
     public $bukti_path;
     public $originalSize = 0;
     public $compressedSize = 0;
+    public $canEdit = false;
 
     public function mount()
     {
+        $this->canEdit = in_array(auth()->user()->role, ['superadmin', 'operator', 'bendahara']);
         $this->bulan_filter = (int)date('m');
         $this->tahun_filter = (int)date('Y');
         $this->tanggal = date('Y-m-d');
@@ -61,7 +70,15 @@ class KeuanganMasjid extends Component
         $bulan = (int) $this->bulan_filter;
         $tahun = (int) $this->tahun_filter;
 
-        // 1. Query Data Tabel
+        // Ambil Data Distinct Sub Kategori untuk Dropdown
+        $availableSubKategoris = Keuangan::select('sub_kategori')
+            ->whereNotNull('sub_kategori')
+            ->where('sub_kategori', '!=', '')
+            ->distinct()
+            ->orderBy('sub_kategori', 'asc')
+            ->pluck('sub_kategori');
+
+        // 1. Query Data Tabel Keuangan
         $query = Keuangan::query()
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
@@ -70,54 +87,55 @@ class KeuanganMasjid extends Component
                   ->orWhere('keterangan', 'like', '%'.$this->search.'%');
             });
 
+        if (!empty($this->sub_kategori_table_filter)) {
+            $query->where('sub_kategori', $this->sub_kategori_table_filter);
+        }
+
         $transaksi = $query->latest('tanggal')->paginate(10);
 
-        // 2. Hitung Ringkasan (Saldo Akumulatif)
-        // Hitung sampai akhir bulan yang dipilih
+        // 2. Query Ringkasan Statistik
+        $statsQuery = Keuangan::query();
+        if (!empty($this->sub_kategori_filter)) {
+            $statsQuery->where('sub_kategori', $this->sub_kategori_filter);
+        }
+
         $endDate = Carbon::createFromDate($tahun, $bulan, 1)->endOfMonth();
 
-        $totalPemasukan = Keuangan::where('kategori', 'pemasukan')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
-        $totalPengeluaran = Keuangan::where('kategori', 'pengeluaran')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
+        $totalPemasukan = (clone $statsQuery)->where('kategori', 'pemasukan')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
+        $totalPengeluaran = (clone $statsQuery)->where('kategori', 'pengeluaran')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
         $saldoAkhir = $totalPemasukan - $totalPengeluaran;
 
-        // Hitung Cashflow Bulan Ini Saja
-        $pemasukanBulanIni = Keuangan::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pemasukan')->sum('nominal');
-        $pengeluaranBulanIni = Keuangan::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pengeluaran')->sum('nominal');
+        $pemasukanBulanIni = (clone $statsQuery)->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pemasukan')->sum('nominal');
+        $pengeluaranBulanIni = (clone $statsQuery)->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pengeluaran')->sum('nominal');
 
         // 3. Siapkan Data Grafik
-        $chartData = $this->prepareChartData($tahun, $bulan);
-
-        // Kirim event update chart ke JS
+        $chartData = $this->prepareChartData($tahun, $bulan, $this->sub_kategori_filter);
         $this->dispatch('update-chart', data: $chartData);
+
+        // 4. Ambil Data Rekening
+        $this->rekenings = Rekening::latest()->get();
 
         return view('livewire.keuangan-masjid', [
             'transaksi' => $transaksi,
             'saldoAkhir' => $saldoAkhir,
             'pemasukanBulanIni' => $pemasukanBulanIni,
             'pengeluaranBulanIni' => $pengeluaranBulanIni,
+            'availableSubKategoris' => $availableSubKategoris
         ]);
     }
 
-    // Fungsi Query Grafik Database (Fix biar grafik muncul)
-    public function prepareChartData($tahun, $bulan)
+    public function prepareChartData($tahun, $bulan, $subKategoriFilter = null)
     {
-        // Ambil data pemasukan harian
-        $incomeDaily = Keuangan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->where('kategori', 'pemasukan')
-            ->groupBy('tanggal')
-            ->selectRaw('DATE(tanggal) as date, sum(nominal) as total')
-            ->pluck('total', 'date')
-            ->toArray();
+        $incomeQ = Keuangan::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pemasukan');
+        $expenseQ = Keuangan::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('kategori', 'pengeluaran');
 
-        // Ambil data pengeluaran harian
-        $expenseDaily = Keuangan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
-            ->where('kategori', 'pengeluaran')
-            ->groupBy('tanggal')
-            ->selectRaw('DATE(tanggal) as date, sum(nominal) as total')
-            ->pluck('total', 'date')
-            ->toArray();
+        if (!empty($subKategoriFilter)) {
+            $incomeQ->where('sub_kategori', $subKategoriFilter);
+            $expenseQ->where('sub_kategori', $subKategoriFilter);
+        }
+
+        $incomeDaily = $incomeQ->groupBy('tanggal')->selectRaw('DATE(tanggal) as date, sum(nominal) as total')->pluck('total', 'date')->toArray();
+        $expenseDaily = $expenseQ->groupBy('tanggal')->selectRaw('DATE(tanggal) as date, sum(nominal) as total')->pluck('total', 'date')->toArray();
 
         $daysInMonth = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
         $labels = [];
@@ -138,7 +156,61 @@ class KeuanganMasjid extends Component
         ];
     }
 
-    // --- IMAGE MODAL LOGIC (FIX ERROR) ---
+    // ==========================================
+    // CRUD REKENING LOGIC
+    // ==========================================
+
+    public function saveRekening()
+    {
+       if (!$this->canEdit) return;
+        $this->validate([
+            'nama_bank' => 'required|string|max:255',
+            'nama_akun' => 'required|string|max:255',
+            'nomor_rekening' => 'required|string|max:255',
+        ]);
+
+        Rekening::updateOrCreate(
+            ['id' => $this->rek_id],
+            [
+                'nama_bank' => $this->nama_bank,
+                'nama_akun' => $this->nama_akun,
+                'nomor_rekening' => $this->nomor_rekening,
+                'is_active' => 1
+            ]
+        );
+
+        $this->resetRekeningForm();
+        session()->flash('rekening_message', 'Data Rekening berhasil disimpan!');
+    }
+
+    public function editRekening($id)
+    {
+        if (!$this->canEdit) return;
+        $rek = Rekening::find($id);
+        $this->rek_id = $rek->id;
+        $this->nama_bank = $rek->nama_bank;
+        $this->nama_akun = $rek->nama_akun;
+        $this->nomor_rekening = $rek->nomor_rekening;
+        $this->isEditRekening = true;
+    }
+
+    public function deleteRekening($id)
+    {
+        if (!$this->canEdit) return;
+        Rekening::find($id)->delete();
+        session()->flash('rekening_message', 'Data Rekening berhasil dihapus!');
+    }
+
+    public function resetRekeningForm()
+    {
+        if (!$this->canEdit) return;
+        $this->reset(['rek_id', 'nama_bank', 'nama_akun', 'nomor_rekening', 'isEditRekening']);
+    }
+
+    // ==========================================
+    // CRUD KEUANGAN LOGIC
+    // ==========================================
+
     public function showImage($url)
     {
         $this->selectedImageUrl = $url;
@@ -151,10 +223,9 @@ class KeuanganMasjid extends Component
         $this->selectedImageUrl = null;
     }
 
-    // --- CRUD OPERATIONS ---
-
     public function create()
     {
+        if (!$this->canEdit) return;
         $this->resetInput();
         $this->isEditMode = false;
         $this->isModalOpen = true;
@@ -162,12 +233,13 @@ class KeuanganMasjid extends Component
 
     public function store()
     {
-        // Sanitasi Nominal: Hapus titik sebelum validasi
+        if (!$this->canEdit) return;
         $this->nominal = (int) str_replace('.', '', $this->nominal);
 
         $this->validate([
             'tanggal' => 'required|date',
             'kategori' => 'required|in:pemasukan,pengeluaran',
+            'sub_kategori' => 'required|string|max:255',
             'sumber_atau_tujuan' => 'required|string|max:255',
             'nominal' => 'required|numeric|min:1',
             'bukti' => 'nullable|image|max:2048',
@@ -181,6 +253,7 @@ class KeuanganMasjid extends Component
         Keuangan::create([
             'tanggal' => $this->tanggal,
             'kategori' => $this->kategori,
+            'sub_kategori' => $this->sub_kategori,
             'sumber_atau_tujuan' => $this->sumber_atau_tujuan,
             'nominal' => $this->nominal,
             'keterangan' => $this->keterangan,
@@ -194,30 +267,32 @@ class KeuanganMasjid extends Component
 
     public function edit($id)
     {
+        if (!$this->canEdit) return;
         $k = Keuangan::find($id);
         $this->selectedId = $id;
         $this->tanggal = $k->tanggal->format('Y-m-d');
         $this->kategori = $k->kategori;
+        $this->sub_kategori = $k->sub_kategori;
         $this->sumber_atau_tujuan = $k->sumber_atau_tujuan;
-
-        // FIX BUG NOMINAL EDIT: Kirim integer murni ke frontend
         $this->nominal = (int) $k->nominal;
-
         $this->keterangan = $k->keterangan;
         $this->bukti_path = $k->bukti_path;
 
         $this->isEditMode = true;
         $this->isModalOpen = true;
+
+        $this->dispatch('set-tomselect', value: $this->sub_kategori);
     }
 
     public function update()
     {
-        // Sanitasi Nominal: Hapus titik sebelum update
+       if (!$this->canEdit) return;
         $this->nominal = (int) str_replace('.', '', $this->nominal);
 
         $this->validate([
             'tanggal' => 'required|date',
             'kategori' => 'required',
+            'sub_kategori' => 'required|string|max:255',
             'sumber_atau_tujuan' => 'required',
             'nominal' => 'required|numeric',
         ]);
@@ -235,6 +310,7 @@ class KeuanganMasjid extends Component
         $k->update([
             'tanggal' => $this->tanggal,
             'kategori' => $this->kategori,
+            'sub_kategori' => $this->sub_kategori,
             'sumber_atau_tujuan' => $this->sumber_atau_tujuan,
             'nominal' => $this->nominal,
             'keterangan' => $this->keterangan,
@@ -247,12 +323,14 @@ class KeuanganMasjid extends Component
 
     public function deleteId($id)
     {
+        if (!$this->canEdit) return;
         $this->selectedId = $id;
         $this->isDeleteModalOpen = true;
     }
 
     public function delete()
     {
+        if (!$this->canEdit) return;
         $k = Keuangan::find($this->selectedId);
         if ($k->bukti_path && Storage::disk('public')->exists($k->bukti_path)) {
             Storage::disk('public')->delete($k->bukti_path);
@@ -274,6 +352,7 @@ class KeuanganMasjid extends Component
     {
         $this->tanggal = date('Y-m-d');
         $this->kategori = 'pemasukan';
+        $this->sub_kategori = '';
         $this->sumber_atau_tujuan = '';
         $this->nominal = '';
         $this->keterangan = '';
@@ -281,6 +360,8 @@ class KeuanganMasjid extends Component
         $this->bukti_path = null;
         $this->originalSize = 0;
         $this->compressedSize = 0;
+
+        $this->dispatch('clear-tomselect');
     }
 
     public function exportPdf()
@@ -288,31 +369,36 @@ class KeuanganMasjid extends Component
         $bulan = (int) $this->bulan_filter;
         $tahun = (int) $this->tahun_filter;
 
-        // 1. Ambil Data (Sama seperti filter tabel, tapi GET semua tanpa pagination)
-        $data = Keuangan::with('user')
+        $query = Keuangan::with('user')
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
-            ->orderBy('tanggal', 'asc')
-            ->get();
+            ->orderBy('tanggal', 'asc');
 
-        // 2. Hitung Ringkasan untuk PDF
+        $statsQuery = Keuangan::query();
+
+        if (!empty($this->sub_kategori_filter)) {
+            $query->where('sub_kategori', $this->sub_kategori_filter);
+            $statsQuery->where('sub_kategori', $this->sub_kategori_filter);
+        }
+
+        $data = $query->get();
+
         $pemasukan = $data->where('kategori', 'pemasukan')->sum('nominal');
         $pengeluaran = $data->where('kategori', 'pengeluaran')->sum('nominal');
 
-        // Saldo akhir sampai bulan ini (akumulatif)
         $endDate = Carbon::createFromDate($tahun, $bulan, 1)->endOfMonth();
-        $totalMasukAll = Keuangan::where('kategori', 'pemasukan')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
-        $totalKeluarAll = Keuangan::where('kategori', 'pengeluaran')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
+        $totalMasukAll = (clone $statsQuery)->where('kategori', 'pemasukan')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
+        $totalKeluarAll = (clone $statsQuery)->where('kategori', 'pengeluaran')->whereDate('tanggal', '<=', $endDate)->sum('nominal');
         $saldo = $totalMasukAll - $totalKeluarAll;
 
-        // 3. Generate PDF
         $pdf = Pdf::loadView('pdf.keuangan', [
             'data' => $data,
             'bulan' => $bulan,
             'tahun' => $tahun,
             'pemasukan' => $pemasukan,
             'pengeluaran' => $pengeluaran,
-            'saldo' => $saldo
+            'saldo' => $saldo,
+            'sub_kategori_filter' => $this->sub_kategori_filter
         ]);
 
         return response()->streamDownload(function () use ($pdf) {

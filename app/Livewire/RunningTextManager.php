@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 use App\Models\AppSetting;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('components.layouts.app')]
 #[Title('Manajemen Running Text')]
@@ -23,7 +24,12 @@ class RunningTextManager extends Component
     // Form Properties
     public $teks, $tipe = 'info', $is_active = true, $urutan = 0;
     public $kecepatan = 5;
+    public $canEdit = false;
 
+    public function mount()
+    {
+        $this->canEdit = in_array(Auth::user()->role, ['superadmin', 'operator', 'humas']);
+    }
     public function render()
     {
         // Ambil Data Running Text
@@ -42,6 +48,7 @@ class RunningTextManager extends Component
 
     public function create()
     {
+        if (!$this->canEdit) return;
         $this->resetInput();
         $this->isEditMode = false;
         $this->isModalOpen = true;
@@ -49,6 +56,7 @@ class RunningTextManager extends Component
 
     public function store()
     {
+        if (!$this->canEdit) return;
         $this->validate([
             'teks' => 'required|min:5',
             'tipe' => 'required',
@@ -69,6 +77,7 @@ class RunningTextManager extends Component
 
     public function edit($id)
     {
+        if (!$this->canEdit) return;
         $this->isEditMode = true;
         $this->selectedId = $id;
         $rt = RunningText::find($id);
@@ -82,6 +91,7 @@ class RunningTextManager extends Component
 
     public function update()
     {
+        if (!$this->canEdit) return;
         $this->validate(['teks' => 'required', 'tipe' => 'required']);
 
         RunningText::find($this->selectedId)->update([
@@ -105,12 +115,14 @@ class RunningTextManager extends Component
 
     public function deleteId($id)
     {
+        if (!$this->canEdit) return;
         $this->selectedId = $id;
         $this->isDeleteModalOpen = true;
     }
 
     public function delete()
     {
+        if (!$this->canEdit) return;
         RunningText::find($this->selectedId)->delete();
         $this->isDeleteModalOpen = false;
         session()->flash('message', 'Teks dihapus!');

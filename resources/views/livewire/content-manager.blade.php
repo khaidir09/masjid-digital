@@ -1,4 +1,4 @@
-<div class="space-y-8 work-sans-all">
+<div class="space-y-8 md:space-y-8 pb-20 work-sans-all">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
         .font-arab { font-family: 'Amiri', serif !important; direction: rtl; }
@@ -15,10 +15,24 @@
                 <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2">Doa & Hadist</h1>
                 <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Manajemen Konten Edukasi Display</p>
             </div>
+            @if($canEdit)
             <button wire:click="create" class="bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl active:scale-95 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tambah Konten
             </button>
+            @else
+                <div class="flex items-center gap-3 bg-amber-50 border border-amber-100 px-5 py-3 rounded-2xl shadow-sm animate-fade-in w-full md:w-auto">
+                    <div class="p-2 bg-amber-500 rounded-lg text-white shadow-sm shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m0-8V7m0 0v2m-9 1l1 1h16l1-1v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4z"></path><circle cx="12" cy="11" r="9" stroke="currentColor" stroke-width="2"></circle></svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest leading-none mb-1">Mode Lihat Saja</span>
+                        <p class="text-[10px] font-bold text-amber-700 leading-tight">
+                            Role kamu <span class="underline uppercase decoration-amber-300 decoration-2">{{ auth()->user()->role }}</span> (Read-only).
+                        </p>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -57,11 +71,12 @@
                             <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Durasi: {{ $content->durasi }}s</span>
                         </div>
                     </div>
-
+                    @if($canEdit)
                     <div class="flex md:flex-col gap-2 shrink-0">
                         <button wire:click="edit({{ $content->id }})" class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-emerald-50 hover:text-emerald-500 transition-all"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
                         <button wire:click="deleteId({{ $content->id }})" class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-rose-50 hover:text-rose-500 transition-all"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                     </div>
+                    @endif
                 </div>
             </div>
         @empty
@@ -69,7 +84,7 @@
         @endforelse
     </div>
 
-    @if($isModalOpen)
+    @if($isModalOpen && $canEdit)
     <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 animate-fade-in">
         <div class="bg-white rounded-[3.5rem] p-10 w-full max-w-3xl shadow-2xl relative overflow-hidden overflow-y-auto max-h-[90vh] custom-scrollbar">
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-emerald-300"></div>
@@ -118,7 +133,7 @@
     </div>
     @endif
 
-    @if($isDeleteModalOpen)
+    @if($isDeleteModalOpen && $canEdit)
     <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-rose-900/90 backdrop-blur-sm p-4 animate-fade-in">
         <div class="bg-white rounded-[3rem] p-10 w-full max-w-md text-center shadow-2xl relative overflow-hidden">
             <div class="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6 text-rose-500 shadow-inner">

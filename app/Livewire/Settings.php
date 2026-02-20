@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire;
 
 use App\Models\AppSetting;
@@ -16,6 +17,7 @@ class Settings extends Component
 {
     use WithFileUploads;
 
+    public $tipe_tempat; // [BARU] Masjid / Mushola
     public $nama_masjid, $alamat, $zona_waktu;
     public $latitude, $longitude;
     public $running_text_speed, $durasi_slide_foto;
@@ -24,16 +26,14 @@ class Settings extends Component
     public $logo, $background_image;
     public $old_logo, $old_background;
 
-    public $adzan;     // Untuk upload file baru
-    public $old_adzan; // Untuk path dari DB
+    public $adzan, $old_adzan;
+    public $adzan_subuh, $old_adzan_subuh; // [BARU] Adzan Subuh
+
+    public $video, $old_video;
+    public $isVideoSaving = false;
+
     public $availableThemes = [];
-
-    public $video;
-    public $old_video; // Ini path dari DB (Video Aktif)
     public $theme_color;
-
-                                   // Status Upload Video
-    public $isVideoSaving = false; // Indikator sedang memindah file
 
     public $iqomah  = [];
     public $koreksi = [];
@@ -41,31 +41,38 @@ class Settings extends Component
     public $api_cari_lokasi, $api_jadwal_sholat, $api_hijriah;
     public $kota_id, $kota_nama;
 
+    public $canEdit = false;
+
     public function mount()
     {
-        $settings              = AppSetting::first();
+        $settings = AppSetting::first();
         $this->availableThemes = ThemeColor::where('is_active', true)->get();
 
         if ($settings) {
+            $this->tipe_tempat        = $settings->tipe_tempat ?? 'Masjid';
             $this->nama_masjid        = $settings->nama_masjid;
             $this->alamat             = $settings->alamat;
             $this->latitude           = $settings->latitude ?? '0.51788';
             $this->longitude          = $settings->longitude ?? '101.44737';
             $this->zona_waktu         = $settings->zona_waktu;
+
             $this->api_cari_lokasi    = $settings->api_cari_lokasi ?? 'https://api.myquran.com/v3/sholat/kabkota/cari/';
             $this->api_jadwal_sholat  = $settings->api_jadwal_sholat ?? 'https://api.myquran.com/v3/sholat/jadwal/';
             $this->api_hijriah        = $settings->api_hijriah ?? 'https://api.myquran.com/v3/cal/hijr/';
             $this->kota_id            = $settings->kota_id;
             $this->kota_nama          = $settings->kota_nama;
+
             $this->running_text_speed = $settings->running_text_speed;
             $this->durasi_slide_foto  = $settings->durasi_slide_foto;
 
-            // Simpan path lama untuk preview
-            $this->old_video      = $settings->video_playlist_url;
-            $this->old_logo       = $settings->logo_path;
-            $this->old_background = $settings->background_image;
-            $this->theme_color    = $settings->theme_color ?? 'emerald';
-            $this->old_adzan      = $settings->path_adzan;
+            // Media Lama
+            $this->old_video       = $settings->video_playlist_url;
+            $this->old_logo        = $settings->logo_path;
+            $this->old_background  = $settings->background_image;
+            $this->old_adzan       = $settings->path_adzan;
+            $this->old_adzan_subuh = $settings->path_adzan_subuh;
+
+            $this->theme_color     = $settings->theme_color ?? 'emerald';
 
             $this->iqomah = [
                 'subuh'   => $settings->iqomah_subuh,
@@ -83,78 +90,120 @@ class Settings extends Component
                 'isya'    => $settings->koreksi_isya,
             ];
         }
+
+        $this->canEdit = in_array(auth()->user()->role, ['superadmin', 'operator']);
+
     }
 
     public function searchCity($query)
     {
-        if (strlen($query) < 3) {
-            return [];
-        }
-
+        if (strlen($query) < 3) return [];
         $response = Http::get($this->api_cari_lokasi . $query);
-        if ($response->json('status')) {
-            return $response->json('data');
-        }
-        return [];
+        return $response->json('status') ? $response->json('data') : [];
     }
 
-    // [BARU] Fungsi ini otomatis jalan setelah upload temp selesai 100%
+    // ==============================================================
+    // AUTO-SAVE MEDIA HOOKS (Jalan otomatis saat upload selesai)
+    // ==============================================================
+
+    public function updatedLogo()
+    {
+        if (!$this->canEdit) return;
+        $settings = AppSetting::first();
+        if ($settings->logo_path && Storage::disk('public')->exists($settings->logo_path)) {
+            Storage::disk('public')->delete($settings->logo_path);
+        }
+        $path = $this->logo->store('logos', 'public');
+        $settings->update(['logo_path' => $path]);
+        $this->old_logo = $path;
+        $this->logo = null;
+        session()->flash('media_success', 'Logo otomatis diperbarui!');
+    }
+
+    public function updatedBackgroundImage()
+    {
+        if (!$this->canEdit) return;
+        $settings = AppSetting::first();
+        if ($settings->background_image && Storage::disk('public')->exists($settings->background_image)) {
+            Storage::disk('public')->delete($settings->background_image);
+        }
+        $path = $this->background_image->store('backgrounds', 'public');
+        $settings->update(['background_image' => $path]);
+        $this->old_background = $path;
+        $this->background_image = null;
+        session()->flash('media_success', 'Background otomatis diperbarui!');
+    }
+
     public function updatedVideo()
     {
-        $this->validate([
-            'video' => 'file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-matroska|max:204800', // 200MB
-        ], [
-            'video.max'       => 'Ukuran video terlalu besar. Maksimal 200MB.',
-            'video.mimetypes' => 'Format video harus MP4, MOV, AVI, atau MKV.',
-        ]);
-
+        if (!$this->canEdit) return;
+        $this->validate(['video' => 'file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-matroska|max:204800']);
         $this->isVideoSaving = true;
-
         try {
             $settings = AppSetting::first();
-
-            // Hapus video lama jika ada
             if ($settings->video_playlist_url && Storage::disk('public')->exists($settings->video_playlist_url)) {
                 Storage::disk('public')->delete($settings->video_playlist_url);
             }
-
-            // Simpan video baru
             $path = $this->video->store('videos', 'public');
-
-            // Update Database Langsung
             $settings->update(['video_playlist_url' => $path]);
-
-            // Update Preview
             $this->old_video = $path;
-
-            // Reset Input
             $this->video = null;
-
-            session()->flash('video_success', 'Video berhasil diupload dan disimpan!');
-
+            session()->flash('media_success', 'Video Kajian otomatis diperbarui!');
         } catch (\Exception $e) {
             $this->addError('video', 'Gagal menyimpan video: ' . $e->getMessage());
         }
-
         $this->isVideoSaving = false;
     }
 
+    public function updatedAdzan()
+    {
+        if (!$this->canEdit) return;
+        $this->validate(['adzan' => 'mimes:mp3,wav|max:10240']);
+        $settings = AppSetting::first();
+        if ($settings->path_adzan && Storage::disk('public')->exists($settings->path_adzan)) {
+            Storage::disk('public')->delete($settings->path_adzan);
+        }
+        $path = $this->adzan->store('sounds', 'public');
+        $settings->update(['path_adzan' => $path]);
+        $this->old_adzan = $path;
+        $this->adzan = null;
+        session()->flash('media_success', 'Audio Adzan otomatis diperbarui!');
+    }
+
+    public function updatedAdzanSubuh()
+    {
+        if (!$this->canEdit) return;
+        $this->validate(['adzan_subuh' => 'mimes:mp3,wav|max:10240']);
+        $settings = AppSetting::first();
+        if ($settings->path_adzan_subuh && Storage::disk('public')->exists($settings->path_adzan_subuh)) {
+            Storage::disk('public')->delete($settings->path_adzan_subuh);
+        }
+        $path = $this->adzan_subuh->store('sounds', 'public');
+        $settings->update(['path_adzan_subuh' => $path]);
+        $this->old_adzan_subuh = $path;
+        $this->adzan_subuh = null;
+        session()->flash('media_success', 'Audio Adzan Subuh otomatis diperbarui!');
+    }
+
+    // ==============================================================
+    // SAVE DATA TEKS (Konfigurasi & Parameter)
+    // ==============================================================
+
     public function save()
     {
-        // Validasi Text & Gambar
+        if (!$this->canEdit) return;
         $this->validate([
+            'tipe_tempat'      => 'required|in:Masjid,Mushola',
             'nama_masjid'      => 'required|string|max:255',
             'latitude'         => 'required',
             'longitude'        => 'required',
             'theme_color'      => 'required|exists:theme_colors,name',
-            'adzan'            => 'nullable|mimes:mp3,wav|max:5120',
-            'logo'             => 'nullable|image|max:2048',
-            'background_image' => 'nullable|image|max:5120',
         ]);
 
         $settings = AppSetting::first();
 
-        $data = [
+        $settings->update([
+            'tipe_tempat'        => $this->tipe_tempat,
             'nama_masjid'        => $this->nama_masjid,
             'alamat'             => $this->alamat,
             'latitude'           => $this->latitude,
@@ -178,46 +227,10 @@ class Settings extends Component
             'koreksi_maghrib'    => $this->koreksi['maghrib'],
             'koreksi_isya'       => $this->koreksi['isya'],
             'theme_color'        => $this->theme_color,
-        ];
-
-        // Handle Logo
-        if ($this->logo) {
-            if ($settings->logo_path && Storage::disk('public')->exists($settings->logo_path)) {
-                Storage::disk('public')->delete($settings->logo_path);
-            }
-            $data['logo_path'] = $this->logo->store('logos', 'public');
-        }
-
-        // Handle Background
-        if ($this->background_image) {
-            if ($settings->background_image && Storage::disk('public')->exists($settings->background_image)) {
-                Storage::disk('public')->delete($settings->background_image);
-            }
-            $data['background_image'] = $this->background_image->store('backgrounds', 'public');
-        }
-
-        // Handle Upload Adzan
-        if ($this->adzan) {
-            if ($settings->path_adzan && Storage::disk('public')->exists($settings->path_adzan)) {
-                Storage::disk('public')->delete($settings->path_adzan);
-            }
-            $data['path_adzan'] = $this->adzan->store('sounds', 'public');
-        }
-
-        // NOTE: Video tidak dihandle disini lagi karena sudah di updatedVideo()
-
-        $settings->update($data);
-
-        $this->logo             = null;
-        $this->background_image = null;
-        $this->adzan = null;
-
-        $this->old_logo       = $settings->logo_path;
-        $this->old_background = $settings->background_image;
-        $this->old_adzan = $settings->path_adzan;
+        ]);
 
         $this->dispatch('theme-changed', color: $this->theme_color);
-        session()->flash('message', 'Pengaturan teks & gambar disimpan!');
+        session()->flash('message', 'Pengaturan teks & lokasi disimpan!');
     }
 
     public function render()

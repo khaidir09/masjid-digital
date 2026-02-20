@@ -6,22 +6,34 @@ use Livewire\Component;
 use App\Models\ThemeColor;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('components.layouts.app')]
 #[Title('Manajemen Warna Tema')]
 class ThemeColorManager extends Component
 {
-    public $colors, $color_id;
+    public $colors, $selectedId;
     public $name, $label, $main_color, $dark_color, $light_color;
     public $is_edit = false;
+    public $isDeleteModalOpen = false;
+
+    // RBAC
+    public $canEdit = false;
 
     protected $rules = [
-        'name' => 'required|alpha_dash|unique:theme_colors,name',
+        'name' => 'required|alpha_dash',
         'label' => 'required|string|max:50',
         'main_color' => 'required|string|max:7',
         'dark_color' => 'required|string|max:7',
         'light_color' => 'required|string|max:7',
     ];
+
+    public function mount()
+    {
+        // Gembok Akses CRUD
+        $this->canEdit = in_array(Auth::user()->role, ['superadmin', 'operator', 'humas']);
+        $this->resetInput();
+    }
 
     public function render()
     {
@@ -37,12 +49,16 @@ class ThemeColorManager extends Component
         $this->dark_color = '#064e3b';
         $this->light_color = '#a7f3d0';
         $this->is_edit = false;
-        $this->color_id = null;
+        $this->selectedId = null;
     }
 
     public function store()
     {
-        $this->validate();
+        if (!$this->canEdit) return; // Gembok
+
+        $this->validate(array_merge($this->rules, [
+            'name' => 'required|alpha_dash|unique:theme_colors,name'
+        ]));
 
         ThemeColor::create([
             'name' => strtolower($this->name),
@@ -58,8 +74,10 @@ class ThemeColorManager extends Component
 
     public function edit($id)
     {
+        if (!$this->canEdit) return; // Gembok
+
         $color = ThemeColor::findOrFail($id);
-        $this->color_id = $id;
+        $this->selectedId = $id;
         $this->name = $color->name;
         $this->label = $color->label;
         $this->main_color = $color->main_color;
@@ -70,15 +88,13 @@ class ThemeColorManager extends Component
 
     public function update()
     {
-        $this->validate([
-            'name' => 'required|alpha_dash|unique:theme_colors,name,' . $this->color_id,
-            'label' => 'required|string',
-            'main_color' => 'required',
-            'dark_color' => 'required',
-            'light_color' => 'required',
-        ]);
+        if (!$this->canEdit) return; // Gembok
 
-        $color = ThemeColor::findOrFail($this->color_id);
+        $this->validate(array_merge($this->rules, [
+            'name' => 'required|alpha_dash|unique:theme_colors,name,' . $this->selectedId
+        ]));
+
+        $color = ThemeColor::findOrFail($this->selectedId);
         $color->update([
             'name' => $this->name,
             'label' => $this->label,
@@ -91,9 +107,26 @@ class ThemeColorManager extends Component
         $this->resetInput();
     }
 
-    public function delete($id)
+    public function deleteId($id)
     {
-        ThemeColor::find($id)->delete();
-        session()->flash('message', 'Warna tema dihapus.');
+        if (!$this->canEdit) return; // Gembok
+
+        $this->selectedId = $id;
+        $this->isDeleteModalOpen = true;
+    }
+
+    public function delete()
+    {
+        if (!$this->canEdit) return; // Gembok
+
+        ThemeColor::find($this->selectedId)->delete();
+        $this->isDeleteModalOpen = false;
+        session()->flash('message', 'Warna tema telah dihapus!');
+        $this->resetInput();
+    }
+
+    public function closeModal()
+    {
+        $this->isDeleteModalOpen = false;
     }
 }

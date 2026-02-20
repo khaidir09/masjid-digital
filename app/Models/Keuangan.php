@@ -12,7 +12,7 @@ class Keuangan extends Model
     protected $table = 'keuangan';
 
     protected $fillable = [
-        'tanggal', 'kategori', 'sumber_atau_tujuan',
+        'tanggal', 'kategori','sub_kategori', 'sumber_atau_tujuan',
         'nominal', 'keterangan', 'bukti_path', 'user_id'
     ];
 

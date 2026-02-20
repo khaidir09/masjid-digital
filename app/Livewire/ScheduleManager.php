@@ -12,6 +12,7 @@ use App\Models\PengajianRutin;
 use App\Models\JadwalSholat; // Digunakan untuk filter tanggal Ramadhan
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('components.layouts.app')]
 #[Title('Jadwal Petugas & Ceramah')]
@@ -35,9 +36,11 @@ class ScheduleManager extends Component
     public $ramadhanYears = [];
     public $selectedRamadhanYear;
     public $ramadhanDates = []; // List tanggal hasil filter hijriah
+    public $canEdit = false;
 
     public function mount()
     {
+        $this->canEdit = in_array(Auth::user()->role, ['superadmin', 'operator', 'humas']);
         $this->tanggal = date('Y-m-d');
 
         // Ambil list tahun dari data jadwal sholat untuk dropdown tahun Ramadhan
@@ -127,6 +130,7 @@ class ScheduleManager extends Component
 
     public function create()
     {
+        if (!$this->canEdit) return;
         $this->resetInput();
         $this->isEditMode = false;
 
@@ -140,6 +144,7 @@ class ScheduleManager extends Component
 
     public function store()
     {
+        if (!$this->canEdit) return;
         $this->validateData();
 
         if ($this->activeTab == 'jumat') {
@@ -168,6 +173,7 @@ class ScheduleManager extends Component
 
     public function edit($id)
     {
+        if (!$this->canEdit) return;
         $this->selectedId = $id;
         $this->isEditMode = true;
 
@@ -211,6 +217,7 @@ class ScheduleManager extends Component
 
     public function update()
     {
+        if (!$this->canEdit) return;
         $this->validateData();
 
         $data = match ($this->activeTab) {
@@ -236,12 +243,14 @@ class ScheduleManager extends Component
 
     public function deleteId($id)
     {
+        if (!$this->canEdit) return;
         $this->selectedId = $id;
         $this->isDeleteModalOpen = true;
     }
 
     public function delete()
     {
+        if (!$this->canEdit) return;
         match ($this->activeTab) {
             'jumat'    => PetugasJumat::find($this->selectedId)->delete(),
             'ramadhan' => PetugasRamadhan::find($this->selectedId)->delete(),

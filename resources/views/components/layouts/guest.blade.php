@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Login' }} - {{ config('app.name') }}</title>
+    <title>{{ $title ?? 'Halaman Publik' }} - {{ config('app.name') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -31,9 +31,13 @@
     </style>
 </head>
 <body class="h-full work-sans-all">
-    <div class="min-h-screen flex items-center justify-center bg-slate-100 relative overflow-hidden">
+    @php
+        $isLogin = request()->routeIs('login');
+    @endphp
 
-        <div class="absolute inset-0 z-0">
+    <div class="min-h-screen flex justify-center bg-slate-100 relative {{ $isLogin ? 'items-center overflow-hidden' : 'py-10 overflow-y-auto' }}">
+
+        <div class="fixed inset-0 z-0">
             @php $setting = \App\Models\AppSetting::first(); @endphp
 
             @if($setting && $setting->bg_login_path)
@@ -44,7 +48,7 @@
             <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
         </div>
 
-        <div class="relative z-10 w-full max-w-md p-4 animate-fade-in">
+        <div class="relative z-10 w-full {{ $isLogin ? 'max-w-md' : 'max-w-7xl' }} p-4 animate-fade-in">
             {{ $slot }}
         </div>
     </div>
