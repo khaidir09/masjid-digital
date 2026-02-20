@@ -72,7 +72,7 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
 1. **Clone Repository**
 
     ```bash
-    git clone [https://github.com/username-kamu/masjid-digital.git](https://github.com/username-kamu/masjid-digital.git)
+    git clone https://github.com/bangameck/masjid-digital.git
     cd masjid-digital
     ```
 
@@ -108,3 +108,28 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
     npm run build
     php artisan serve
     ```
+
+---
+
+## 👨‍💻 Dikembangkan Oleh
+
+**RadevankaProject**
+<br>
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Work+Sans&weight=800&size=18&pause=1000&color=10B981&vCenter=true&width=600&lines=Membangun+digitalisasi+masjid+untuk+umat...;Developer:+@bangameck;Lokasi:+Pekanbaru,+Riau)](https://git.io/typing-svg)
+
+- 🧑‍💻 **Developer:** [@bangameck](https://instagram.com/bangameck)
+- 📍 **Lokasi:** Pekanbaru, Riau, Indonesia 🇮🇩
+- 🎯 **Visi:** *Membangun digitalisasi masjid untuk umat yang lebih baik.*
+
+### ☕ Support Developer
+Jika aplikasi ini bermanfaat untuk masjid di tempatmu, dukung pengembangannya agar terus di-*update* dan bebas *bug*! 
+
+
+<a href="https://trakteer.id/rproject" target="_blank">
+  <img src="https://img.shields.io/badge/Trakteer-Traktir_Kopi_Developer-E11D48?style=for-the-badge&logo=kofi&logoColor=white" alt="Support via Trakteer">
+</a>
+
+---
+
+## 📄 Lisensi
+Hak Cipta &copy; 2026 **Masjid Digital**. Seluruh hak cipta dilindungi.
