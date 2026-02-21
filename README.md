@@ -107,7 +107,7 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
    <br>Salin file .env.example menjadi .env lalu sesuaikan konfigurasi database dan variabel sistem.
 
     ```bash
-    cp .env.for-masjid .env
+    cp .env.example .env
     php artisan key:generate
     ```
 
