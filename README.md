@@ -84,16 +84,9 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
 | **Running Text** | **Galeri TV** |
 | <img src="public/assets/screenshot/running_text.png" alt="Running Text"> | <img src="public/assets/screenshot/galeri.png" alt="Galeri"> |
 | **Upload Foto Galeri** | |
-| <img src="public/assets/screenshot/foto_galeri.png" alt="Foto Galeri"> | |
+| <img src="public/assets/screenshot/galeri_foto.png" alt="Foto Galeri"> | |
 
 ---
-
-## 🚀 Panduan Instalasi
-
-1. **Clone Repository**
-   ```bash
-   git clone [https://github.com/bangameck/masjid-digital.git](https://github.com/bangameck/masjid-digital.git)
-   cd masjid-digital
 
 ## 🚀 Panduan Instalasi
 
@@ -114,7 +107,7 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
    <br>Salin file .env.example menjadi .env lalu sesuaikan konfigurasi database dan variabel sistem.
 
     ```bash
-    cp .env.example .env
+    cp .env.for-masjid .env
     php artisan key:generate
     ```
 
