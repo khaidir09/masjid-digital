@@ -92,7 +92,7 @@ Sistem tab rapi untuk mengelola berbagai agenda dakwah:
 
 1. **Clone Repository**
    ```bash
-   git clone [https://github.com/bangameck/masjid-digital.git](https://github.com/bangameck/masjid-digital.git)
+   git clone https://github.com/bangameck/masjid-digital.git
    cd masjid-digital
    ```
 
