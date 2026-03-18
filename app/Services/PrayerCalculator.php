@@ -46,6 +46,9 @@ class PrayerCalculator
                 $hijriString = null;
                 if ($dataHijri && $dataHijri['status'] == true) {
                     $hijriString = $dataHijri['data']['hijr']['today'];
+                    if (strpos($hijriString, ', ') !== false) {
+                        $hijriString = explode(', ', $hijriString)[1];
+                    }
                 }
 
                 return [

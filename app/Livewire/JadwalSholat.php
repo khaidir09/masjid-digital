@@ -228,6 +228,9 @@ class JadwalSholat extends Component
         // SIMPAN KE DATABASE
         if ($resJadwalData) {
             $hijriText = $resHijriData ? ($resHijriData['today'] ?? ($resHijriData['hijr']['today'] ?? 'Tidak tersedia')) : 'Tidak tersedia';
+            if (strpos($hijriText, ', ') !== false) {
+                $hijriText = explode(', ', $hijriText)[1];
+            }
 
             JadwalModel::create([
                 'tanggal'         => $dateStr,
