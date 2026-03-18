@@ -115,7 +115,7 @@ class JadwalSholat extends Component
         $this->statusText      = "Memeriksa ketersediaan API...";
 
         $setting = AppSetting::getSettings();
-        $kotaId  = $setting->kota_id ?? 'c7e1249ffc03eb9ded908c236bd1996d'; // Default Pekanbaru
+        $kotaId  = $setting->kota_id ?? '2f2b265625d76a6704b08093c652fd79'; // Default Hulu Sungai Utara
 
         // --- VALIDASI URL KOSONG / NULL ---
         if (empty($setting->api_jadwal_sholat)) {
@@ -149,7 +149,6 @@ class JadwalSholat extends Component
 
                 $this->statusText = "Koneksi stabil. Memulai sinkronisasi...";
                 $this->dispatch('process-next-day');
-
             } elseif ($response->status() === 404) {
                 $this->triggerError("Endpoint API tidak ditemukan (Error 404). Silakan periksa URL di Pengaturan: " . $baseUrlJadwal);
             } elseif ($response->serverError()) {
@@ -157,7 +156,6 @@ class JadwalSholat extends Component
             } else {
                 $this->triggerError("Gagal terhubung ke API. Status Code: " . $response->status());
             }
-
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             // Kita ubah pesan errornya biar lebih komprehensif
             $this->triggerError("Gagal terhubung ke server. Pastikan koneksi internet PC aktif, ATAU periksa kembali kebenaran link API (domain mungkin tidak valid) di menu Pengaturan.");

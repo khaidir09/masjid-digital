@@ -106,7 +106,7 @@
                                 <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Target
                                     Location:</span>
                                 <span
-                                    class="text-[10px] text-white font-bold uppercase tracking-tight">{{ $setting->kota_nama ?? 'KOTA PEKANBARU' }}
+                                    class="text-[10px] text-white font-bold uppercase tracking-tight">{{ $setting->kota_nama ?? 'KAB. HULU SUNGAI UTARA' }}
                                     <span class="text-emerald-500">—</span> {{ $setting->kota_id }}</span>
                             </div>
 

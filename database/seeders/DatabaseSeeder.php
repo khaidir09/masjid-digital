@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             'api_cari_lokasi' => 'https://api.myquran.com/v3/sholat/kabkota/cari/',
             'api_jadwal_sholat' => 'https://api.myquran.com/v3/sholat/jadwal/',
             'api_hijriah' => 'https://api.myquran.com/v3/cal/hijr/',
-            'kota_nama' => 'KOTA PEKANBARU',
-            'kota_id' => 'c7e1249ffc03eb9ded908c236bd1996d',
+            'kota_nama' => 'KAB. HULU SUNGAI UTARA',
+            'kota_id' => '2f2b265625d76a6704b08093c652fd79',
             'logo_path' => 'logos/Y2f6abAuI5vr2KQ6cVwrq4PvqgXc5x8fdSXGiqlK.png',
             'background_image' => 'backgrounds/L532KxBL0CvCMqG7XkeW2VaLOckv8609LUBnwWss.png',
             'running_text_speed' => 7,
@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
             ['tanggal' => '2026-02-28', 'hijri' => 'Sabtu, 11 Ramadan 1447 H', 'subuh' => '05:09', 'isya' => '19:42'],
         ];
 
-        foreach($jadwalData as $j) {
+        foreach ($jadwalData as $j) {
             DB::table('jadwal_sholat')->insert([
                 'tanggal' => $j['tanggal'],
                 'tanggal_hijriah' => $j['hijri'],
