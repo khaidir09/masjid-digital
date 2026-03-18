@@ -34,8 +34,8 @@ class PrayerCalculator
             $responseJadwal = Http::timeout(10)->get($baseUrlJadwal . $kotaId . '/' . $date);
             $dataJadwal = $responseJadwal->json();
 
-            // 2. Tembak API Hijriah: {url}/{yyyy-mm-dd}
-            $responseHijri = Http::timeout(10)->get($baseUrlHijri . $date);
+            // 2. Tembak API Hijriah: {url}/{yyyy-mm-dd}?adj=-1
+            $responseHijri = Http::timeout(10)->get($baseUrlHijri . $date . '?adj=-1');
             $dataHijri = $responseHijri->json();
 
             if ($dataJadwal && $dataJadwal['status'] == true) {
@@ -46,6 +46,9 @@ class PrayerCalculator
                 $hijriString = null;
                 if ($dataHijri && $dataHijri['status'] == true) {
                     $hijriString = $dataHijri['data']['hijr']['today'];
+                    if (strpos($hijriString, ', ') !== false) {
+                        $hijriString = explode(', ', $hijriString)[1];
+                    }
                 }
 
                 return [
