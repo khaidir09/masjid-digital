@@ -386,12 +386,16 @@
 
             <div class="flex-1 flex flex-col gap-4 h-full min-w-0">
                 <div class="flex-1 flex flex-col gap-2 min-h-0">
-                    @php $waktuSholat = ['Imsak', 'Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
+                    @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
                     @foreach ($waktuSholat as $waktu)
                         @php
                             $field = strtolower($waktu);
-                            $jamFormatted = \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
-                            $isSunnah = in_array($waktu, ['Imsak']);
+                            if ($waktu === 'Isyraq') {
+                                $jamFormatted = \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(15)->format('H:i');
+                            } else {
+                                $jamFormatted = \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
+                            }
+                            $isSunnah = in_array($waktu, ['Imsak', 'Isyraq']);
                         @endphp
 
                         <div class="flex-1 relative overflow-hidden rounded-[1.2rem] px-5 flex justify-between items-center border transition-all duration-500"
@@ -638,6 +642,7 @@
                 countdownSholatDisplay: '00:00',
                 durasiSholat: {
                     'Subuh': 20,
+                    'Isyraq': 0,
                     'Dzuhur': 20,
                     'Ashar': 20,
                     'Maghrib': 20,
@@ -717,6 +722,17 @@
                             iqomah: this.settings.iqomah_subuh || 10
                         },
                         {
+                            name: 'Isyraq',
+                            jamDB: (() => {
+                                if (!this.jadwalDB.terbit) return null;
+                                let tParts = this.jadwalDB.terbit.split(':');
+                                let dateObj = new Date();
+                                dateObj.setHours(parseInt(tParts[0]), parseInt(tParts[1]) + 15, tParts[2] ? parseInt(tParts[2]) : 0);
+                                return dateObj.toTimeString().substring(0, 8);
+                            })(),
+                            iqomah: 0
+                        },
+                        {
                             name: 'Dzuhur',
                             jamDB: this.jadwalDB.dzuhur,
                             iqomah: this.settings.iqomah_dzuhur || 10
@@ -768,40 +784,42 @@
                             nextP = p.name;
                         }
 
-                        if (currentSeconds >= preAdzanSeconds && currentSeconds < adzanStartSeconds) {
-                            activeMode = 'menuju_adzan';
-                            this.currentPrayerName = p.name;
-                            let sisaDetikAdzan = adzanStartSeconds - currentSeconds;
-                            this.countdownAdzanDisplay = `00:${sisaDetikAdzan.toString().padStart(2, '0')}`;
-                            if ([10, 5, 4, 3, 2, 1].includes(sisaDetikAdzan)) {
-                                this.playBeep();
+                        if (p.name !== 'Isyraq') {
+                            if (currentSeconds >= preAdzanSeconds && currentSeconds < adzanStartSeconds) {
+                                activeMode = 'menuju_adzan';
+                                this.currentPrayerName = p.name;
+                                let sisaDetikAdzan = adzanStartSeconds - currentSeconds;
+                                this.countdownAdzanDisplay = `00:${sisaDetikAdzan.toString().padStart(2, '0')}`;
+                                if ([10, 5, 4, 3, 2, 1].includes(sisaDetikAdzan)) {
+                                    this.playBeep();
+                                }
+                                break;
                             }
-                            break;
-                        }
 
-                        if (currentSeconds === adzanStartSeconds) {
-                            this.playAdzan(p.name);
-                        }
-
-                        if (currentSeconds >= adzanStartSeconds && currentSeconds < iqomahEndSeconds) {
-                            activeMode = 'waiting_iqomah';
-                            this.currentPrayerName = p.name;
-                            let sisaDetikTotal = iqomahEndSeconds - currentSeconds;
-                            let sisaMenit = Math.floor(sisaDetikTotal / 60).toString().padStart(2, '0');
-                            let sisaDetik = (sisaDetikTotal % 60).toString().padStart(2, '0');
-                            this.countdownIqomahDisplay = `${sisaMenit}:${sisaDetik}`;
-                            if (sisaDetikTotal <= 10 && sisaDetikTotal > 0) {
-                                this.playBeep();
+                            if (currentSeconds === adzanStartSeconds) {
+                                this.playAdzan(p.name);
                             }
-                            break;
-                        } else if (currentSeconds >= iqomahEndSeconds && currentSeconds < sholatEndSeconds) {
-                            activeMode = 'sholat';
-                            this.currentPrayerName = p.name;
-                            let sisaDetikSholatTotal = sholatEndSeconds - currentSeconds;
-                            let sisaMenitSholat = Math.floor(sisaDetikSholatTotal / 60).toString().padStart(2, '0');
-                            let sisaDetikSholat = (sisaDetikSholatTotal % 60).toString().padStart(2, '0');
-                            this.countdownSholatDisplay = `${sisaMenitSholat}:${sisaDetikSholat}`;
-                            break;
+
+                            if (currentSeconds >= adzanStartSeconds && currentSeconds < iqomahEndSeconds) {
+                                activeMode = 'waiting_iqomah';
+                                this.currentPrayerName = p.name;
+                                let sisaDetikTotal = iqomahEndSeconds - currentSeconds;
+                                let sisaMenit = Math.floor(sisaDetikTotal / 60).toString().padStart(2, '0');
+                                let sisaDetik = (sisaDetikTotal % 60).toString().padStart(2, '0');
+                                this.countdownIqomahDisplay = `${sisaMenit}:${sisaDetik}`;
+                                if (sisaDetikTotal <= 10 && sisaDetikTotal > 0) {
+                                    this.playBeep();
+                                }
+                                break;
+                            } else if (currentSeconds >= iqomahEndSeconds && currentSeconds < sholatEndSeconds) {
+                                activeMode = 'sholat';
+                                this.currentPrayerName = p.name;
+                                let sisaDetikSholatTotal = sholatEndSeconds - currentSeconds;
+                                let sisaMenitSholat = Math.floor(sisaDetikSholatTotal / 60).toString().padStart(2, '0');
+                                let sisaDetikSholat = (sisaDetikSholatTotal % 60).toString().padStart(2, '0');
+                                this.countdownSholatDisplay = `${sisaMenitSholat}:${sisaDetikSholat}`;
+                                break;
+                            }
                         }
                     }
 
