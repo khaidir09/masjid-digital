@@ -361,18 +361,18 @@
                                         <div class="w-[30%] flex flex-col gap-1 items-end justify-center pl-4">
                                             @if ($kajian->imam)
                                                 <div
-                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex justify-between w-full max-w-[150px]">
-                                                    <span class="text-slate-400 font-bold uppercase">Imam</span>
+                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex items-center justify-between w-full gap-2">
+                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Imam</span>
                                                     <span
-                                                        class="text-white font-semibold truncate">{{ $kajian->imam }}</span>
+                                                        class="text-white font-semibold text-right leading-tight">{{ $kajian->imam }}</span>
                                                 </div>
                                             @endif
                                             @if ($kajian->muadzin)
                                                 <div
-                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex justify-between w-full max-w-[150px]">
-                                                    <span class="text-slate-400 font-bold uppercase">Muadz</span>
+                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex items-center justify-between w-full gap-2">
+                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Muadz</span>
                                                     <span
-                                                        class="text-white font-semibold truncate">{{ $kajian->muadzin }}</span>
+                                                        class="text-white font-semibold text-right leading-tight">{{ $kajian->muadzin }}</span>
                                                 </div>
                                             @endif
                                         </div>
