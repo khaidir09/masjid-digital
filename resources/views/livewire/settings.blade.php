@@ -46,13 +46,18 @@
 
         @if ($canEdit)
             <button wire:click="save" wire:loading.attr="disabled"
-                class="fixed bottom-6 right-6 md:static z-50 flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-full shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-1 active:scale-95">
-                <svg wire:loading.remove class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="fixed bottom-6 right-6 md:static z-50 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white w-14 h-14 sm:w-auto sm:h-auto sm:px-8 sm:py-3.5 rounded-full shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-1 active:scale-95">
+                <svg wire:loading.remove class="w-5 h-5 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                         d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
                     </path>
                 </svg>
-                <svg wire:loading wire:target="save" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg"
+                <svg wire:loading.remove class="w-6 h-6 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                    </path>
+                </svg>
+                <svg wire:loading wire:target="save" class="animate-spin w-5 h-5 hidden sm:block" xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                         stroke-width="4"></circle>
@@ -60,7 +65,15 @@
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                     </path>
                 </svg>
-                <span class="font-black tracking-widest uppercase text-xs">Simpan Pengaturan</span>
+                <svg wire:loading wire:target="save" class="animate-spin w-6 h-6 sm:hidden" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                        stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+                <span class="font-black tracking-widest uppercase text-xs hidden sm:inline">Simpan Pengaturan</span>
             </button>
         @else
             <div
@@ -112,7 +125,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div class="xl:col-span-2 space-y-8">
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">
                     <div class="p-2 bg-emerald-50 rounded-xl text-emerald-500"><svg class="w-6 h-6" fill="none"
@@ -124,21 +137,21 @@
                     Identitas Tempat
                 </h3>
 
-                <div class="mb-8 flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     <div class="flex flex-col">
                         <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Tipe Tempat
                             Ibadah</span>
                         <span class="text-sm font-bold text-slate-700 mt-1">Pilih sebutan untuk header Display</span>
                     </div>
-                    <div class="flex items-center gap-3 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-1 sm:gap-3 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-full sm:w-auto">
                         <button {{ !$canEdit ? 'disabled' : '' }} wire:click="$set('tipe_tempat', 'Masjid')"
-                            class="px-6 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all {{ $tipe_tempat == 'Masjid' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50' }}">Masjid</button>
+                            class="flex-1 sm:flex-none px-2 sm:px-6 py-2 rounded-lg text-[10px] sm:text-sm font-black uppercase tracking-widest transition-all {{ $tipe_tempat == 'Masjid' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50' }}">Masjid</button>
                         <button {{ !$canEdit ? 'disabled' : '' }} wire:click="$set('tipe_tempat', 'Mushola')"
-                            class="px-6 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all {{ $tipe_tempat == 'Mushola' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50' }}">Mushola</button>
+                            class="flex-1 sm:flex-none px-2 sm:px-6 py-2 rounded-lg text-[10px] sm:text-sm font-black uppercase tracking-widest transition-all {{ $tipe_tempat == 'Mushola' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50' }}">Mushola</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                     <div class="relative group">
                         <input type="text" wire:model="nama_masjid" {{ !$canEdit ? 'disabled' : '' }}
                             id="nama_masjid"
@@ -161,11 +174,11 @@
                             <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
                         </select>
                         <label for="zona_waktu"
-                            class="absolute top-3.5 left-4 text-emerald-500 font-black text-[10px] uppercase tracking-widest bg-white px-1 -translate-y-5 transition-all pointer-events-none">Zona
+                            class="absolute top-3.5 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">Zona
                             Waktu</label>
                     </div>
 
-                    <div class="md:col-span-2 relative group mt-2">
+                    <div class="md:col-span-2 relative group mt-4 sm:mt-2">
                         <textarea wire:model="alamat" {{ !$canEdit ? 'disabled' : '' }} id="alamat" rows="2"
                             class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3.5 text-slate-900 font-bold focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent transition-all"
                             placeholder=" "></textarea>
@@ -176,7 +189,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden"
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden mt-6"
                 wire:ignore x-data="mapComponent({ lat: @entangle('latitude'), lng: @entangle('longitude') })">
                 <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
 
@@ -277,7 +290,7 @@
                 </script>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden mt-6">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden mt-6">
                 <div class="absolute top-0 left-0 w-2 h-full bg-purple-500"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">
                     <div class="p-2 bg-purple-50 rounded-xl text-purple-500"><svg class="w-6 h-6" fill="none"
@@ -288,35 +301,35 @@
                     Parameter Waktu Sholat
                 </h3>
 
-                <div class="overflow-hidden rounded-2xl border border-slate-200">
-                    <table class="w-full text-sm text-left">
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-sm text-left min-w-[500px]">
                         <thead
                             class="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Waktu</th>
-                                <th class="px-6 py-4 text-center">Iqomah (Menit)</th>
-                                <th class="px-6 py-4 text-center">Koreksi (+/- Menit)</th>
+                                <th class="px-4 sm:px-6 py-4">Waktu</th>
+                                <th class="px-4 sm:px-6 py-4 text-center">Iqomah (Menit)</th>
+                                <th class="px-4 sm:px-6 py-4 text-center">Koreksi (+/- Menit)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @foreach (['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'] as $waktu)
                                 <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4 font-black text-slate-700 uppercase tracking-widest">
+                                    <td class="px-4 sm:px-6 py-4 font-black text-slate-700 uppercase tracking-widest">
                                         {{ $waktu }}</td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-4 sm:px-6 py-4">
                                         <div class="flex items-center justify-center gap-2">
                                             <input type="number" wire:model="iqomah.{{ $waktu }}"
                                                 {{ !$canEdit ? 'disabled' : '' }}
-                                                class="w-20 px-4 py-2 rounded-xl border border-slate-300 font-bold text-center focus:ring-purple-500 focus:border-purple-500">
+                                                class="w-16 sm:w-20 px-2 sm:px-4 py-2 rounded-xl border border-slate-300 font-bold text-center focus:ring-purple-500 focus:border-purple-500">
                                             <span
                                                 class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Mnt</span>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-4 sm:px-6 py-4">
                                         <div class="flex items-center justify-center">
                                             <input type="number" wire:model="koreksi.{{ $waktu }}"
                                                 {{ !$canEdit ? 'disabled' : '' }}
-                                                class="w-20 px-4 py-2 rounded-xl border border-slate-300 font-bold text-center focus:ring-rose-500 focus:border-rose-500 text-rose-600"
+                                                class="w-16 sm:w-20 px-2 sm:px-4 py-2 rounded-xl border border-slate-300 font-bold text-center focus:ring-rose-500 focus:border-rose-500 text-rose-600"
                                                 placeholder="0">
                                         </div>
                                     </td>
@@ -327,7 +340,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden mt-6">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden mt-6">
                 <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">
                     <div class="p-2 bg-emerald-50 rounded-xl text-emerald-500"><svg class="w-6 h-6" fill="none"
@@ -341,9 +354,9 @@
                 <link href="{{ asset('assets/css/tom-select/tom-select.css') }}" rel="stylesheet">
                 <script src="{{ asset('assets/js/tom-select/tom-select.complete.min.js') }}"></script>  
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                     <div
-                        class="md:col-span-2 bg-slate-50 p-6 rounded-2xl border border-slate-200 {{ !$canEdit ? 'opacity-80' : '' }}">
+                        class="md:col-span-2 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200 {{ !$canEdit ? 'opacity-80' : '' }}">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">
                             Pilih Kota / Kab (MyQuran API)
                         </label>
@@ -401,33 +414,33 @@
                         </div>
                     </div>
 
-                    <div class="relative group">
+                    <div class="relative group mt-2 sm:mt-0">
                         <input type="text" wire:model="api_cari_lokasi" {{ !$canEdit ? 'disabled' : '' }}
                             id="api_cari_lokasi"
                             class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 font-medium focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
                             placeholder=" " />
                         <label for="api_cari_lokasi"
-                            class="absolute top-3 left-4 text-emerald-500 font-black text-[10px] uppercase tracking-widest bg-white px-1 -translate-y-4 transition-all pointer-events-none">API
+                            class="absolute top-3.5 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
                             Cari Lokasi</label>
                     </div>
 
-                    <div class="relative group">
+                    <div class="relative group mt-2 sm:mt-0">
                         <input type="text" wire:model="api_jadwal_sholat" {{ !$canEdit ? 'disabled' : '' }}
                             id="api_jadwal_sholat"
                             class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 font-medium focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
                             placeholder=" " />
                         <label for="api_jadwal_sholat"
-                            class="absolute top-3 left-4 text-emerald-500 font-black text-[10px] uppercase tracking-widest bg-white px-1 -translate-y-4 transition-all pointer-events-none">API
+                            class="absolute top-3.5 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
                             Jadwal Sholat</label>
                     </div>
 
-                    <div class="md:col-span-2 relative group">
+                    <div class="md:col-span-2 relative group mt-2 sm:mt-0">
                         <input type="text" wire:model="api_hijriah" {{ !$canEdit ? 'disabled' : '' }}
                             id="api_hijriah"
                             class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3 text-slate-900 font-medium focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent"
                             placeholder=" " />
                         <label for="api_hijriah"
-                            class="absolute top-3 left-4 text-emerald-500 font-black text-[10px] uppercase tracking-widest bg-white px-1 -translate-y-4 transition-all pointer-events-none">API
+                            class="absolute top-3.5 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">API
                             Konversi Hijriah</label>
                     </div>
                 </div>
@@ -436,7 +449,7 @@
 
         <div class="space-y-8">
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-2 h-full bg-orange-500"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">
                     <div class="p-2 bg-orange-50 rounded-xl text-orange-500"><svg class="w-6 h-6" fill="none"
@@ -514,9 +527,9 @@
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Logo
                         (Otomatis Tersimpan)</label>
                     <div
-                        class="flex items-center gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
+                        class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
                         <div
-                            class="relative w-24 h-24 rounded-2xl bg-white border border-slate-200 overflow-hidden shrink-0 shadow-sm">
+                            class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border border-slate-200 overflow-hidden shrink-0 shadow-sm">
                             @if ($old_logo)
                                 <img src="{{ asset('storage/' . $old_logo) }}"
                                     class="w-full h-full object-contain p-2">
@@ -537,11 +550,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-1">
+                        <div class="flex-1 text-center sm:text-left w-full sm:w-auto">
                             <input type="file" id="logo_upload" class="hidden" accept="image/*"
                                 @change="handleUpload" {{ !$canEdit ? 'disabled' : '' }}>
                             <label for="logo_upload"
-                                class="inline-flex px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition
+                                class="inline-flex justify-center w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition
                         {{ $canEdit ? 'bg-emerald-500 text-white cursor-pointer hover:bg-emerald-600' : 'bg-slate-300 text-slate-500 cursor-not-allowed pointer-events-none' }}">
                                 {{ $canEdit ? 'Ganti Logo' : 'Akses Terkunci' }}
                             </label>
@@ -658,7 +671,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">
                     <div class="p-2 bg-blue-50 rounded-xl text-blue-500"><svg class="w-6 h-6" fill="currentColor"
@@ -670,7 +683,7 @@
                 </h3>
 
                 <div
-                    class="mb-6 bg-slate-50 p-6 rounded-3xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
+                    class="mb-6 bg-slate-50 p-4 sm:p-6 rounded-3xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Adzan 4
                         Waktu</label>
                     @if ($old_adzan)
@@ -713,7 +726,7 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
+                <div class="bg-slate-50 p-4 sm:p-6 rounded-3xl border border-slate-200 {{ !$canEdit ? 'opacity-75' : '' }}">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Khusus
                         Adzan Subuh</label>
                     @if ($old_adzan_subuh)
@@ -757,7 +770,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+            <div class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-2 h-full bg-slate-800"></div>
                 <h3 class="font-black text-xl text-slate-800 mb-8 flex items-center gap-3 tracking-tight">Tampilan
                     Layar</h3>
