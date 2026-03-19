@@ -214,7 +214,7 @@ class JadwalSholat extends Component
 
         // FETCH API HIJRIAH PER HARI
         try {
-            $resHijri = Http::timeout(10)->get($baseUrlHijri . $dateStr);
+            $resHijri = Http::timeout(10)->get($baseUrlHijri . $dateStr . '?adj=-1');
             if ($resHijri->successful() && isset($resHijri->json()['status']) && $resHijri->json()['status']) {
                 $resHijriData         = $resHijri->json()['data']['hijr'] ?? $resHijri->json()['data'];
                 $this->apiStatusHijri = 'Sukses ✓';
@@ -228,7 +228,9 @@ class JadwalSholat extends Component
         // SIMPAN KE DATABASE
         if ($resJadwalData) {
             $hijriText = $resHijriData ? ($resHijriData['today'] ?? ($resHijriData['hijr']['today'] ?? 'Tidak tersedia')) : 'Tidak tersedia';
-
+            if (strpos($hijriText, ', ') !== false) {
+                $hijriText = explode(', ', $hijriText)[1];
+            }
             JadwalModel::create([
                 'tanggal'         => $dateStr,
                 'tanggal_hijriah' => $hijriText,

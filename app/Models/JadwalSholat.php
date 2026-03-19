@@ -12,8 +12,16 @@ class JadwalSholat extends Model
     protected $table = 'jadwal_sholat';
 
     protected $fillable = [
-        'tanggal', 'tanggal_hijriah', 'imsak', 'subuh', 'terbit', 'dhuha',
-        'dzuhur', 'ashar', 'maghrib', 'isya'
+        'tanggal',
+        'tanggal_hijriah',
+        'imsak',
+        'subuh',
+        'terbit',
+        'dhuha',
+        'dzuhur',
+        'ashar',
+        'maghrib',
+        'isya'
     ];
 
     protected $casts = [
