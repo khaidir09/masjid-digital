@@ -386,7 +386,7 @@
 
             <div class="flex-1 flex flex-col gap-4 h-full min-w-0">
                 <div class="flex-1 flex flex-col gap-2 min-h-0">
-                    @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
+                    @php $waktuSholat = ['Subuh', 'Isyraq', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
                     @foreach ($waktuSholat as $waktu)
                         @php
                             $field = strtolower($waktu);
@@ -395,7 +395,7 @@
                             } else {
                                 $jamFormatted = \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
                             }
-                            $isSunnah = in_array($waktu, ['Imsak', 'Isyraq']);
+                            $isSunnah = in_array($waktu, ['Isyraq']);
                         @endphp
 
                         <div class="flex-1 relative overflow-hidden rounded-[1.2rem] px-5 flex justify-between items-center border transition-all duration-500"
@@ -641,12 +641,12 @@
                 countdownIqomahDisplay: '00:00',
                 countdownSholatDisplay: '00:00',
                 durasiSholat: {
-                    'Subuh': 20,
+                    'Subuh': 10,
                     'Isyraq': 0,
-                    'Dzuhur': 20,
-                    'Ashar': 20,
-                    'Maghrib': 20,
-                    'Isya': 20,
+                    'Dzuhur': 10,
+                    'Ashar': 10,
+                    'Maghrib': 10,
+                    'Isya': 10,
                     'Jumat': 45
                 },
 

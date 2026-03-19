@@ -40,7 +40,7 @@ class LiveDisplay extends Component
         // 1. DATA JADWAL & KOREKSI WAKTU DINAMIS
         $jadwal = JadwalSholat::where('tanggal', $today)->first();
         if ($jadwal && $settings) {
-            $waktuSholat = ['imsak','subuh', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
+            $waktuSholat = ['subuh', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
             foreach ($waktuSholat as $waktu) {
                 $koreksiField = 'koreksi_' . $waktu;
                 $koreksi = (int) ($settings->$koreksiField ?? 0);
@@ -64,43 +64,59 @@ class LiveDisplay extends Component
         $ceramahList = collect();
 
         // - Pengajian Rutin
-        $rutin = PengajianRutin::where('tanggal', '>=', $today)->get()->map(function($item) {
+        $rutin = PengajianRutin::where('tanggal', '>=', $today)->get()->map(function ($item) {
             return (object) [
-                'tanggal' => $item->tanggal, 'kategori' => 'Kajian Rutin',
-                'tokoh' => $item->penceramah, 'judul' => $item->judul_ceramah,
-                'imam' => null, 'muadzin' => null, 'bilal' => null
+                'tanggal' => $item->tanggal,
+                'kategori' => 'Kajian Rutin',
+                'tokoh' => $item->penceramah,
+                'judul' => $item->judul_ceramah,
+                'imam' => null,
+                'muadzin' => null,
+                'bilal' => null
             ];
         });
         $ceramahList = $ceramahList->concat($rutin);
 
         // - Petugas Jumat (HANYA MUNCUL JIKA TIPE TEMPAT ADALAH MASJID)
         if ($tipeTempat !== 'Mushola') {
-            $jumat = PetugasJumat::where('tanggal', '>=', $today)->get()->map(function($item) {
+            $jumat = PetugasJumat::where('tanggal', '>=', $today)->get()->map(function ($item) {
                 return (object) [
-                    'tanggal' => $item->tanggal, 'kategori' => 'Sholat Jumat',
-                    'tokoh' => $item->khatib, 'judul' => $item->judul_ceramah ?? 'Khatib Jumat',
-                    'imam' => $item->imam, 'muadzin' => $item->muadzin, 'bilal' => $item->bilal
+                    'tanggal' => $item->tanggal,
+                    'kategori' => 'Sholat Jumat',
+                    'tokoh' => $item->khatib,
+                    'judul' => $item->judul_ceramah ?? 'Khatib Jumat',
+                    'imam' => $item->imam,
+                    'muadzin' => $item->muadzin,
+                    'bilal' => $item->bilal
                 ];
             });
             $ceramahList = $ceramahList->concat($jumat);
         }
 
         // - Petugas Ramadhan
-        $ramadhan = PetugasRamadhan::where('tanggal', '>=', $today)->get()->map(function($item) {
+        $ramadhan = PetugasRamadhan::where('tanggal', '>=', $today)->get()->map(function ($item) {
             return (object) [
-                'tanggal' => $item->tanggal, 'kategori' => 'Tarawih (Malam ke-'.$item->malam_ke.')',
-                'tokoh' => $item->penceramah, 'judul' => $item->judul_ceramah ?? 'Penceramah Tarawih',
-                'imam' => $item->imam, 'muadzin' => $item->muadzin, 'bilal' => $item->bilal
+                'tanggal' => $item->tanggal,
+                'kategori' => 'Tarawih (Malam ke-' . $item->malam_ke . ')',
+                'tokoh' => $item->penceramah,
+                'judul' => $item->judul_ceramah ?? 'Penceramah Tarawih',
+                'imam' => $item->imam,
+                'muadzin' => $item->muadzin,
+                'bilal' => $item->bilal
             ];
         });
         $ceramahList = $ceramahList->concat($ramadhan);
 
         // - Petugas Ied
-        $ied = PetugasIed::where('tanggal', '>=', $today)->get()->map(function($item) {
+        $ied = PetugasIed::where('tanggal', '>=', $today)->get()->map(function ($item) {
             return (object) [
-                'tanggal' => $item->tanggal, 'kategori' => 'Sholat '.$item->ied,
-                'tokoh' => $item->khatib, 'judul' => $item->judul_ceramah ?? 'Khatib '.$item->ied,
-                'imam' => $item->imam, 'muadzin' => $item->muadzin, 'bilal' => $item->bilal
+                'tanggal' => $item->tanggal,
+                'kategori' => 'Sholat ' . $item->ied,
+                'tokoh' => $item->khatib,
+                'judul' => $item->judul_ceramah ?? 'Khatib ' . $item->ied,
+                'imam' => $item->imam,
+                'muadzin' => $item->muadzin,
+                'bilal' => $item->bilal
             ];
         });
         $ceramahList = $ceramahList->concat($ied);
