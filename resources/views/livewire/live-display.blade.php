@@ -194,7 +194,7 @@
                 class="w-[75%] shrink-0 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col justify-end">
 
                 <div class="absolute inset-0 z-0">
-                    @if ($banners->count() > 0)
+                    @if ($banners->isNotEmpty())
                         @foreach ($banners as $index => $banner)
                             <div class="absolute inset-0" x-show="activeSlide === {{ $index }}"
                                 x-transition.duration.1000ms>
@@ -210,7 +210,7 @@
 
                 <div class="relative w-full md:max-w-[100%] p-6 flex flex-col gap-4 z-20 items-start">
 
-                    @if ($contents->count() > 0)
+                    @if ($contents->isNotEmpty())
                         <div
                             class="bg-slate-950/50 backdrop-blur-md rounded-[1.5rem] p-4 md:p-5 border border-white/10 shadow-2xl relative w-full overflow-hidden ring-1 ring-white/5">
                             <div class="absolute inset-0 opacity-[0.03] islamic-pattern pointer-events-none"></div>
@@ -293,7 +293,7 @@
                         </div>
                     @endif
 
-                    @if ($ceramah->count() > 0)
+                    @if ($ceramah->isNotEmpty())
                         <div
                             class="bg-black/60 backdrop-blur-xl rounded-[1rem] md:rounded-[1.2rem] border border-white/20 shadow-xl relative overflow-hidden w-full h-[70px] md:h-[80px] flex items-center px-4 ring-1 ring-white/5">
                             <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-theme-main shadow-theme-glow"></div>
@@ -456,7 +456,7 @@
                             </p>
                         </div>
 
-                        @if ($rekenings->count() > 0)
+                        @if ($rekenings->isNotEmpty())
                             @foreach ($rekenings as $idx => $rek)
                                 @php
                                     // Logika Icon Bank yang Lebih Solid (Anti Silang)
