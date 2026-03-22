@@ -173,9 +173,9 @@ class PublicKeuangan extends Component
         $expenseQ = Keuangan::where('kategori', 'pengeluaran');
 
         if ($this->filter_mode == 'rentang') {
-            // Rentang waktu: Fix paksa kalender X-Axis jadi 31 Hari (Tanggal Awal + 30 Hari)
+            // Rentang waktu: Dinamis mengikuti rentang tanggal yang dipilih
             $periodStart = Carbon::parse($this->start_date);
-            $periodEnd = $periodStart->copy()->addDays(30); // 31 hari inklusif
+            $periodEnd = Carbon::parse($this->end_date);
 
             $incomeQ->whereBetween('tanggal', [$periodStart->format('Y-m-d'), $periodEnd->format('Y-m-d')]);
             $expenseQ->whereBetween('tanggal', [$periodStart->format('Y-m-d'), $periodEnd->format('Y-m-d')]);
