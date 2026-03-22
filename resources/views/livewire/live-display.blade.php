@@ -370,7 +370,7 @@
                                             @if ($kajian->muadzin)
                                                 <div
                                                     class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex items-center justify-between w-full gap-2">
-                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Muadz</span>
+                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Muadzin</span>
                                                     <span
                                                         class="text-white font-semibold text-right leading-tight">{{ $kajian->muadzin }}</span>
                                                 </div>
@@ -386,7 +386,7 @@
 
             <div class="flex-1 flex flex-col gap-4 h-full min-w-0">
                 <div class="flex-1 flex flex-col gap-2 min-h-0">
-                    @php $waktuSholat = ['Subuh', 'Isyraq', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
+                    @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
                     @foreach ($waktuSholat as $waktu)
                         @php
                             $field = strtolower($waktu);
@@ -395,7 +395,7 @@
                             } else {
                                 $jamFormatted = \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
                             }
-                            $isSunnah = in_array($waktu, ['Isyraq']);
+                            $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
                         @endphp
 
                         <div class="flex-1 relative overflow-hidden rounded-[1.2rem] px-5 flex justify-between items-center border transition-all duration-500"
@@ -641,8 +641,10 @@
                 countdownIqomahDisplay: '00:00',
                 countdownSholatDisplay: '00:00',
                 durasiSholat: {
+                    'Imsak': 0,
                     'Subuh': 10,
                     'Isyraq': 0,
+                    'Dhuha': 0,
                     'Dzuhur': 10,
                     'Ashar': 10,
                     'Maghrib': 10,
@@ -716,7 +718,13 @@
                     if (!this.jadwalDB || !this.started) return;
 
                     const currentSeconds = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
-                    const prayers = [{
+                    const prayers = [
+                        {
+                            name: 'Imsak',
+                            jamDB: this.jadwalDB.imsak,
+                            iqomah: 0
+                        },
+                        {
                             name: 'Subuh',
                             jamDB: this.jadwalDB.subuh,
                             iqomah: this.settings.iqomah_subuh || 10
@@ -732,6 +740,11 @@
                             })(),
                             iqomah: 0
                         },
+                            {
+                                name: 'Dhuha',
+                                jamDB: this.jadwalDB.dhuha,
+                                iqomah: 0
+                            },
                         {
                             name: 'Dzuhur',
                             jamDB: this.jadwalDB.dzuhur,
@@ -784,7 +797,7 @@
                             nextP = p.name;
                         }
 
-                        if (p.name !== 'Isyraq') {
+                        if (p.name !== 'Isyraq' && p.name !== 'Dhuha' && p.name !== 'Imsak') {
                             if (currentSeconds >= preAdzanSeconds && currentSeconds < adzanStartSeconds) {
                                 activeMode = 'menuju_adzan';
                                 this.currentPrayerName = p.name;
