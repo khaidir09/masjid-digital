@@ -133,12 +133,8 @@
     </div>
 
     <div class="absolute inset-0 z-0">
-        @if ($settings && $settings->background_image)
-            <img src="{{ Storage::url($settings->background_image) }}" class="w-full h-full object-cover opacity-30">
-        @else
-            <div class="w-full h-full"
+        <div class="w-full h-full"
                 style="background: radial-gradient(ellipse at top right, var(--theme-dark), #0f172a, #000000);"></div>
-        @endif
         <div class="absolute inset-0 islamic-pattern"></div>
     </div>
 
@@ -166,7 +162,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
-                        {{ $settings->kota_nama ?? 'Pekanbaru' }}
+                        {{ $settings->kota_nama ?? 'Amuntai' }}
                     </span>
                     <span class="text-slate-600">•</span>
                     <span
@@ -186,332 +182,117 @@
         </div>
     </header>
 
-    <main class="relative z-10 w-full flex-1 flex justify-center items-center overflow-hidden p-6 md:p-8"
-        x-show="mode === 'standby'">
-        <div class="w-full h-full flex gap-6 md:gap-8">
-
-            <div
-                class="w-[75%] shrink-0 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col justify-end">
-
-                <div class="absolute inset-0 z-0">
-                    @if ($banners->count() > 0)
-                        @foreach ($banners as $index => $banner)
-                            <div class="absolute inset-0" x-show="activeSlide === {{ $index }}"
-                                x-transition.duration.1000ms>
-                                <img src="{{ Storage::url($banner->image_path) }}" class="w-full h-full object-cover">
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 pointer-events-none">
-                </div>
-
-                <div class="relative w-full md:max-w-[100%] p-6 flex flex-col gap-4 z-20 items-start">
-
-                    @if ($contents->count() > 0)
-                        <div
-                            class="bg-slate-950/50 backdrop-blur-md rounded-[1.5rem] p-4 md:p-5 border border-white/10 shadow-2xl relative w-full overflow-hidden ring-1 ring-white/5">
-                            <div class="absolute inset-0 opacity-[0.03] islamic-pattern pointer-events-none"></div>
-
-                            <div class="flex items-center gap-2 mb-3 relative z-10">
-                                <span
-                                    class="w-2.5 h-2.5 rounded-full bg-theme-main animate-pulse shadow-theme-glow"></span>
-                                <h3 class="text-[10px] md:text-xs font-black text-theme-main uppercase tracking-widest">
-                                    Mutiara Hikmah
-                                </h3>
-                            </div>
-
-                            <div class="dynamic-stack w-full relative z-10">
-                                @foreach ($contents as $idx => $content)
-                                    @php
-                                        // Logika Pewarnaan Berdasarkan Kata di Judul atau Kategori
-                                        $keyword = strtolower(
-                                            ($content->kategori ?? '') . ' ' . ($content->judul ?? ''),
-                                        );
-
-                                        if (str_contains($keyword, 'doa')) {
-                                            // Tema Doa: Cyan
-                                            $badgeStyle = 'bg-cyan-900/40 text-cyan-300 border-cyan-500/30';
-                                            $borderStyle = 'border-cyan-500';
-                                            $sumberStyle = 'bg-cyan-950/60 text-cyan-400 border-cyan-800';
-                                        } elseif (
-                                            str_contains($keyword, 'hadits') ||
-                                            str_contains($keyword, 'hadist')
-                                        ) {
-                                            // Tema Hadits: Amber (Kuning)
-                                            $badgeStyle = 'bg-amber-900/40 text-amber-300 border-amber-500/30';
-                                            $borderStyle = 'border-amber-500';
-                                            $sumberStyle = 'bg-amber-950/60 text-amber-400 border-amber-800';
-                                        } else {
-                                            // Default / Lainnya
-                                            $badgeStyle = 'bg-black/40 text-theme-light border-theme-main/30';
-                                            $borderStyle = 'border-theme-main';
-                                            $sumberStyle = 'bg-white/5 text-theme-main border-white/10';
-                                        }
-                                    @endphp
-
-                                    <div class="flex flex-col justify-center w-full"
-                                        x-show="activeContent === {{ $idx }}"
-                                        x-transition:enter="transition ease-out duration-700"
-                                        x-transition:enter-start="opacity-0 translate-y-4"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-500"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 -translate-y-4">
-
-                                        <h4
-                                            class="text-[10px] font-bold mb-2 inline-block px-2 py-1 rounded-md border w-max {{ $badgeStyle }}">
-                                            {{ $content->judul }}
-                                        </h4>
-
-                                        @if ($content->teks_arab)
-                                            <p class="font-arab text-xl md:text-3xl text-white text-right mb-3 drop-shadow-md"
-                                                dir="rtl" style="line-height: 1.8;">{{ $content->teks_arab }}</p>
-                                        @endif
-
-                                        <div
-                                            class="border-l-2 {{ $borderStyle }} pl-3 bg-gradient-to-r from-black/40 to-transparent py-2 rounded-r-lg">
-
-                                            <p
-                                                class="text-slate-300 text-xs md:text-sm italic font-medium leading-relaxed">
-                                                "{{ $content->teks_indo }}"
-                                            </p>
-
-                                            @if (!empty($content->sumber))
-                                                <div
-                                                    class="mt-2.5 inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase border {{ $sumberStyle }}">
-                                                    HR / Sumber: {{ $content->sumber }}
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    @if ($ceramah->count() > 0)
-                        <div
-                            class="bg-black/60 backdrop-blur-xl rounded-[1rem] md:rounded-[1.2rem] border border-white/20 shadow-xl relative overflow-hidden w-full h-[70px] md:h-[80px] flex items-center px-4 ring-1 ring-white/5">
-                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-theme-main shadow-theme-glow"></div>
-
-                            <div class="relative w-full flex items-center h-full">
-                                @foreach ($ceramah as $idx => $kajian)
-                                    @php
-                                        $kat = $kajian->kategori;
-                                        if (str_contains($kat, 'Jumat')) {
-                                            $nameStyle = 'text-emerald-300';
-                                            $iconColor = 'text-emerald-400';
-                                        } elseif (str_contains($kat, 'Rutin')) {
-                                            $nameStyle = 'text-blue-300';
-                                            $iconColor = 'text-blue-400';
-                                        } elseif (str_contains($kat, 'Tarawih')) {
-                                            $nameStyle = 'text-purple-300';
-                                            $iconColor = 'text-purple-400';
-                                        } elseif (str_contains($kat, 'Idul')) {
-                                            $nameStyle = 'text-amber-300';
-                                            $iconColor = 'text-amber-400';
-                                        } else {
-                                            $nameStyle = 'text-white';
-                                            $iconColor = 'text-theme-main';
-                                        }
-                                    @endphp
-
-                                    <div class="absolute inset-0 flex items-center justify-between w-full"
-                                        x-show="activeCeramah === {{ $idx }}"
-                                        x-transition:enter="transition ease-out duration-700 delay-300"
-                                        x-transition:enter-start="opacity-0 translate-x-12"
-                                        x-transition:enter-end="opacity-100 translate-x-0"
-                                        x-transition:leave="transition ease-in duration-500"
-                                        x-transition:leave-start="opacity-100 translate-x-0"
-                                        x-transition:leave-end="opacity-0 -translate-x-12">
-
-                                        <div class="flex items-center gap-3 w-[30%]">
-                                            <div class="p-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
-                                                <svg class="w-5 h-5 {{ $iconColor }}" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                    </path>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <p
-                                                    class="text-[9px] font-black uppercase text-slate-400 tracking-widest">
-                                                    {{ \Carbon\Carbon::parse($kajian->tanggal)->translatedFormat('l, d M Y') }}
-                                                </p>
-                                                <p
-                                                    class="text-[11px] font-bold {{ $nameStyle }} uppercase tracking-widest mt-0.5 truncate">
-                                                    {{ $kajian->kategori }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex-1 text-center border-l border-r border-white/10 px-4">
-                                            <p
-                                                class="text-xl md:text-2xl font-black text-white leading-none truncate mb-1">
-                                                {{ $kajian->tokoh }}</p>
-                                            <p class="text-[10px] text-slate-300 font-medium truncate">
-                                                {{ $kajian->judul ?? 'Penceramah / Khatib' }}</p>
-                                        </div>
-
-                                        <div class="w-[30%] flex flex-col gap-1 items-end justify-center pl-4">
-                                            @if ($kajian->imam)
-                                                <div
-                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex items-center justify-between w-full gap-2">
-                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Imam</span>
-                                                    <span
-                                                        class="text-white font-semibold text-right leading-tight">{{ $kajian->imam }}</span>
-                                                </div>
-                                            @endif
-                                            @if ($kajian->muadzin)
-                                                <div
-                                                    class="text-[9px] bg-white/5 px-2 py-0.5 rounded border border-white/10 flex items-center justify-between w-full gap-2">
-                                                    <span class="text-slate-400 font-bold uppercase shrink-0">Muadzin</span>
-                                                    <span
-                                                        class="text-white font-semibold text-right leading-tight">{{ $kajian->muadzin }}</span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <div class="flex-1 flex flex-col gap-4 h-full min-w-0">
-                <div class="flex-1 flex flex-col gap-2 min-h-0">
-                    @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
-                    @foreach ($waktuSholat as $waktu)
-                        @php
-                            $field = strtolower($waktu);
-                            if ($waktu === 'Isyraq') {
-                                $jamFormatted = \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(15)->format('H:i');
-                            } else {
-                                $jamFormatted = \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
-                            }
-                            $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
-                        @endphp
-
-                        <div class="flex-1 relative overflow-hidden rounded-[1.2rem] px-5 flex justify-between items-center border transition-all duration-500"
-                            :class="nextPrayerName === '{{ $waktu }}' ?
-                                'bg-theme-main border-theme-main scale-105 shadow-theme-glow z-10' :
-                                'bg-black/50 backdrop-blur-md {{ $isSunnah ? 'border-amber-500/20 bg-amber-950/20' : 'border-white/10' }}'">
-
-                            <span class="text-lg font-bold uppercase tracking-widest"
-                                :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' :
-                                    '{{ $isSunnah ? 'text-amber-600' : 'text-slate-400' }}'">{{ $waktu }}</span>
-
-                            <span class="text-3xl font-black tracking-tighter tabular-nums"
-                                :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' :
-                                    '{{ $isSunnah ? 'text-amber-400' : 'text-theme-main' }}'">{{ $jamFormatted }}</span>
-
-                            <div x-show="nextPrayerName === '{{ $waktu }}'"
-                                class="absolute -bottom-4 -right-4 text-7xl text-white opacity-20 rotate-12">
-                                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
-                                </svg>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div
-                    class="bg-theme-dark rounded-[1.5rem] p-5 border border-theme-main/50 shadow-[0_0_40px_rgba(0,0,0,0.8)] shrink-0 relative overflow-hidden h-[120px] flex items-center justify-center group ring-1 ring-white/10">
-                    <div
-                        class="absolute -right-4 -top-4 text-white/5 w-32 h-32 rotate-12 transition-transform duration-1000 group-hover:rotate-45 pointer-events-none">
-                        <svg fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-                        </svg>
+    <main class="relative z-10 w-full flex-1 flex overflow-hidden p-4 md:p-6 gap-4 md:gap-6" 
+      x-show="mode === 'standby'">
+    
+    <div class="relative flex-1 h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
+        
+        <div class="absolute inset-0 z-0">
+            @if ($banners->isNotEmpty())
+                @foreach ($banners as $index => $banner)
+                    <div class="absolute inset-0 w-full h-full" x-show="activeSlide === {{ $index }}" x-transition.duration.1000ms>
+                        <img src="{{ Storage::url($banner->image_path) }}" class="w-full h-full object-cover">
                     </div>
-
-                    <div class="dynamic-stack w-full h-full relative z-10">
-                        <div x-show="activeRekening === 0" x-transition:enter="transition ease-out duration-700"
-                            x-transition:enter-start="opacity-0 translate-y-4"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-500"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 -translate-y-4"
-                            class="flex flex-col items-center justify-center w-full h-full text-center">
-                            <h3
-                                class="text-[10px] font-black text-theme-light uppercase tracking-[0.2em] mb-1 flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                    </path>
-                                </svg>
-                                Total Saldo Kas
-                            </h3>
-                            <p
-                                class="text-[2.2rem] font-black text-white tracking-tighter drop-shadow-lg leading-none">
-                                <span class="text-lg opacity-70">Rp</span>
-                                {{ number_format($totalSaldo, 0, ',', '.') }}
-                            </p>
-                        </div>
-
-                        @if ($rekenings->count() > 0)
-                            @foreach ($rekenings as $idx => $rek)
-                                @php
-                                    // Logika Icon Bank yang Lebih Solid (Anti Silang)
-                                    $bankName = strtoupper($rek->nama_bank);
-
-                                    // Icon Gedung Bank (Umum/Nasional)
-                                    $iconBank =
-                                        'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z';
-
-                                    // Icon Kubah/Masjid (Syariah/BSI)
-                                    if (str_contains($bankName, 'BSI') || str_contains($bankName, 'SYARIAH')) {
-                                        $iconBank =
-                                            'M12,7V3H14V2H10V3H12V7C8.13,7.03 5,10.14 5,14V21H19V14C19,10.14 15.87,7.03 12,7M7,19V14C7,11.24 9.24,9 12,9C14.76,9 17,11.24 17,14V19H7Z';
-                                    }
-                                @endphp
-                                <div x-show="activeRekening === {{ $idx + 1 }}" style="display:none;"
-                                    x-transition:enter="transition ease-out duration-700 delay-100"
-                                    x-transition:enter-start="opacity-0 translate-y-4"
-                                    x-transition:enter-end="opacity-100 translate-y-0"
-                                    x-transition:leave="transition ease-in duration-500"
-                                    x-transition:leave-start="opacity-100 translate-y-0"
-                                    x-transition:leave-end="opacity-0 -translate-y-4"
-                                    class="flex flex-col items-center justify-center w-full h-full text-center px-2">
-
-                                    <div class="flex items-center gap-2 mb-1.5">
-                                        <svg class="w-5 h-5 text-theme-main shrink-0" viewBox="0 0 24 24"
-                                            fill="currentColor">
-                                            <path d="{{ $iconBank }}" />
-                                        </svg>
-                                        <h3 class="text-[12px] font-black text-white uppercase tracking-widest">
-                                            {{ $rek->nama_bank }}</h3>
-                                    </div>
-
-                                    <p class="text-[1.8rem] font-black text-theme-main tracking-widest drop-shadow-lg leading-none mb-1.5"
-                                        style="font-family: 'Work Sans', sans-serif !important;">
-                                        {{ $rek->nomor_rekening }}
-                                    </p>
-
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            class="px-2 py-0.5 bg-white/5 rounded-md text-[8px] font-bold text-slate-400 uppercase tracking-tighter border border-white/10">Atas
-                                            Nama</span>
-                                        <p
-                                            class="text-[10px] text-white uppercase font-black tracking-wider truncate max-w-[180px]">
-                                            {{ $rek->nama_akun }}
-                                        </p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            </div>
+                @endforeach
+            @endif
         </div>
-    </main>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none"></div>
+
+        <div class="relative mt-auto w-full p-6 md:p-10 z-20 flex flex-col gap-4">
+            </div>
+    </div>
+
+    <div class="w-[30%] lg:w-[28%] flex flex-col gap-3 h-full min-w-0">
+    
+    <div class="flex-[3.5] flex flex-col gap-2 min-h-0">
+        @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
+        @foreach ($waktuSholat as $waktu)
+            @php
+                $field = strtolower($waktu);
+                $jamFormatted = ($waktu === 'Isyraq') 
+                    ? \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(15)->format('H:i')
+                    : \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
+                $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
+            @endphp
+
+            <div class="flex-1 flex justify-between items-center px-5 rounded-[1.2rem] border transition-all duration-500 relative overflow-hidden"
+                :class="nextPrayerName === '{{ $waktu }}' ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' : 'bg-black/40 backdrop-blur-md {{ $isSunnah ? 'border-amber-500/20 bg-amber-950/20' : 'border-white/10' }}'">
+                
+                <span class="text-sm lg:text-lg font-bold uppercase tracking-wider"
+                    :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-600' : 'text-slate-300' }}'">
+                    {{ $waktu }}
+                </span>
+
+                <span class="text-2xl lg:text-4xl font-black tabular-nums"
+                    :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-400' : 'text-theme-main' }}'">
+                    {{ $jamFormatted }}
+                </span>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="flex-1 bg-theme-dark rounded-[2rem] p-4 border border-theme-main/40 shadow-2xl relative overflow-hidden flex items-center justify-center ring-1 ring-white/10">
+        
+        <div class="absolute -right-4 -top-4 text-white/5 w-24 h-24 rotate-12 pointer-events-none">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2-.9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </div>
+
+        <div class="dynamic-stack w-full h-full relative z-10">
+            
+            <div x-show="activeRekening === 0" 
+                 x-transition:enter="transition ease-out duration-700"
+                 x-transition:enter-start="opacity-0 translate-y-4"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-500"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-4"
+                 class="flex flex-col items-center justify-center h-full text-center">
+                <h3 class="text-[10px] font-black text-theme-light uppercase tracking-[0.2em] mb-1">Total Saldo Kas</h3>
+                <p class="text-2xl lg:text-4xl font-black text-white tracking-tighter leading-none">
+                    <span class="text-sm lg:text-base opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
+                </p>
+            </div>
+
+            @if ($rekenings->isNotEmpty())
+                @foreach ($rekenings as $idx => $rek)
+                    @php
+                        $bankName = strtoupper($rek->nama_bank);
+                        $iconBank = str_contains($bankName, 'BSI') || str_contains($bankName, 'SYARIAH')
+                            ? 'M12,7V3H14V2H10V3H12V7C8.13,7.03 5,10.14 5,14V21H19V14C19,10.14 15.87,7.03 12,7M7,19V14C7,11.24 9.24,9 12,9C14.76,9 17,11.24 17,14V19H7Z'
+                            : 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z';
+                    @endphp
+
+                    <div x-show="activeRekening === {{ $idx + 1 }}" style="display:none;"
+                         x-transition:enter="transition ease-out duration-700"
+                         x-transition:enter-start="opacity-0 translate-y-4"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-500"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-4"
+                         class="flex flex-col items-center justify-center h-full text-center px-2">
+                        
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-theme-main shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="{{ $iconBank }}" />
+                            </svg>
+                            <h3 class="text-[11px] font-black text-white uppercase">{{ $rek->nama_bank }}</h3>
+                        </div>
+
+                        <p class="text-xl lg:text-3xl font-black text-theme-main tracking-widest leading-none mb-1">
+                            {{ $rek->nomor_rekening }}
+                        </p>
+
+                        <p class="text-[9px] text-white/80 uppercase font-bold truncate max-w-full">
+                            an. {{ $rek->nama_akun }}
+                        </p>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</div>
+</main>
 
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
         class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl">
