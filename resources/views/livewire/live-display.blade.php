@@ -324,6 +324,11 @@
         <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25rem] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
+
+        <div x-show="surahReadings && surahReadings[currentPrayerName.toLowerCase()]" style="display: none;" class="mt-8 text-center animate-fade-in-up">
+            <p :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[2.5vh] mb-2 tracking-widest uppercase font-bold transition-colors duration-500">Bacaan Surah:</p>
+            <h3 :class="themeMode === 'light' ? 'text-emerald-700' : 'text-emerald-400'" class="text-[4vh] font-black tracking-wider transition-colors duration-500" x-text="surahReadings[currentPrayerName.toLowerCase()]?.surah"></h3>
+        </div>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
@@ -385,6 +390,7 @@
                 activeRekening: 0,
                 tipeTempat: '{{ $tipeTempat }}',
                 jadwalDB: {{ Illuminate\Support\Js::from($jadwal) }},
+                surahReadings: {{ Illuminate\Support\Js::from($surahReadings) }},
                 settings: {{ Illuminate\Support\Js::from($settings) }},
                 bannersCount: Number("{{ $banners->count() }}"),
                 contentsCount: Number("{{ $contents->count() }}"),

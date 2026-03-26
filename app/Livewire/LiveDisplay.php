@@ -14,6 +14,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\AppSetting;
 use App\Models\JadwalSholat;
+use App\Models\DailySurahReading;
 use App\Models\RunningText;
 use App\Models\Banner;
 use App\Models\PetugasJumat;
@@ -50,6 +51,10 @@ class LiveDisplay extends Component
                 }
             }
         }
+
+        $surahReadings = DailySurahReading::where('tanggal', $today)->get()->keyBy(function($item) {
+            return strtolower($item->waktu_sholat);
+        });
 
         $runningTexts = RunningText::where('is_active', true)->orderBy('urutan')->get();
 
@@ -138,6 +143,7 @@ class LiveDisplay extends Component
             'settings' => $settings,
             'tipeTempat' => $tipeTempat,
             'jadwal' => $jadwal,
+            'surahReadings' => $surahReadings,
             'runningTexts' => $runningTexts,
             'banners' => $banners,
             'contents' => $contents,
