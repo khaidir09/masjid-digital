@@ -128,6 +128,10 @@ class LiveDisplay extends Component
         $pemasukan = Keuangan::where('kategori', 'pemasukan')->sum('nominal');
         $pengeluaran = Keuangan::where('kategori', 'pengeluaran')->sum('nominal');
         $totalSaldo = $pemasukan - $pengeluaran;
+
+        $pemasukanBulanIni = Keuangan::where('kategori', 'pemasukan')->whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('nominal');
+        $pengeluaranBulanIni = Keuangan::where('kategori', 'pengeluaran')->whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('nominal');
+
         $rekenings = Rekening::where('is_active', true)->get();
 
         return view('livewire.live-display', [
@@ -139,6 +143,8 @@ class LiveDisplay extends Component
             'contents' => $contents,
             'ceramah' => $ceramah,
             'totalSaldo' => $totalSaldo,
+            'pemasukanBulanIni' => $pemasukanBulanIni,
+            'pengeluaranBulanIni' => $pengeluaranBulanIni,
             'rekenings' => $rekenings
         ]);
     }

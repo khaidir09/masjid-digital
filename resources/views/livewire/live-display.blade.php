@@ -294,9 +294,23 @@
                  x-transition:leave-end="opacity-0 -translate-y-4"
                  class="flex flex-col items-center justify-center h-full text-center">
                 <h3 class="text-[1.2vh] font-black text-theme-light uppercase tracking-[0.2em] mb-[0.5vh]">Total Saldo Kas</h3>
-                <p class="text-[3.5vh] font-black text-white tracking-tighter leading-none">
+                <p class="text-[3.5vh] font-black text-white tracking-tighter leading-none mb-[1vh]">
                     <span class="text-[1.5vh] opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
                 </p>
+                <div class="flex items-center gap-4 text-[1vh] uppercase font-bold tracking-widest text-slate-300">
+                    <div class="flex items-center gap-1">
+                        <svg class="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        <span>IN: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <svg class="w-3 h-3 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                        </svg>
+                        <span>OUT: Rp {{ number_format($pengeluaranBulanIni, 0, ',', '.') }}</span>
+                    </div>
+                </div>
             </div>
 
             @if ($rekenings->isNotEmpty())
