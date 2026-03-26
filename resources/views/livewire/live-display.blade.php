@@ -126,7 +126,7 @@
             <h1 class="text-5xl font-black text-white uppercase tracking-widest mb-4">Display TV Ready</h1>
             <p class="text-slate-400 mb-8 font-bold tracking-widest">Mode: {{ $tipeTempat }}</p>
             <button @click="startDisplay()"
-                class="bg-theme-main text-white px-12 py-6 rounded-full font-black text-2xl uppercase tracking-[0.2em] shadow-theme-glow hover:scale-105 transition-all">
+                class="bg-theme-main text-white px-12 py-[2vh] rounded-full font-black text-[2.5vh] uppercase tracking-[0.2em] shadow-theme-glow hover:scale-105 transition-all">
                 Mulai
             </button>
         </div>
@@ -139,18 +139,18 @@
     </div>
 
     <header x-show="mode === 'standby'"
-        class="relative w-full z-20 flex justify-between items-center px-10 py-6 bg-black/40 backdrop-blur-xl border-b border-white/10 shadow-xl shrink-0">
+        class="relative w-full z-20 flex justify-between items-center px-[3vw] py-6 bg-black/40 backdrop-blur-xl border-b border-white/10 shadow-xl shrink-0">
         <div class="flex items-center gap-6">
             @if ($settings && $settings->logo_path)
                 <img src="{{ Storage::url($settings->logo_path) }}"
-                    class="w-24 h-24 rounded-full object-cover border-4 border-theme-main shadow-theme-glow shrink-0">
+                    class="w-[8vh] h-[8vh] rounded-full object-cover border-4 border-theme-main shadow-theme-glow shrink-0">
             @endif
 
             <div class="flex flex-col justify-center">
-                <h1 class="text-4xl font-black tracking-tighter uppercase text-white shadow-theme-text leading-none">
+                <h1 class="text-[4vh] font-black tracking-tighter uppercase text-white shadow-theme-text leading-none">
                     {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
                 </h1>
-                <p class="text-sm font-medium text-slate-300 mt-1 mb-2 opacity-90 line-clamp-1">
+                <p class="text-[1.5vh] font-medium text-slate-300 mt-1 mb-[1vh] opacity-90 line-clamp-1">
                     {{ $settings->alamat ?? 'Alamat tempat belum dikonfigurasi' }}
                 </p>
                 <div class="flex items-center gap-3">
@@ -166,14 +166,14 @@
                     </span>
                     <span class="text-slate-600">•</span>
                     <span
-                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                        class="text-[1.1vh] font-black text-slate-400 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded border border-white/10">
                         {{ $tipeTempat }} Mode
                     </span>
                 </div>
             </div>
         </div>
         <div class="text-right">
-            <div class="text-6xl font-black text-white tracking-widest leading-none drop-shadow-2xl tabular-nums"
+            <div class="text-[6vh] font-black text-white tracking-widest leading-none drop-shadow-2xl tabular-nums"
                 x-text="time">00:00:00</div>
             <div class="text-xl font-medium text-theme-main mt-2 uppercase tracking-wide">
                 <span x-text="dateGregorian"></span> &bull; <span
@@ -182,7 +182,7 @@
         </div>
     </header>
 
-    <main class="relative z-10 w-full flex-1 flex overflow-hidden p-4 md:p-6 gap-4 md:gap-6" 
+    <main class="relative z-10 w-full flex-1 flex overflow-hidden p-[2vh] gap-[2vh]" 
       x-show="mode === 'standby'">
     
     <div class="relative flex-1 h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
@@ -203,9 +203,9 @@
             </div>
     </div>
 
-    <div class="w-[30%] lg:w-[28%] flex flex-col gap-3 h-full min-w-0">
+    <div class="w-[30vw] flex flex-col gap-[1vh] h-full min-w-0">
     
-    <div class="flex-[3.5] flex flex-col gap-2 min-h-0">
+    <div class="flex-[3.5] flex flex-col gap-[1vh] min-h-0">
         @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
         @foreach ($waktuSholat as $waktu)
             @php
@@ -216,15 +216,15 @@
                 $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-5 rounded-[1.2rem] border transition-all duration-500 relative overflow-hidden"
+            <div class="flex-1 flex justify-between items-center px-[1.5vw] rounded-[1.5vh] border transition-all duration-500 relative overflow-hidden"
                 :class="nextPrayerName === '{{ $waktu }}' ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' : 'bg-black/40 backdrop-blur-md {{ $isSunnah ? 'border-amber-500/20 bg-amber-950/20' : 'border-white/10' }}'">
                 
-                <span class="text-sm lg:text-lg font-bold uppercase tracking-wider"
+                <span class="text-[1.8vh] font-bold uppercase tracking-wider"
                     :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-600' : 'text-slate-300' }}'">
                     {{ $waktu }}
                 </span>
 
-                <span class="text-2xl lg:text-4xl font-black tabular-nums"
+                <span class="text-[3.5vh] font-black tabular-nums"
                     :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-400' : 'text-theme-main' }}'">
                     {{ $jamFormatted }}
                 </span>
@@ -232,7 +232,7 @@
         @endforeach
     </div>
 
-    <div class="flex-1 bg-theme-dark rounded-[2rem] p-4 border border-theme-main/40 shadow-2xl relative overflow-hidden flex items-center justify-center ring-1 ring-white/10">
+    <div class="flex-1 bg-theme-dark rounded-[2.5vh] p-[1.5vh] border border-theme-main/40 shadow-2xl relative overflow-hidden flex items-center justify-center ring-1 ring-white/10">
         
         <div class="absolute -right-4 -top-4 text-white/5 w-24 h-24 rotate-12 pointer-events-none">
             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2-.9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
@@ -248,9 +248,9 @@
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 -translate-y-4"
                  class="flex flex-col items-center justify-center h-full text-center">
-                <h3 class="text-[10px] font-black text-theme-light uppercase tracking-[0.2em] mb-1">Total Saldo Kas</h3>
-                <p class="text-2xl lg:text-4xl font-black text-white tracking-tighter leading-none">
-                    <span class="text-sm lg:text-base opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
+                <h3 class="text-[1.2vh] font-black text-theme-light uppercase tracking-[0.2em] mb-[0.5vh]">Total Saldo Kas</h3>
+                <p class="text-[3.5vh] font-black text-white tracking-tighter leading-none">
+                    <span class="text-[1.5vh] opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
                 </p>
             </div>
 
@@ -276,14 +276,14 @@
                             <svg class="w-4 h-4 text-theme-main shrink-0" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="{{ $iconBank }}" />
                             </svg>
-                            <h3 class="text-[11px] font-black text-white uppercase">{{ $rek->nama_bank }}</h3>
+                            <h3 class="text-[1.3vh] font-black text-white uppercase">{{ $rek->nama_bank }}</h3>
                         </div>
 
-                        <p class="text-xl lg:text-3xl font-black text-theme-main tracking-widest leading-none mb-1">
+                        <p class="text-[3vh] font-black text-theme-main tracking-widest leading-none mb-[0.5vh]">
                             {{ $rek->nomor_rekening }}
                         </p>
 
-                        <p class="text-[9px] text-white/80 uppercase font-bold truncate max-w-full">
+                        <p class="text-[1.1vh] text-white/80 uppercase font-bold truncate max-w-full">
                             an. {{ $rek->nama_akun }}
                         </p>
                     </div>
@@ -298,7 +298,7 @@
         class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl">
         <h2 class="text-[4rem] font-bold text-slate-400 uppercase tracking-[0.5em] mb-6">Waktu <span
                 x-text="currentPrayerName" class="text-white"></span></h2>
-        <p class="text-4xl text-theme-main mb-8 tracking-widest uppercase font-black animate-pulse">Menuju Adzan</p>
+        <p class="text-[3.5vh] text-theme-main mb-8 tracking-widest uppercase font-black animate-pulse">Menuju Adzan</p>
         <h1 class="text-[25rem] font-black text-white leading-none tabular-nums shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]"
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
@@ -307,7 +307,7 @@
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl">
         <h2 class="text-[4rem] font-bold text-slate-400 uppercase tracking-[0.5em] mb-6 animate-pulse">Waktu <span
                 x-text="currentPrayerName" class="text-white"></span> Telah Masuk</h2>
-        <p class="text-4xl text-theme-main mb-8 tracking-widest uppercase font-black">Iqomah Dalam:</p>
+        <p class="text-[3.5vh] text-theme-main mb-8 tracking-widest uppercase font-black">Iqomah Dalam:</p>
         <h1 class="text-[25rem] font-black text-white leading-none tabular-nums shadow-theme-text"
             x-text="countdownIqomahDisplay">00:00</h1>
     </div>
@@ -333,27 +333,27 @@
         <div
             class="flex items-center gap-12 bg-white/10 px-12 py-6 rounded-[3rem] border border-white/20 backdrop-blur-md">
             <div class="text-center">
-                <p class="text-2xl text-slate-400 font-bold uppercase tracking-widest mb-2">Jam Saat Ini</p>
+                <p class="text-[2.5vh] text-slate-400 font-bold uppercase tracking-widest mb-2">Jam Saat Ini</p>
                 <p class="text-5xl font-black text-white tracking-widest tabular-nums" x-text="time">00:00:00</p>
             </div>
-            <div class="w-1 h-20 bg-white/20 rounded-full"></div>
+            <div class="w-1 h-[8vh] bg-white/20 rounded-full"></div>
             <div class="text-center">
-                <p class="text-2xl text-theme-main font-bold uppercase tracking-widest mb-2">Sisa Waktu</p>
+                <p class="text-[2.5vh] text-theme-main font-bold uppercase tracking-widest mb-2">Sisa Waktu</p>
                 <p class="text-5xl font-black text-white tracking-widest tabular-nums"
                     x-text="countdownSholatDisplay">00:00</p>
             </div>
         </div>
     </div>
 
-    <div x-show="mode === 'standby'" class="relative w-full px-6 pb-6 pt-2 z-20 shrink-0">
+    <div x-show="mode === 'standby'" class="relative w-full px-6 pb-[2vh] pt-[1vh] z-20 shrink-0">
         <div
-            class="h-20 bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] flex items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
+            class="h-[8vh] bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[4vh] flex items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
             <div
-                class="bg-theme-main h-full flex items-center px-10 z-30 shadow-[10px_0_30px_rgba(0,0,0,0.8)] border-r border-white/20 relative">
-                <span class="text-black font-black uppercase tracking-[0.1em] text-2xl relative z-10">Informasi</span>
+                class="bg-theme-main h-full flex items-center px-[2vw] z-30 shadow-[10px_0_30px_rgba(0,0,0,0.8)] border-r border-white/20 relative">
+                <span class="text-black font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
             </div>
             <div class="marquee-preview flex-1">
-                <div class="marquee-content font-black text-4xl uppercase tracking-[0.05em]"
+                <div class="marquee-content font-black text-[3.5vh] uppercase tracking-[0.05em]"
                     style="animation-duration: {{ $duration }}s;">
                     @forelse($runningTexts as $item)
                         @php
@@ -366,7 +366,7 @@
                         @endphp
                         <div class="marquee-item {{ $marqueeTheme['text'] }} drop-shadow-md">
 
-                            <svg class="w-10 h-10 {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0"
+                            <svg class="w-[4vh] h-[4vh] {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0"
                                 viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
@@ -376,7 +376,7 @@
                         </div>
                     @empty
                         <div class="marquee-item text-slate-400">
-                            <svg class="w-10 h-10 text-slate-500 animate-spin-slow shrink-0" viewBox="0 0 24 24"
+                            <svg class="w-[4vh] h-[4vh] text-slate-500 animate-spin-slow shrink-0" viewBox="0 0 24 24"
                                 fill="currentColor">
                                 <path
                                     d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
