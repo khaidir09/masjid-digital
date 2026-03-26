@@ -185,7 +185,7 @@
     <main class="relative z-10 w-full flex-1 flex overflow-hidden p-[2vh] gap-[2vh]" 
       x-show="mode === 'standby'">
     
-    <div class="relative flex-1 h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
+    <div class="relative aspect-video w-full max-w-[1280px] min-w-[640px] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
         
         <div class="absolute inset-0 z-0">
             @if ($banners->isNotEmpty())
