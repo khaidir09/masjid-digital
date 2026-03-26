@@ -197,8 +197,6 @@
             @endif
         </div>
 
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none"></div>
-
         <div class="relative mt-auto w-full p-6 md:p-10 z-20 flex flex-col gap-4">
             </div>
     </div>
