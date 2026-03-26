@@ -239,8 +239,8 @@
             </div>
 
             @if ($canEdit)
-                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-3xl border border-slate-200">
-                    <div class="flex flex-col px-3 border-r border-slate-200">
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-3 bg-slate-50 p-2 rounded-3xl border border-slate-200 w-full sm:w-auto">
+                    <div class="flex flex-col px-3 border-r border-slate-200 flex-1 sm:flex-none">
                         <span class="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Bulan</span>
                         <select wire:model="bulan_generate"
                             class="bg-transparent border-none focus:ring-0 font-black text-slate-800 text-sm py-0 cursor-pointer">
@@ -250,13 +250,13 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="flex flex-col px-3">
+                    <div class="flex flex-col px-3 flex-1 sm:flex-none">
                         <span class="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Tahun</span>
                         <input type="number" wire:model="tahun_generate"
-                            class="w-20 bg-transparent border-none focus:ring-0 font-black text-slate-800 text-sm py-0" />
+                            class="w-full sm:w-20 bg-transparent border-none focus:ring-0 font-black text-slate-800 text-sm py-0" />
                     </div>
                     <button wire:click="startGenerate"
-                        class="bg-slate-950 text-white px-6 md:px-10 py-3 md:py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl active:scale-95">
+                        class="w-full sm:w-auto bg-slate-950 text-white px-6 md:px-10 py-3 md:py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl active:scale-95">
                         Sinkronkan
                     </button>
                 </div>
@@ -348,13 +348,13 @@
 
                                             @if ($canEdit)
                                                 @if ($editingId === $item->id)
-                                                    <div class="mt-1 flex items-center gap-1 w-full max-w-62.5">
+                                                    <div class="mt-1 flex items-center gap-1 w-full min-w-[150px] sm:max-w-[250px]">
                                                         <input type="text" wire:model="hijriahText"
                                                             wire:keydown.enter="saveHijriah"
-                                                            class="w-full text-[10px] font-bold text-emerald-700 uppercase bg-emerald-50 border border-emerald-300 rounded-lg px-2 py-1 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition-all">
+                                                            class="w-full min-w-0 text-[10px] font-bold text-emerald-700 uppercase bg-emerald-50 border border-emerald-300 rounded-lg px-2 py-1 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition-all">
 
                                                         <button wire:click="saveHijriah"
-                                                            class="p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors shadow-sm"
+                                                            class="shrink-0 p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors shadow-sm"
                                                             title="Simpan">
                                                             <svg class="w-3.5 h-3.5" fill="none"
                                                                 stroke="currentColor" viewBox="0 0 24 24">
@@ -363,7 +363,7 @@
                                                             </svg>
                                                         </button>
                                                         <button wire:click="cancelEdit"
-                                                            class="p-1.5 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors shadow-sm"
+                                                            class="shrink-0 p-1.5 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors shadow-sm"
                                                             title="Batal">
                                                             <svg class="w-3.5 h-3.5" fill="none"
                                                                 stroke="currentColor" viewBox="0 0 24 24">
