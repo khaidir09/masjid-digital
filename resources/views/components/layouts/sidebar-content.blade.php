@@ -25,10 +25,10 @@
         </div>
         <x-nav-link href="{{ route('banner') }}" :active="request()->routeIs('banner')" icon="banner">Banner TV Dislpay</x-nav-link>
         <x-nav-link href="{{ route('jadwal.sholat') }}" :active="request()->routeIs('jadwal.sholat')" icon="calendar">Waktu Sholat</x-nav-link>
-        <x-nav-link href="{{ route('schedule') }}" :active="request()->routeIs('schedule')" icon="task">Jadwal Ceramah</x-nav-link>
-        <x-nav-link href="{{ route('doa.hadist') }}" :active="request()->routeIs('doa.hadist')" icon="content">Doa & Hadist</x-nav-link>
+        {{-- <x-nav-link href="{{ route('schedule') }}" :active="request()->routeIs('schedule')" icon="task">Jadwal Ceramah</x-nav-link> --}}
+        {{-- <x-nav-link href="{{ route('doa.hadist') }}" :active="request()->routeIs('doa.hadist')" icon="content">Doa & Hadist</x-nav-link> --}}
         <x-nav-link href="{{ route('running.text') }}" :active="request()->routeIs('running.text')" icon="tv">Running Text</x-nav-link>
-        <x-nav-link href="{{ route('gallery') }}" :active="request()->routeIs('gallery')" icon="photo">Galeri Dokumentasi</x-nav-link>
+        {{-- <x-nav-link href="{{ route('gallery') }}" :active="request()->routeIs('gallery')" icon="photo">Galeri Dokumentasi</x-nav-link> --}}
     </nav>
 
     <div class="p-4 border-t border-slate-800 bg-slate-950/50">
