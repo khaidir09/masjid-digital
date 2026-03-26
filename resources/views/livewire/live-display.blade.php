@@ -163,28 +163,32 @@
 
     <header x-show="mode === 'standby'"
         :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
-        class="relative w-full z-20 flex justify-between items-center px-[3vw] py-6 backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500">
-        <div class="flex items-center gap-6">
+        class="relative w-full z-20 flex justify-between items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500">
+        <div class="flex-1 flex items-center justify-start">
             <div class="flex flex-col justify-center">
                 <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
-                    class="text-[4vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
+                    class="text-[3.5vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
                     {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
                 </h1>
                 <p :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'"
-                   class="text-[1.5vh] font-medium mt-1 mb-[1vh] opacity-90 line-clamp-1 transition-colors duration-500">
+                   class="text-[1.5vh] font-medium mt-1 opacity-90 line-clamp-1 transition-colors duration-500">
                     {{ $settings->alamat ?? 'Alamat tempat belum dikonfigurasi' }}
                 </p>
             </div>
         </div>
-        <div class="text-right">
-            <div :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
-                 class="text-[6vh] font-black tracking-widest leading-none drop-shadow-2xl tabular-nums transition-colors duration-500"
-                x-text="time">00:00:00</div>
-            <div class="text-xl font-medium text-theme-main mt-2 uppercase tracking-wide">
-                <span x-text="dateGregorian"></span> &bull; <span
-                    :class="themeMode === 'light' ? 'text-slate-700' : 'text-white'"
-                    class="transition-colors duration-500">{{ $jadwal->tanggal_hijriah ?? '' }}</span>
+        <div class="flex-1 flex flex-col items-center justify-center text-center">
+            <div class="text-[1.8vh] font-bold text-theme-main uppercase tracking-wide leading-tight">
+                <span x-text="dateGregorian"></span>
             </div>
+            <div :class="themeMode === 'light' ? 'text-slate-700' : 'text-white'"
+                 class="text-[1.6vh] font-medium uppercase tracking-wide leading-tight mt-[0.5vh] transition-colors duration-500">
+                {{ $jadwal->tanggal_hijriah ?? '' }}
+            </div>
+        </div>
+        <div class="flex-1 text-right">
+            <div :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
+                 class="text-[5vh] font-black tracking-widest leading-none drop-shadow-2xl tabular-nums transition-colors duration-500"
+                x-text="time">00:00:00</div>
         </div>
     </header>
 
