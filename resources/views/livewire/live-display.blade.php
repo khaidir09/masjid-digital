@@ -374,6 +374,7 @@
             return {
                 themeMode: localStorage.getItem('liveDisplayTheme') || 'dark',
                 started: false,
+                wakeLock: null,
                 time: '00:00:00',
                 dateGregorian: '',
                 mode: 'standby',
@@ -407,6 +408,7 @@
 
                 startDisplay() {
                     this.started = true;
+                    this.requestWakeLock();
                     let beep = document.getElementById('audio-beep');
                     let adzan = document.getElementById('audio-adzan');
                     if (beep) {
@@ -425,7 +427,29 @@
                     localStorage.setItem('liveDisplayTheme', mode);
                 },
 
+                async requestWakeLock() {
+                    if ('wakeLock' in navigator) {
+                        try {
+                            this.wakeLock = await navigator.wakeLock.request('screen');
+                            this.wakeLock.addEventListener('release', () => {
+                                console.log('Screen Wake Lock was released');
+                            });
+                            console.log('Screen Wake Lock is active');
+                        } catch (err) {
+                            console.error(`Wake Lock error: ${err.name}, ${err.message}`);
+                        }
+                    } else {
+                        console.warn('Screen Wake Lock API not supported');
+                    }
+                },
+
                 initSystem() {
+                    document.addEventListener('visibilitychange', async () => {
+                        if (this.wakeLock !== null && document.visibilityState === 'visible' && this.started) {
+                            await this.requestWakeLock();
+                        }
+                    });
+
                     this.updateTime();
                     setInterval(() => this.updateTime(), 1000);
 
