@@ -185,9 +185,10 @@
     <main class="relative z-10 w-full flex-1 flex overflow-hidden p-[2vh] gap-[2vh]" 
       x-show="mode === 'standby'">
     
-    <div class="relative aspect-video w-full max-w-[1280px] min-w-[640px] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
-        
-        <div class="absolute inset-0 z-0">
+    <div class="w-full max-w-[1280px] min-w-[640px] flex flex-col gap-[2vh]">
+        <div class="relative aspect-video w-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
+            
+            <div class="absolute inset-0 z-0">
             @if ($banners->isNotEmpty())
                 @foreach ($banners as $index => $banner)
                     <div class="absolute inset-0 w-full h-full" x-show="activeSlide === {{ $index }}" x-transition.duration.1000ms>
@@ -197,10 +198,54 @@
             @endif
         </div>
 
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none"></div>
-
         <div class="relative mt-auto w-full p-6 md:p-10 z-20 flex flex-col gap-4">
             </div>
+        </div>
+
+        <div class="relative w-full z-20 shrink-0">
+            <div
+                class="h-[8vh] bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[4vh] flex items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
+                <div
+                    class="bg-theme-main h-full flex items-center px-[2vw] z-30 shadow-[10px_0_30px_rgba(0,0,0,0.8)] border-r border-white/20 relative">
+                    <span class="text-black font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
+                </div>
+                <div class="marquee-preview flex-1">
+                    <div class="marquee-content font-black text-[3.5vh] uppercase tracking-[0.05em]"
+                        style="animation-duration: {{ $duration }}s;">
+                        @forelse($runningTexts as $item)
+                            @php
+                                $marqueeTheme = match ($item->tipe) {
+                                    'ayat' => ['text' => 'text-cyan-400', 'dot' => 'text-cyan-500'],
+                                    'hadits' => ['text' => 'text-purple-400', 'dot' => 'text-purple-500'],
+                                    'ucapan' => ['text' => 'text-amber-400', 'dot' => 'text-amber-500'],
+                                    default => ['text' => 'text-theme-main', 'dot' => 'text-theme-main'],
+                                };
+                            @endphp
+                            <div class="marquee-item {{ $marqueeTheme['text'] }} drop-shadow-md">
+
+                                <svg class="w-[4vh] h-[4vh] {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0"
+                                    viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
+                                </svg>
+
+                                <span class="px-4">{{ $item->teks }}</span>
+                            </div>
+                        @empty
+                            <div class="marquee-item text-slate-400">
+                                <svg class="w-[4vh] h-[4vh] text-slate-500 animate-spin-slow shrink-0" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
+                                </svg>
+                                <span class="px-4 normal-case font-bold">Selamat Datang di
+                                    {{ $settings->nama_masjid ?? 'Masjid Digital' }}.</span>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="w-[30vw] flex flex-col gap-[1vh] h-full min-w-0">
@@ -341,51 +386,6 @@
                 <p class="text-[2.5vh] text-theme-main font-bold uppercase tracking-widest mb-2">Sisa Waktu</p>
                 <p class="text-5xl font-black text-white tracking-widest tabular-nums"
                     x-text="countdownSholatDisplay">00:00</p>
-            </div>
-        </div>
-    </div>
-
-    <div x-show="mode === 'standby'" class="relative w-full px-6 pb-[2vh] pt-[1vh] z-20 shrink-0">
-        <div
-            class="h-[8vh] bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[4vh] flex items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
-            <div
-                class="bg-theme-main h-full flex items-center px-[2vw] z-30 shadow-[10px_0_30px_rgba(0,0,0,0.8)] border-r border-white/20 relative">
-                <span class="text-black font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
-            </div>
-            <div class="marquee-preview flex-1">
-                <div class="marquee-content font-black text-[3.5vh] uppercase tracking-[0.05em]"
-                    style="animation-duration: {{ $duration }}s;">
-                    @forelse($runningTexts as $item)
-                        @php
-                            $marqueeTheme = match ($item->tipe) {
-                                'ayat' => ['text' => 'text-cyan-400', 'dot' => 'text-cyan-500'],
-                                'hadits' => ['text' => 'text-purple-400', 'dot' => 'text-purple-500'],
-                                'ucapan' => ['text' => 'text-amber-400', 'dot' => 'text-amber-500'],
-                                default => ['text' => 'text-theme-main', 'dot' => 'text-theme-main'],
-                            };
-                        @endphp
-                        <div class="marquee-item {{ $marqueeTheme['text'] }} drop-shadow-md">
-
-                            <svg class="w-[4vh] h-[4vh] {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0"
-                                viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
-                            </svg>
-
-                            <span class="px-4">{{ $item->teks }}</span>
-                        </div>
-                    @empty
-                        <div class="marquee-item text-slate-400">
-                            <svg class="w-[4vh] h-[4vh] text-slate-500 animate-spin-slow shrink-0" viewBox="0 0 24 24"
-                                fill="currentColor">
-                                <path
-                                    d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
-                            </svg>
-                            <span class="px-4 normal-case font-bold">Selamat Datang di
-                                {{ $settings->nama_masjid ?? 'Masjid Digital' }}.</span>
-                        </div>
-                    @endforelse
-                </div>
             </div>
         </div>
     </div>
