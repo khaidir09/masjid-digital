@@ -264,7 +264,7 @@
             @php
                 $field = strtolower($waktu);
                 $jamFormatted = ($waktu === 'Isyraq') 
-                    ? \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(15)->format('H:i')
+                    ? \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(12)->format('H:i')
                     : \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
                 $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
             @endphp
@@ -493,7 +493,7 @@
                                 if (!this.jadwalDB.terbit) return null;
                                 let tParts = this.jadwalDB.terbit.split(':');
                                 let dateObj = new Date();
-                                dateObj.setHours(parseInt(tParts[0]), parseInt(tParts[1]) + 15, tParts[2] ? parseInt(tParts[2]) : 0);
+                                dateObj.setHours(parseInt(tParts[0]), parseInt(tParts[1]) + 12, tParts[2] ? parseInt(tParts[2]) : 0);
                                 return dateObj.toTimeString().substring(0, 8);
                             })(),
                             iqomah: 0
