@@ -1,5 +1,6 @@
 <div x-data="displaySystem()" x-init="initSystem()"
-    class="relative w-full h-screen font-sans bg-slate-950 text-white overflow-hidden flex flex-col">
+    :class="themeMode === 'light' ? 'bg-slate-50 text-slate-800' : 'bg-slate-950 text-white'"
+    class="relative w-full h-screen font-sans overflow-hidden flex flex-col transition-colors duration-500">
 
     @php
         $activeTheme = $settings->theme;
@@ -52,6 +53,10 @@
 
         .islamic-pattern {
             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+
+        .islamic-pattern-light {
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23000000" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
         }
 
         .font-arab {
@@ -129,17 +134,36 @@
                 class="bg-theme-main text-white px-12 py-[2vh] rounded-full font-black text-[2.5vh] uppercase tracking-[0.2em] shadow-theme-glow hover:scale-105 transition-all">
                 Mulai
             </button>
+            
+            <div class="mt-8 flex items-center justify-center gap-4">
+                <button @click="setTheme('dark')"
+                    :class="themeMode === 'dark' ? 'ring-2 ring-theme-main bg-slate-800' : 'bg-slate-900/50 hover:bg-slate-800'"
+                    class="px-6 py-3 rounded-xl font-bold text-white transition-all flex items-center gap-2 border border-white/10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    Dark Mode
+                </button>
+                <button @click="setTheme('light')"
+                    :class="themeMode === 'light' ? 'ring-2 ring-theme-main bg-white text-slate-900' : 'bg-slate-900/50 text-slate-300 hover:bg-slate-800'"
+                    class="px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 border border-white/10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Light Mode
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="absolute inset-0 z-0">
+    <div class="absolute inset-0 z-0 transition-opacity duration-500">
         <div class="w-full h-full"
-                style="background: radial-gradient(ellipse at top right, var(--theme-dark), #0f172a, #000000);"></div>
-        <div class="absolute inset-0 islamic-pattern"></div>
+             :style="themeMode === 'light' 
+                ? 'background: radial-gradient(ellipse at top right, var(--theme-light), #f8fafc, #f1f5f9); opacity: 0.3;' 
+                : 'background: radial-gradient(ellipse at top right, var(--theme-dark), #0f172a, #000000);'">
+        </div>
+        <div class="absolute inset-0" :class="themeMode === 'light' ? 'islamic-pattern-light' : 'islamic-pattern'"></div>
     </div>
 
     <header x-show="mode === 'standby'"
-        class="relative w-full z-20 flex justify-between items-center px-[3vw] py-6 bg-black/40 backdrop-blur-xl border-b border-white/10 shadow-xl shrink-0">
+        :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
+        class="relative w-full z-20 flex justify-between items-center px-[3vw] py-6 backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500">
         <div class="flex items-center gap-6">
             @if ($settings && $settings->logo_path)
                 <img src="{{ Storage::url($settings->logo_path) }}"
@@ -147,14 +171,17 @@
             @endif
 
             <div class="flex flex-col justify-center">
-                <h1 class="text-[4vh] font-black tracking-tighter uppercase text-white shadow-theme-text leading-none">
+                <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
+                    class="text-[4vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
                     {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
                 </h1>
-                <p class="text-[1.5vh] font-medium text-slate-300 mt-1 mb-[1vh] opacity-90 line-clamp-1">
+                <p :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'"
+                   class="text-[1.5vh] font-medium mt-1 mb-[1vh] opacity-90 line-clamp-1 transition-colors duration-500">
                     {{ $settings->alamat ?? 'Alamat tempat belum dikonfigurasi' }}
                 </p>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold text-theme-light tracking-widest uppercase flex items-center gap-1">
+                    <span :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-light'"
+                          class="text-xs font-bold tracking-widest uppercase flex items-center gap-1 transition-colors duration-500">
                         <svg class="w-4 h-4 text-theme-main" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
@@ -166,18 +193,21 @@
                     </span>
                     <span class="text-slate-600">•</span>
                     <span
-                        class="text-[1.1vh] font-black text-slate-400 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                        :class="themeMode === 'light' ? 'text-slate-600 bg-slate-100 border-slate-200' : 'text-slate-400 bg-white/5 border-white/10'"
+                        class="text-[1.1vh] font-black uppercase tracking-widest px-2 py-0.5 rounded border transition-colors duration-500">
                         {{ $tipeTempat }} Mode
                     </span>
                 </div>
             </div>
         </div>
         <div class="text-right">
-            <div class="text-[6vh] font-black text-white tracking-widest leading-none drop-shadow-2xl tabular-nums"
+            <div :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
+                 class="text-[6vh] font-black tracking-widest leading-none drop-shadow-2xl tabular-nums transition-colors duration-500"
                 x-text="time">00:00:00</div>
             <div class="text-xl font-medium text-theme-main mt-2 uppercase tracking-wide">
                 <span x-text="dateGregorian"></span> &bull; <span
-                    class="text-white">{{ $jadwal->tanggal_hijriah ?? '' }}</span>
+                    :class="themeMode === 'light' ? 'text-slate-700' : 'text-white'"
+                    class="transition-colors duration-500">{{ $jadwal->tanggal_hijriah ?? '' }}</span>
             </div>
         </div>
     </header>
@@ -204,10 +234,12 @@
 
         <div class="relative w-full z-20 shrink-0">
             <div
-                class="h-[8vh] bg-black/60 backdrop-blur-2xl border border-white/20 rounded-[4vh] flex items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
+                :class="themeMode === 'light' ? 'bg-white/90 border-slate-200 shadow-xl ring-slate-100' : 'bg-black/60 border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-white/10'"
+                class="h-[8vh] backdrop-blur-2xl border rounded-[4vh] flex items-center overflow-hidden ring-1 transition-colors duration-500">
                 <div
-                    class="bg-theme-main h-full flex items-center px-[2vw] z-30 shadow-[10px_0_30px_rgba(0,0,0,0.8)] border-r border-white/20 relative">
-                    <span class="text-black font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
+                    :class="themeMode === 'light' ? 'border-slate-200 shadow-[10px_0_30px_rgba(0,0,0,0.1)]' : 'border-white/20 shadow-[10px_0_30px_rgba(0,0,0,0.8)]'"
+                    class="bg-theme-main h-full flex items-center px-[2vw] z-30 border-r relative transition-colors duration-500">
+                    <span class="text-white font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
                 </div>
                 <div class="marquee-preview flex-1">
                     <div class="marquee-content font-black text-[3.5vh] uppercase tracking-[0.05em]"
@@ -221,9 +253,9 @@
                                     default => ['text' => 'text-theme-main', 'dot' => 'text-theme-main'],
                                 };
                             @endphp
-                            <div class="marquee-item {{ $marqueeTheme['text'] }} drop-shadow-md">
+                            <div class="marquee-item {{ $marqueeTheme['text'] }} drop-shadow-md transition-colors duration-500">
 
-                                <svg class="w-[4vh] h-[4vh] {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0"
+                                <svg class="w-[4vh] h-[4vh] {{ $marqueeTheme['dot'] }} animate-spin-slow shrink-0 transition-colors duration-500"
                                     viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
@@ -232,8 +264,8 @@
                                 <span class="px-4">{{ $item->teks }}</span>
                             </div>
                         @empty
-                            <div class="marquee-item text-slate-400">
-                                <svg class="w-[4vh] h-[4vh] text-slate-500 animate-spin-slow shrink-0" viewBox="0 0 24 24"
+                            <div :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="marquee-item transition-colors duration-500">
+                                <svg :class="themeMode === 'light' ? 'text-slate-400' : 'text-slate-500'" class="w-[4vh] h-[4vh] animate-spin-slow shrink-0 transition-colors duration-500" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path
                                         d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
@@ -261,25 +293,44 @@
                 $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[1.5vw] rounded-[1.5vh] border transition-all duration-500 relative overflow-hidden"
-                :class="nextPrayerName === '{{ $waktu }}' ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' : 'bg-black/40 backdrop-blur-md {{ $isSunnah ? 'border-amber-500/20 bg-amber-950/20' : 'border-white/10' }}'">
+            <div class="flex-1 flex justify-between items-center px-[1.5vw] rounded-[1.5vh] border transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+                :class="[
+                    nextPrayerName === '{{ $waktu }}' 
+                        ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
+                        : (themeMode === 'light' 
+                            ? ('{{ $isSunnah }}' ? 'border-amber-500/30 bg-amber-50' : 'bg-white/80 border-slate-200')
+                            : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 border-white/10'))
+                ]">
                 
-                <span class="text-[1.8vh] font-bold uppercase tracking-wider"
-                    :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-600' : 'text-slate-300' }}'">
+                <span class="text-[1.8vh] font-bold uppercase tracking-wider transition-colors duration-500"
+                    :class="[
+                        nextPrayerName === '{{ $waktu }}' 
+                            ? 'text-white' 
+                            : (themeMode === 'light' 
+                                ? ('{{ $isSunnah }}' ? 'text-amber-600' : 'text-slate-600')
+                                : ('{{ $isSunnah }}' ? 'text-amber-600' : 'text-slate-300'))
+                    ]">
                     {{ $waktu }}
                 </span>
 
-                <span class="text-[3.5vh] font-black tabular-nums"
-                    :class="nextPrayerName === '{{ $waktu }}' ? 'text-white' : '{{ $isSunnah ? 'text-amber-400' : 'text-theme-main' }}'">
+                <span class="text-[3.5vh] font-black tabular-nums transition-colors duration-500"
+                    :class="[
+                        nextPrayerName === '{{ $waktu }}' 
+                            ? 'text-white' 
+                            : (themeMode === 'light'
+                                ? ('{{ $isSunnah }}' ? 'text-amber-500' : 'text-theme-dark')
+                                : ('{{ $isSunnah }}' ? 'text-amber-400' : 'text-theme-main'))
+                    ]">
                     {{ $jamFormatted }}
                 </span>
             </div>
         @endforeach
     </div>
 
-    <div class="flex-1 bg-theme-dark rounded-[2.5vh] p-[1.5vh] border border-theme-main/40 shadow-2xl relative overflow-hidden flex items-center justify-center ring-1 ring-white/10">
+    <div :class="themeMode === 'light' ? 'bg-white border-slate-200 ring-slate-100 shadow-xl' : 'bg-theme-dark border-theme-main/40 shadow-2xl ring-white/10'"
+         class="flex-1 rounded-[2.5vh] p-[1.5vh] border relative overflow-hidden flex items-center justify-center ring-1 transition-colors duration-500">
         
-        <div class="absolute -right-4 -top-4 text-white/5 w-24 h-24 rotate-12 pointer-events-none">
+        <div :class="themeMode === 'light' ? 'text-slate-100' : 'text-white/5'" class="absolute -right-4 -top-4 w-24 h-24 rotate-12 pointer-events-none transition-colors duration-500">
             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2-.9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
         </div>
 
@@ -293,11 +344,14 @@
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 -translate-y-4"
                  class="flex flex-col items-center justify-center h-full text-center">
-                <h3 class="text-[1.2vh] font-black text-theme-light uppercase tracking-[0.2em] mb-[0.5vh]">Total Saldo Kas</h3>
-                <p class="text-[3.5vh] font-black text-white tracking-tighter leading-none mb-[1vh]">
+                <h3 :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-light'"
+                    class="text-[1.2vh] font-black uppercase tracking-[0.2em] mb-[0.5vh] transition-colors duration-500">Total Saldo Kas</h3>
+                <p :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
+                   class="text-[3.5vh] font-black tracking-tighter leading-none mb-[1vh] transition-colors duration-500">
                     <span class="text-[1.5vh] opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
                 </p>
-                <div class="flex items-center gap-4 text-[1vh] uppercase font-bold tracking-widest text-slate-300">
+                <div :class="themeMode === 'light' ? 'text-slate-500' : 'text-slate-300'"
+                     class="flex items-center gap-4 text-[1vh] uppercase font-bold tracking-widest transition-colors duration-500">
                     <div class="flex items-center gap-1">
                         <svg class="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -335,14 +389,17 @@
                             <svg class="w-4 h-4 text-theme-main shrink-0" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="{{ $iconBank }}" />
                             </svg>
-                            <h3 class="text-[1.3vh] font-black text-white uppercase">{{ $rek->nama_bank }}</h3>
+                            <h3 :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'"
+                                class="text-[1.3vh] font-black uppercase transition-colors duration-500">{{ $rek->nama_bank }}</h3>
                         </div>
 
-                        <p class="text-[3vh] font-black text-theme-main tracking-widest leading-none mb-[0.5vh]">
+                        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'"
+                           class="text-[3vh] font-black tracking-widest leading-none mb-[0.5vh] transition-colors duration-500">
                             {{ $rek->nomor_rekening }}
                         </p>
 
-                        <p class="text-[1.1vh] text-white/80 uppercase font-bold truncate max-w-full">
+                        <p :class="themeMode === 'light' ? 'text-slate-500' : 'text-white/80'"
+                           class="text-[1.1vh] uppercase font-bold truncate max-w-full transition-colors duration-500">
                             an. {{ $rek->nama_akun }}
                         </p>
                     </div>
@@ -354,25 +411,28 @@
 </main>
 
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
-        class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl">
-        <h2 class="text-[4rem] font-bold text-slate-400 uppercase tracking-[0.5em] mb-6">Waktu <span
-                x-text="currentPrayerName" class="text-white"></span></h2>
-        <p class="text-[3.5vh] text-theme-main mb-8 tracking-widest uppercase font-black animate-pulse">Menuju Adzan</p>
-        <h1 class="text-[25rem] font-black text-white leading-none tabular-nums shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]"
+        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        class="absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 transition-colors duration-500">Waktu <span
+                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[25rem] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
 
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl">
-        <h2 class="text-[4rem] font-bold text-slate-400 uppercase tracking-[0.5em] mb-6 animate-pulse">Waktu <span
-                x-text="currentPrayerName" class="text-white"></span> Telah Masuk</h2>
-        <p class="text-[3.5vh] text-theme-main mb-8 tracking-widest uppercase font-black">Iqomah Dalam:</p>
-        <h1 class="text-[25rem] font-black text-white leading-none tabular-nums shadow-theme-text"
+        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 animate-pulse transition-colors duration-500">Waktu <span
+                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span> Telah Masuk</h2>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25rem] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black w-full h-full">
+        :class="themeMode === 'light' ? 'bg-slate-50' : 'bg-black'"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
         <div class="relative w-96 h-96 mb-16 animate-pulse">
             <div
                 class="absolute inset-0 border-[12px] border-rose-600 rounded-full shadow-[0_0_100px_rgba(225,29,72,0.5)]">
@@ -386,19 +446,20 @@
                 class="absolute top-1/2 left-1/2 w-full h-8 bg-rose-600 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
             </div>
         </div>
-        <h1 class="text-[7rem] font-black text-white uppercase tracking-[0.2em] mb-8 shadow-2xl">Mohon Tenang</h1>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[7rem] font-black uppercase tracking-[0.2em] mb-8 transition-colors duration-500">Mohon Tenang</h1>
         <p class="text-[4rem] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-16">
             Matikan / Silent<br>Ponsel Anda</p>
         <div
-            class="flex items-center gap-12 bg-white/10 px-12 py-6 rounded-[3rem] border border-white/20 backdrop-blur-md">
+            :class="themeMode === 'light' ? 'bg-white/80 border-slate-200 shadow-xl' : 'bg-white/10 border-white/20'"
+            class="flex items-center gap-12 px-12 py-6 rounded-[3rem] border backdrop-blur-md transition-colors duration-500">
             <div class="text-center">
-                <p class="text-[2.5vh] text-slate-400 font-bold uppercase tracking-widest mb-2">Jam Saat Ini</p>
-                <p class="text-5xl font-black text-white tracking-widest tabular-nums" x-text="time">00:00:00</p>
+                <p :class="themeMode === 'light' ? 'text-slate-500' : 'text-slate-400'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Jam Saat Ini</p>
+                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
             </div>
-            <div class="w-1 h-[8vh] bg-white/20 rounded-full"></div>
+            <div :class="themeMode === 'light' ? 'bg-slate-200' : 'bg-white/20'" class="w-1 h-[8vh] rounded-full transition-colors duration-500"></div>
             <div class="text-center">
-                <p class="text-[2.5vh] text-theme-main font-bold uppercase tracking-widest mb-2">Sisa Waktu</p>
-                <p class="text-5xl font-black text-white tracking-widest tabular-nums"
+                <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Sisa Waktu</p>
+                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500"
                     x-text="countdownSholatDisplay">00:00</p>
             </div>
         </div>
@@ -415,6 +476,7 @@
     <script>
         function displaySystem() {
             return {
+                themeMode: localStorage.getItem('liveDisplayTheme') || 'dark',
                 started: false,
                 time: '00:00:00',
                 dateGregorian: '',
@@ -460,6 +522,11 @@
                     if (document.documentElement.requestFullscreen) {
                         document.documentElement.requestFullscreen().catch(() => {});
                     }
+                },
+
+                setTheme(mode) {
+                    this.themeMode = mode;
+                    localStorage.setItem('liveDisplayTheme', mode);
                 },
 
                 initSystem() {
