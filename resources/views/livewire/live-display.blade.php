@@ -198,7 +198,7 @@
             @if ($banners->isNotEmpty())
                 @foreach ($banners as $index => $banner)
                     <div class="absolute inset-0 w-full h-full" x-show="activeSlide === {{ $index }}" x-transition.duration.1000ms>
-                        <img src="{{ Storage::url($banner->image_path) }}" class="w-full h-full object-cover">
+                        <img src="{{ Storage::url($banner->image_path) }}" class="w-full h-full object-fit">
                     </div>
                 @endforeach
             @endif
@@ -256,9 +256,9 @@
         </div>
     </div>
 
-    <div class="w-[30vw] flex flex-col gap-[1vh] h-full min-w-0">
+    <div class="w-[30vw] flex flex-col gap-[2vh] h-full min-w-0">
     
-    <div class="flex-[3.5] flex flex-col gap-[1vh] min-h-0">
+    <div class="flex-1 flex flex-col gap-[1.5vh] min-h-0">
         @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
         @foreach ($waktuSholat as $waktu)
             @php
@@ -269,7 +269,7 @@
                 $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[1.5vw] rounded-[1.5vh] border transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border transition-all duration-500 relative overflow-hidden backdrop-blur-md"
                 :class="[
                     nextPrayerName === '{{ $waktu }}' 
                         ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
@@ -278,7 +278,7 @@
                             : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 border-white/10'))
                 ]">
                 
-                <span class="text-[1.8vh] font-bold uppercase tracking-wider transition-colors duration-500"
+                <span class="text-[2.5vh] font-bold uppercase tracking-wider transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white' 
@@ -289,7 +289,7 @@
                     {{ $waktu }}
                 </span>
 
-                <span class="text-[3.5vh] font-black tabular-nums transition-colors duration-500"
+                <span class="text-[5vh] font-black tabular-nums transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white' 
@@ -303,86 +303,6 @@
         @endforeach
     </div>
 
-    <div :class="themeMode === 'light' ? 'bg-white border-slate-200 ring-slate-100 shadow-xl' : 'bg-theme-dark border-theme-main/40 shadow-2xl ring-white/10'"
-         class="flex-1 rounded-[2.5vh] p-[1.5vh] border relative overflow-hidden flex items-center justify-center ring-1 transition-colors duration-500">
-        
-        <div :class="themeMode === 'light' ? 'text-slate-100' : 'text-white/5'" class="absolute -right-4 -top-4 w-24 h-24 rotate-12 pointer-events-none transition-colors duration-500">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2-.9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-        </div>
-
-        <div class="dynamic-stack w-full h-full relative z-10">
-            
-            <div x-show="activeRekening === 0" 
-                 x-transition:enter="transition ease-out duration-700"
-                 x-transition:enter-start="opacity-0 translate-y-4"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-500"
-                 x-transition:leave-start="opacity-100 translate-y-0"
-                 x-transition:leave-end="opacity-0 -translate-y-4"
-                 class="flex flex-col items-center justify-center h-full text-center">
-                <h3 :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-light'"
-                    class="text-[1.2vh] font-black uppercase tracking-[0.2em] mb-[0.5vh] transition-colors duration-500">Total Saldo Kas</h3>
-                <p :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
-                   class="text-[3.5vh] font-black tracking-tighter leading-none mb-[1vh] transition-colors duration-500">
-                    <span class="text-[1.5vh] opacity-70">Rp</span> {{ number_format($totalSaldo, 0, ',', '.') }}
-                </p>
-                <div :class="themeMode === 'light' ? 'text-slate-500' : 'text-slate-300'"
-                     class="flex items-center gap-4 text-[1vh] uppercase font-bold tracking-widest transition-colors duration-500">
-                    <div class="flex items-center gap-1">
-                        <svg class="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        <span>MASUK: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <svg class="w-3 h-3 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                        </svg>
-                        <span>KELUAR: Rp {{ number_format($pengeluaranBulanIni, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            @if ($rekenings->isNotEmpty())
-                @foreach ($rekenings as $idx => $rek)
-                    @php
-                        $bankName = strtoupper($rek->nama_bank);
-                        $iconBank = str_contains($bankName, 'BSI') || str_contains($bankName, 'SYARIAH')
-                            ? 'M12,7V3H14V2H10V3H12V7C8.13,7.03 5,10.14 5,14V21H19V14C19,10.14 15.87,7.03 12,7M7,19V14C7,11.24 9.24,9 12,9C14.76,9 17,11.24 17,14V19H7Z'
-                            : 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z';
-                    @endphp
-
-                    <div x-show="activeRekening === {{ $idx + 1 }}" style="display:none;"
-                         x-transition:enter="transition ease-out duration-700"
-                         x-transition:enter-start="opacity-0 translate-y-4"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-500"
-                         x-transition:leave-start="opacity-100 translate-y-0"
-                         x-transition:leave-end="opacity-0 -translate-y-4"
-                         class="flex flex-col items-center justify-center h-full text-center px-2">
-                        
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-4 h-4 text-theme-main shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="{{ $iconBank }}" />
-                            </svg>
-                            <h3 :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'"
-                                class="text-[1.3vh] font-black uppercase transition-colors duration-500">{{ $rek->nama_bank }}</h3>
-                        </div>
-
-                        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'"
-                           class="text-[3vh] font-black tracking-widest leading-none mb-[0.5vh] transition-colors duration-500">
-                            {{ $rek->nomor_rekening }}
-                        </p>
-
-                        <p :class="themeMode === 'light' ? 'text-slate-500' : 'text-white/80'"
-                           class="text-[1.1vh] uppercase font-bold truncate max-w-full transition-colors duration-500">
-                            an. {{ $rek->nama_akun }}
-                        </p>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-    </div>
 </div>
 </main>
 
