@@ -165,11 +165,6 @@
         :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
         class="relative w-full z-20 flex justify-between items-center px-[3vw] py-6 backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500">
         <div class="flex items-center gap-6">
-            @if ($settings && $settings->logo_path)
-                <img src="{{ Storage::url($settings->logo_path) }}"
-                    class="w-[8vh] h-[8vh] rounded-full object-cover border-4 border-theme-main shadow-theme-glow shrink-0">
-            @endif
-
             <div class="flex flex-col justify-center">
                 <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
                     class="text-[4vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
@@ -179,25 +174,6 @@
                    class="text-[1.5vh] font-medium mt-1 mb-[1vh] opacity-90 line-clamp-1 transition-colors duration-500">
                     {{ $settings->alamat ?? 'Alamat tempat belum dikonfigurasi' }}
                 </p>
-                <div class="flex items-center gap-3">
-                    <span :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-light'"
-                          class="text-xs font-bold tracking-widest uppercase flex items-center gap-1 transition-colors duration-500">
-                        <svg class="w-4 h-4 text-theme-main" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        {{ $settings->kota_nama ?? 'Amuntai' }}
-                    </span>
-                    <span class="text-slate-600">•</span>
-                    <span
-                        :class="themeMode === 'light' ? 'text-slate-600 bg-slate-100 border-slate-200' : 'text-slate-400 bg-white/5 border-white/10'"
-                        class="text-[1.1vh] font-black uppercase tracking-widest px-2 py-0.5 rounded border transition-colors duration-500">
-                        {{ $tipeTempat }} Mode
-                    </span>
-                </div>
             </div>
         </div>
         <div class="text-right">
