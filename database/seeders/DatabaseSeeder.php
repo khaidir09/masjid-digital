@@ -196,6 +196,14 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
         ]);
 
+        DB::table('daily_surah_readings')->insert([
+            ['tanggal' => date('Y-m-d'), 'waktu_sholat' => 'Subuh', 'surah' => 'Al-Fatihah', 'created_at' => now()],
+            ['tanggal' => date('Y-m-d'), 'waktu_sholat' => 'Dzuhur', 'surah' => 'Al-Baqarah', 'created_at' => now()],
+            ['tanggal' => date('Y-m-d'), 'waktu_sholat' => 'Ashar', 'surah' => 'Ali-Imran', 'created_at' => now()],
+            ['tanggal' => date('Y-m-d'), 'waktu_sholat' => 'Maghrib', 'surah' => 'An-Nisa', 'created_at' => now()],
+            ['tanggal' => date('Y-m-d'), 'waktu_sholat' => 'Isya', 'surah' => 'Al-Maidah', 'created_at' => now()],
+        ]);
+
         $this->call([
             ThemeColorSeeder::class,
         ]);
