@@ -302,13 +302,13 @@
                         <svg class="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
-                        <span>IN: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</span>
+                        <span>MASUK: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <svg class="w-3 h-3 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
                         </svg>
-                        <span>OUT: Rp {{ number_format($pengeluaranBulanIni, 0, ',', '.') }}</span>
+                        <span>KELUAR: Rp {{ number_format($pengeluaranBulanIni, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
