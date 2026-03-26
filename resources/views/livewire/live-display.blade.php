@@ -578,7 +578,7 @@
                                 let sisaMenit = Math.floor(sisaDetikTotal / 60).toString().padStart(2, '0');
                                 let sisaDetik = (sisaDetikTotal % 60).toString().padStart(2, '0');
                                 this.countdownIqomahDisplay = `${sisaMenit}:${sisaDetik}`;
-                                if (sisaDetikTotal <= 10 && sisaDetikTotal > 0) {
+                                if (sisaDetikTotal <= 3 && sisaDetikTotal > 0) {
                                     this.playBeep();
                                 }
                                 break;
