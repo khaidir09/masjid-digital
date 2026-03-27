@@ -353,11 +353,11 @@
                 <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
             </div>
             <div :class="themeMode === 'light' ? 'bg-slate-200' : 'bg-white/20'" class="w-1 h-[8vh] rounded-full transition-colors duration-500"></div>
-            <div class="text-center">
+            {{-- <div class="text-center">
                 <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Sisa Waktu</p>
                 <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500"
                     x-text="countdownSholatDisplay">00:00</p>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -393,18 +393,18 @@
                 rekeningCount: Number("{{ $rekenings->count() }}"),
                 countdownAdzanDisplay: '00:00',
                 countdownIqomahDisplay: '00:00',
-                countdownSholatDisplay: '00:00',
-                durasiSholat: {
-                    'Imsak': 0,
-                    'Subuh': 10,
-                    'Isyraq': 0,
-                    'Dhuha': 0,
-                    'Dzuhur': 10,
-                    'Ashar': 10,
-                    'Maghrib': 10,
-                    'Isya': 10,
-                    'Jumat': 45
-                },
+                // countdownSholatDisplay: '00:00',
+                // durasiSholat: {
+                //     'Imsak': 0,
+                //     'Subuh': 10,
+                //     'Isyraq': 0,
+                //     'Dhuha': 0,
+                //     'Dzuhur': 10,
+                //     'Ashar': 10,
+                //     'Maghrib': 10,
+                //     'Isya': 10,
+                //     'Jumat': 45
+                // },
 
                 startDisplay() {
                     this.started = true;
@@ -609,10 +609,6 @@
                             } else if (currentSeconds >= iqomahEndSeconds && currentSeconds < sholatEndSeconds) {
                                 activeMode = 'sholat';
                                 this.currentPrayerName = p.name;
-                                let sisaDetikSholatTotal = sholatEndSeconds - currentSeconds;
-                                let sisaMenitSholat = Math.floor(sisaDetikSholatTotal / 60).toString().padStart(2, '0');
-                                let sisaDetikSholat = (sisaDetikSholatTotal % 60).toString().padStart(2, '0');
-                                this.countdownSholatDisplay = `${sisaMenitSholat}:${sisaDetikSholat}`;
                                 break;
                             }
                         }
