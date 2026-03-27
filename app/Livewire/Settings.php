@@ -29,7 +29,7 @@ class Settings extends Component
     public $tipe_tempat; // Masjid / Mushola
     public $nama_masjid, $alamat, $zona_waktu;
     public $latitude, $longitude;
-    public $running_text_speed, $durasi_slide_foto;
+    public $running_text_speed, $durasi_slide_foto, $durasi_adzan;
 
     // Uploads
     public $logo, $background_image;
@@ -73,6 +73,7 @@ class Settings extends Component
 
             $this->running_text_speed = $settings->running_text_speed;
             $this->durasi_slide_foto  = $settings->durasi_slide_foto;
+            $this->durasi_adzan       = $settings->durasi_adzan ?? 4;
 
             // Media Lama
             $this->old_video       = $settings->video_playlist_url;
@@ -225,6 +226,7 @@ class Settings extends Component
             'kota_nama'          => $this->kota_nama,
             'running_text_speed' => $this->running_text_speed,
             'durasi_slide_foto'  => $this->durasi_slide_foto,
+            'durasi_adzan'       => $this->durasi_adzan,
             'iqomah_subuh'       => $this->iqomah['subuh'],
             'iqomah_dzuhur'      => $this->iqomah['dzuhur'],
             'iqomah_ashar'       => $this->iqomah['ashar'],

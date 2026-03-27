@@ -776,6 +776,19 @@
                     Layar</h3>
 
                 <div class="space-y-8">
+                    <div x-data="{ val: @entangle('durasi_adzan').live }">
+                        <div class="flex justify-between mb-3 items-center">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Durasi
+                                Adzan (Menit)</label>
+                            <span
+                                class="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-black border border-slate-200"
+                                x-text="val"></span>
+                        </div>
+                        <input type="range" {{ !$canEdit ? 'disabled' : '' }} x-model="val" min="1"
+                            max="15" step="1"
+                            class="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-slate-800">
+                    </div>
+
                     <div x-data="{ val: @entangle('running_text_speed').live }">
                         <div class="flex justify-between mb-3 items-center">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Speed

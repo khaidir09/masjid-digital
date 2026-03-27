@@ -316,6 +316,14 @@
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
 
+    <div x-show="mode === 'adzan'" style="display: none;"
+        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 transition-colors duration-500">Sedang <span
+                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan Berkumandang</p>
+    </div>
+
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
@@ -572,7 +580,8 @@
 
                         let adzanStartSeconds = (h * 3600) + (m * 60) + s;
                         let preAdzanSeconds = adzanStartSeconds - 30;
-                        let iqomahEndSeconds = adzanStartSeconds + (p.iqomah * 60);
+                        let adzanEndSeconds = adzanStartSeconds + ({{ $settings->durasi_adzan ?? 4 }} * 60);
+                        let iqomahEndSeconds = adzanEndSeconds + (p.iqomah * 60);
                         let sholatEndSeconds = iqomahEndSeconds + (this.durasiSholat[p.name] * 60);
 
                         if (adzanStartSeconds > currentSeconds && !nextP) {
@@ -595,7 +604,13 @@
                                 this.playAdzan(p.name);
                             }
 
-                            if (currentSeconds >= adzanStartSeconds && currentSeconds < iqomahEndSeconds) {
+                            if (currentSeconds >= adzanStartSeconds && currentSeconds < adzanEndSeconds) {
+                                activeMode = 'adzan';
+                                this.currentPrayerName = p.name;
+                                break;
+                            }
+
+                            if (currentSeconds >= adzanEndSeconds && currentSeconds < iqomahEndSeconds) {
                                 activeMode = 'waiting_iqomah';
                                 this.currentPrayerName = p.name;
                                 let sisaDetikTotal = iqomahEndSeconds - currentSeconds;
