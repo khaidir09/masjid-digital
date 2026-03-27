@@ -293,7 +293,7 @@
                 };
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border-3 transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border-4 transition-all duration-500 relative overflow-hidden backdrop-blur-md"
                 :class="[
                     nextPrayerName === '{{ $waktu }}' 
                         ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
@@ -302,7 +302,7 @@
                             : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 {{ $darkBorder }}'))
                 ]">
                 
-                <span class="text-[2.5vh] font-bold uppercase tracking-wider transition-colors duration-500"
+                <span class="text-[3vh] font-bold uppercase tracking-wider transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white' 
