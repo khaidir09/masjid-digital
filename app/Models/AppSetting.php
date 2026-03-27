@@ -34,6 +34,7 @@ class AppSetting extends Model
         'koreksi_ashar'      => 'integer',
         'koreksi_maghrib'    => 'integer',
         'koreksi_isya'       => 'integer',
+        'durasi_adzan'       => 'integer',
     ];
 
     public function theme()
