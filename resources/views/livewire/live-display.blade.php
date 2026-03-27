@@ -287,7 +287,7 @@
                 };
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border-2 transition-all duration-500 relative overflow-hidden backdrop-blur-md"
                 :class="[
                     nextPrayerName === '{{ $waktu }}' 
                         ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
