@@ -359,23 +359,11 @@
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
-        :class="themeMode === 'light' ? 'bg-slate-50' : 'bg-black'"
-        class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[10vh] font-black uppercase tracking-[0.2em] mb-[4vh] transition-colors duration-500">Mohon Tenang</h1>
-        <p class="text-[6vh] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-[6vh]">
-            Matikan / Silent<br>Ponsel Anda</p>
-        <div
-            :class="themeMode === 'light' ? 'bg-white/80 border-slate-200 shadow-xl' : 'bg-white/10 border-white/20'"
-            class="flex items-center gap-12 px-12 py-6 rounded-[3rem] border backdrop-blur-md transition-colors duration-500">
-            <div class="text-center">
-                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
-            </div>
-            
-            {{-- <div class="text-center">
-                <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Sisa Waktu</p>
-                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500"
-                    x-text="countdownSholatDisplay">00:00</p>
-            </div> --}}
+        class="bg-black fixed inset-0 z-[100] w-full h-full transition-colors duration-500 overflow-hidden">
+        <div class="absolute transition-all duration-1000 ease-in-out flex flex-col items-center justify-center w-max"
+            x-bind:style="`left: ${floatingClockX}vw; top: ${floatingClockY}vh; transform: translate(-50%, -50%);`">
+            <h1 class="text-[6vh] font-black uppercase tracking-[0.2em] mb-[2vh] text-slate-400">Mohon Tenang</h1>
+            <p class="text-[12vh] font-black tracking-widest tabular-nums text-rose-500" x-text="time">00:00:00</p>
         </div>
     </div>
 
@@ -392,6 +380,8 @@
             return {
                 themeMode: localStorage.getItem('liveDisplayTheme') || 'dark',
                 started: false,
+                floatingClockX: 50,
+                floatingClockY: 50,
                 wakeLock: null,
                 time: '00:00:00',
                 dateGregorian: '',
@@ -470,6 +460,16 @@
 
                     this.updateTime();
                     setInterval(() => this.updateTime(), 1000);
+
+                    setInterval(() => {
+                        if (this.mode === 'sholat') {
+                            this.floatingClockX = Math.floor(Math.random() * 60) + 20;
+                            this.floatingClockY = Math.floor(Math.random() * 60) + 20;
+                        } else {
+                            this.floatingClockX = 50;
+                            this.floatingClockY = 50;
+                        }
+                    }, 10000);
 
                     if (this.bannersCount > 1) {
                         setInterval(() => {
