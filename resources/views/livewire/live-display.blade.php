@@ -267,15 +267,33 @@
                     ? \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(12)->format('H:i')
                     : \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
                 $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
+
+                $lightBorder = match($waktu) {
+                    'Subuh' => 'border-cyan-500/50',
+                    'Dzuhur' => 'border-emerald-500/50',
+                    'Ashar' => 'border-orange-500/50',
+                    'Maghrib' => 'border-rose-500/50',
+                    'Isya' => 'border-indigo-500/50',
+                    default => 'border-slate-200'
+                };
+                
+                $darkBorder = match($waktu) {
+                    'Subuh' => 'border-cyan-500/30',
+                    'Dzuhur' => 'border-emerald-500/30',
+                    'Ashar' => 'border-orange-500/30',
+                    'Maghrib' => 'border-rose-500/30',
+                    'Isya' => 'border-indigo-500/30',
+                    default => 'border-white/10'
+                };
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border-3 transition-all duration-500 relative overflow-hidden backdrop-blur-md"
                 :class="[
                     nextPrayerName === '{{ $waktu }}' 
                         ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
                         : (themeMode === 'light' 
-                            ? ('{{ $isSunnah }}' ? 'border-amber-500/30 bg-amber-50' : 'bg-white/80 border-slate-200')
-                            : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 border-white/10'))
+                            ? ('{{ $isSunnah }}' ? 'border-amber-500/30 bg-amber-50' : 'bg-white/80 {{ $lightBorder }}')
+                            : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 {{ $darkBorder }}'))
                 ]">
                 
                 <span class="text-[2.5vh] font-bold uppercase tracking-wider transition-colors duration-500"
@@ -327,7 +345,7 @@
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Menuju Iqomah:</p>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
