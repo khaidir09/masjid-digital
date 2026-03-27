@@ -359,9 +359,8 @@
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
-        class="bg-black fixed inset-0 z-[100] w-full h-full transition-colors duration-500 overflow-hidden">
-        <div class="absolute transition-all duration-1000 ease-in-out flex flex-col items-center justify-center w-max"
-            x-bind:style="`left: ${floatingClockX}vw; top: ${floatingClockY}vh; transform: translate(-50%, -50%);`">
+        class="bg-black fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500 overflow-hidden">
+        <div class="flex flex-col items-center justify-center">
             <h1 class="text-[6vh] font-black uppercase tracking-[0.2em] mb-[2vh] text-slate-400">Mohon Tenang</h1>
             <p class="text-[12vh] font-black tracking-widest tabular-nums text-rose-500" x-text="time">00:00:00</p>
         </div>
@@ -380,8 +379,6 @@
             return {
                 themeMode: localStorage.getItem('liveDisplayTheme') || 'dark',
                 started: false,
-                floatingClockX: 50,
-                floatingClockY: 50,
                 wakeLock: null,
                 time: '00:00:00',
                 dateGregorian: '',
@@ -460,16 +457,6 @@
 
                     this.updateTime();
                     setInterval(() => this.updateTime(), 1000);
-
-                    setInterval(() => {
-                        if (this.mode === 'sholat') {
-                            this.floatingClockX = Math.floor(Math.random() * 60) + 20;
-                            this.floatingClockY = Math.floor(Math.random() * 60) + 20;
-                        } else {
-                            this.floatingClockX = 50;
-                            this.floatingClockY = 50;
-                        }
-                    }, 10000);
 
                     if (this.bannersCount > 1) {
                         setInterval(() => {
