@@ -327,29 +327,16 @@
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] animate-pulse transition-colors duration-500">Waktu <span
-                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span> Telah Masuk</h2>
         <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
+        {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] mt-[4vh] tracking-wider uppercase font-black transition-colors duration-500">Isi shaf kosong di depan, luruskan dan rapatkan</p>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-slate-50' : 'bg-black'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
-        <div class="relative w-[30vh] h-[30vh] mb-[6vh] animate-pulse">
-            <div
-                class="absolute inset-0 border-[12px] border-rose-600 rounded-full shadow-[0_0_100px_rgba(225,29,72,0.5)]">
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center"><svg class="w-[15vh] h-[15vh] text-rose-600"
-                    fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
-                </svg></div>
-            <div
-                class="absolute top-1/2 left-1/2 w-full h-[2vh] bg-rose-600 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            </div>
-        </div>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[10vh] font-black uppercase tracking-[0.2em] mb-[4vh] transition-colors duration-500">Mohon Tenang</h1>
         <p class="text-[6vh] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-[6vh]">
             Matikan / Silent<br>Ponsel Anda</p>
@@ -357,10 +344,9 @@
             :class="themeMode === 'light' ? 'bg-white/80 border-slate-200 shadow-xl' : 'bg-white/10 border-white/20'"
             class="flex items-center gap-12 px-12 py-6 rounded-[3rem] border backdrop-blur-md transition-colors duration-500">
             <div class="text-center">
-                <p :class="themeMode === 'light' ? 'text-slate-500' : 'text-slate-400'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Jam Saat Ini</p>
                 <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
             </div>
-            <div :class="themeMode === 'light' ? 'bg-slate-200' : 'bg-white/20'" class="w-1 h-[8vh] rounded-full transition-colors duration-500"></div>
+            
             {{-- <div class="text-center">
                 <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Sisa Waktu</p>
                 <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500"
@@ -401,18 +387,18 @@
                 rekeningCount: Number("{{ $rekenings->count() }}"),
                 countdownAdzanDisplay: '00:00',
                 countdownIqomahDisplay: '00:00',
-                // countdownSholatDisplay: '00:00',
-                // durasiSholat: {
-                //     'Imsak': 0,
-                //     'Subuh': 10,
-                //     'Isyraq': 0,
-                //     'Dhuha': 0,
-                //     'Dzuhur': 10,
-                //     'Ashar': 10,
-                //     'Maghrib': 10,
-                //     'Isya': 10,
-                //     'Jumat': 45
-                // },
+                countdownSholatDisplay: '00:00',
+                durasiSholat: {
+                    'Imsak': 0,
+                    'Subuh': 10,
+                    'Isyraq': 0,
+                    'Dhuha': 0,
+                    'Dzuhur': 10,
+                    'Ashar': 10,
+                    'Maghrib': 10,
+                    'Isya': 10,
+                    'Jumat': 45
+                },
 
                 startDisplay() {
                     this.started = true;
@@ -617,13 +603,17 @@
                                 let sisaMenit = Math.floor(sisaDetikTotal / 60).toString().padStart(2, '0');
                                 let sisaDetik = (sisaDetikTotal % 60).toString().padStart(2, '0');
                                 this.countdownIqomahDisplay = `${sisaMenit}:${sisaDetik}`;
-                                if (sisaDetikTotal <= 3 && sisaDetikTotal > 0) {
+                                if (sisaDetikTotal <= 5 && sisaDetikTotal > 0) {
                                     this.playBeep();
                                 }
                                 break;
                             } else if (currentSeconds >= iqomahEndSeconds && currentSeconds < sholatEndSeconds) {
                                 activeMode = 'sholat';
                                 this.currentPrayerName = p.name;
+                                let sisaDetikSholatTotal = sholatEndSeconds - currentSeconds;
+                                let sisaMenitSholat = Math.floor(sisaDetikSholatTotal / 60).toString().padStart(2, '0');
+                                let sisaDetikSholat = (sisaDetikSholatTotal % 60).toString().padStart(2, '0');
+                                this.countdownSholatDisplay = `${sisaMenitSholat}:${sisaDetikSholat}`;
                                 break;
                             }
                         }
