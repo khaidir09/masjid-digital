@@ -573,7 +573,7 @@
                         let s = timeParts[2] ? parseInt(timeParts[2]) : 0;
 
                         let adzanStartSeconds = (h * 3600) + (m * 60) + s;
-                        let preAdzanSeconds = adzanStartSeconds - 30;
+                        let preAdzanSeconds = adzanStartSeconds - 300;
                         let adzanEndSeconds = adzanStartSeconds + ({{ $settings->durasi_adzan ?? 4 }} * 60);
                         let iqomahEndSeconds = adzanEndSeconds + (p.iqomah * 60);
                         let sholatEndSeconds = iqomahEndSeconds + (this.durasiSholat[p.name] * 60);
@@ -587,8 +587,10 @@
                                 activeMode = 'menuju_adzan';
                                 this.currentPrayerName = p.name;
                                 let sisaDetikAdzan = adzanStartSeconds - currentSeconds;
-                                this.countdownAdzanDisplay = `00:${sisaDetikAdzan.toString().padStart(2, '0')}`;
-                                if ([10, 5, 4, 3, 2, 1].includes(sisaDetikAdzan)) {
+                                let sisaMenitAdzan = Math.floor(sisaDetikAdzan / 60).toString().padStart(2, '0');
+                                let sisaDetikAdzanMod = (sisaDetikAdzan % 60).toString().padStart(2, '0');
+                                this.countdownAdzanDisplay = `${sisaMenitAdzan}:${sisaDetikAdzanMod}`;
+                                if ([3, 2, 1].includes(sisaDetikAdzan)) {
                                     this.playBeep();
                                 }
                                 break;
