@@ -333,9 +333,9 @@
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Waktu <span
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Menjelang <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p>
+        {{-- <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p> --}}
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
@@ -355,7 +355,7 @@
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] mt-[4vh] tracking-wider uppercase font-black transition-colors duration-500">Isi shaf kosong di depan, luruskan dan rapatkan</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] mt-[4vh] tracking-wider font-black animate-pulse transition-colors duration-500">Mohon isi shaf kosong di depan dan senyapkan alat komunikasi</p>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
@@ -573,7 +573,7 @@
                         let s = timeParts[2] ? parseInt(timeParts[2]) : 0;
 
                         let adzanStartSeconds = (h * 3600) + (m * 60) + s;
-                        let preAdzanSeconds = adzanStartSeconds - 30;
+                        let preAdzanSeconds = adzanStartSeconds - 300;
                         let adzanEndSeconds = adzanStartSeconds + ({{ $settings->durasi_adzan ?? 4 }} * 60);
                         let iqomahEndSeconds = adzanEndSeconds + (p.iqomah * 60);
                         let sholatEndSeconds = iqomahEndSeconds + (this.durasiSholat[p.name] * 60);
@@ -587,8 +587,10 @@
                                 activeMode = 'menuju_adzan';
                                 this.currentPrayerName = p.name;
                                 let sisaDetikAdzan = adzanStartSeconds - currentSeconds;
-                                this.countdownAdzanDisplay = `00:${sisaDetikAdzan.toString().padStart(2, '0')}`;
-                                if ([10, 5, 4, 3, 2, 1].includes(sisaDetikAdzan)) {
+                                let sisaMenitAdzan = Math.floor(sisaDetikAdzan / 60).toString().padStart(2, '0');
+                                let sisaDetikAdzanMod = (sisaDetikAdzan % 60).toString().padStart(2, '0');
+                                this.countdownAdzanDisplay = `${sisaMenitAdzan}:${sisaDetikAdzanMod}`;
+                                if ([3, 2, 1].includes(sisaDetikAdzan)) {
                                     this.playBeep();
                                 }
                                 break;
@@ -611,7 +613,8 @@
                                 let sisaMenit = Math.floor(sisaDetikTotal / 60).toString().padStart(2, '0');
                                 let sisaDetik = (sisaDetikTotal % 60).toString().padStart(2, '0');
                                 this.countdownIqomahDisplay = `${sisaMenit}:${sisaDetik}`;
-                                if (sisaDetikTotal <= 5 && sisaDetikTotal > 0) {
+                                // bunyikan 3 detik terakhir sebelum iqomah
+                                if ([3, 2, 1].includes(sisaDetikTotal)) {
                                     this.playBeep();
                                 }
                                 break;
