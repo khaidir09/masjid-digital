@@ -115,6 +115,12 @@
         .dynamic-stack>* {
             grid-area: 1 / 1;
         }
+
+        .bg-frame {
+            background-image: url('{{ asset('assets/images/frame.png') }}');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 
     <div x-show="!started"
@@ -326,7 +332,7 @@
 
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
-        class="absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        class="bg-frame absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
         <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Waktu <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
         <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p>
@@ -336,7 +342,7 @@
 
     <div x-show="mode === 'adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
         <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Sedang <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
         <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan Berkumandang</p>
@@ -344,7 +350,7 @@
 
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
+        class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
         <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Menuju Iqomah:</p>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
@@ -354,7 +360,7 @@
 
     <div x-show="mode === 'sholat'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-slate-50' : 'bg-black'"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
+        class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[10vh] font-black uppercase tracking-[0.2em] mb-[4vh] transition-colors duration-500">Mohon Tenang</h1>
         <p class="text-[6vh] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-[6vh]">
             Matikan / Silent<br>Ponsel Anda</p>
