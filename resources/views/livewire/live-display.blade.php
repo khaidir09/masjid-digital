@@ -309,61 +309,61 @@
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 transition-colors duration-500">Waktu <span
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Waktu <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[25rem] font-black leading-none tabular-nums transition-colors duration-500"
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Menuju Adzan</p>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
 
     <div x-show="mode === 'adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 transition-colors duration-500">Sedang <span
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Sedang <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan Berkumandang</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan Berkumandang</p>
     </div>
 
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[4rem] font-bold uppercase tracking-[0.5em] mb-6 animate-pulse transition-colors duration-500">Waktu <span
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] animate-pulse transition-colors duration-500">Waktu <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span> Telah Masuk</h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3.5vh] mb-8 tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25rem] font-black leading-none tabular-nums transition-colors duration-500"
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Iqomah Dalam:</p>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-slate-50' : 'bg-black'"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center w-full h-full transition-colors duration-500">
-        <div class="relative w-96 h-96 mb-16 animate-pulse">
+        <div class="relative w-[30vh] h-[30vh] mb-[6vh] animate-pulse">
             <div
                 class="absolute inset-0 border-[12px] border-rose-600 rounded-full shadow-[0_0_100px_rgba(225,29,72,0.5)]">
             </div>
-            <div class="absolute inset-0 flex items-center justify-center"><svg class="w-48 h-48 text-rose-600"
+            <div class="absolute inset-0 flex items-center justify-center"><svg class="w-[15vh] h-[15vh] text-rose-600"
                     fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
                 </svg></div>
             <div
-                class="absolute top-1/2 left-1/2 w-full h-8 bg-rose-600 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                class="absolute top-1/2 left-1/2 w-full h-[2vh] bg-rose-600 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
             </div>
         </div>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[7rem] font-black uppercase tracking-[0.2em] mb-8 transition-colors duration-500">Mohon Tenang</h1>
-        <p class="text-[4rem] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-16">
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-2xl'" class="text-[10vh] font-black uppercase tracking-[0.2em] mb-[4vh] transition-colors duration-500">Mohon Tenang</h1>
+        <p class="text-[6vh] text-rose-500 font-black uppercase tracking-[0.3em] text-center leading-tight mb-[6vh]">
             Matikan / Silent<br>Ponsel Anda</p>
         <div
             :class="themeMode === 'light' ? 'bg-white/80 border-slate-200 shadow-xl' : 'bg-white/10 border-white/20'"
             class="flex items-center gap-12 px-12 py-6 rounded-[3rem] border backdrop-blur-md transition-colors duration-500">
             <div class="text-center">
                 <p :class="themeMode === 'light' ? 'text-slate-500' : 'text-slate-400'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Jam Saat Ini</p>
-                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
+                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500" x-text="time">00:00:00</p>
             </div>
             <div :class="themeMode === 'light' ? 'bg-slate-200' : 'bg-white/20'" class="w-1 h-[8vh] rounded-full transition-colors duration-500"></div>
             {{-- <div class="text-center">
                 <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[2.5vh] font-bold uppercase tracking-widest mb-2 transition-colors duration-500">Sisa Waktu</p>
-                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-5xl font-black tracking-widest tabular-nums transition-colors duration-500"
+                <p :class="themeMode === 'light' ? 'text-slate-800' : 'text-white'" class="text-[6vh] font-black tracking-widest tabular-nums transition-colors duration-500"
                     x-text="countdownSholatDisplay">00:00</p>
             </div> --}}
         </div>
