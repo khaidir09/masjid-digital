@@ -216,7 +216,7 @@
 
         <div class="relative w-full z-20 shrink-0">
             <div
-                :class="themeMode === 'light' ? 'bg-white/90 border-slate-200 shadow-xl ring-slate-100' : 'bg-black/60 border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-white/10'"
+                :class="themeMode === 'light' ? 'bg-white/90 border-slate-800 shadow-xl ring-slate-700' : 'bg-black/60 border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-white/10'"
                 class="h-[8vh] backdrop-blur-2xl border rounded-[4vh] flex items-center overflow-hidden ring-1 transition-colors duration-500">
                 <div
                     :class="themeMode === 'light' ? 'border-slate-200 shadow-[10px_0_30px_rgba(0,0,0,0.1)]' : 'border-white/20 shadow-[10px_0_30px_rgba(0,0,0,0.8)]'"
@@ -265,14 +265,14 @@
     <div class="w-[30vw] flex flex-col gap-[2vh] h-full min-w-0">
     
     <div class="flex-1 flex flex-col gap-[1.5vh] min-h-0">
-        @php $waktuSholat = ['Imsak', 'Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
+        @php $waktuSholat = ['Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
         @foreach ($waktuSholat as $waktu)
             @php
                 $field = strtolower($waktu);
                 $jamFormatted = ($waktu === 'Isyraq') 
                     ? \Carbon\Carbon::parse($jadwal->terbit ?? '00:00:00')->addMinutes(12)->format('H:i')
                     : \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
-                $isSunnah = in_array($waktu, ['Imsak', 'Isyraq', 'Dhuha']);
+                $isSunnah = in_array($waktu, ['Isyraq', 'Dhuha']);
 
                 $lightBorder = match($waktu) {
                     'Subuh' => 'border-cyan-500/50',
@@ -343,15 +343,15 @@
     <div x-show="mode === 'adzan'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Sedang <span
+        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] px-[4vw] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Waktu <span
                 x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan Berkumandang</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[5vh] mb-[4vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Telah Masuk</p>
     </div>
 
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[4vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Menuju Iqomah:</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] mb-[4vh] tracking-widest uppercase font-black transition-colors duration-500">Menuju Iqomah:</p>
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[30vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
@@ -397,7 +397,6 @@
                 countdownIqomahDisplay: '00:00',
                 countdownSholatDisplay: '00:00',
                 durasiSholat: {
-                    'Imsak': 0,
                     'Subuh': 10,
                     'Isyraq': 0,
                     'Dhuha': 0,
@@ -504,11 +503,6 @@
                     const currentSeconds = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
                     const prayers = [
                         {
-                            name: 'Imsak',
-                            jamDB: this.jadwalDB.imsak,
-                            iqomah: 0
-                        },
-                        {
                             name: 'Subuh',
                             jamDB: this.jadwalDB.subuh,
                             iqomah: this.settings.iqomah_subuh || 10
@@ -582,7 +576,7 @@
                             nextP = p.name;
                         }
 
-                        if (p.name !== 'Isyraq' && p.name !== 'Dhuha' && p.name !== 'Imsak') {
+                        if (p.name !== 'Isyraq' && p.name !== 'Dhuha') {
                             if (currentSeconds >= preAdzanSeconds && currentSeconds < adzanStartSeconds) {
                                 activeMode = 'menuju_adzan';
                                 this.currentPrayerName = p.name;
