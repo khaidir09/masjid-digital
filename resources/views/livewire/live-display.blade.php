@@ -229,9 +229,9 @@
                         @forelse($runningTexts as $item)
                             @php
                                 $marqueeTheme = match ($item->tipe) {
-                                    'ayat' => ['text' => 'text-cyan-400', 'dot' => 'text-cyan-500'],
-                                    'hadits' => ['text' => 'text-purple-400', 'dot' => 'text-purple-500'],
-                                    'ucapan' => ['text' => 'text-amber-400', 'dot' => 'text-amber-500'],
+                                    'ayat'   => ['text' => 'text-cyan-700', 'dot' => 'text-cyan-500'],
+                                    'hadits' => ['text' => 'text-purple-700', 'dot' => 'text-purple-500'],
+                                    'ucapan' => ['text' => 'text-slate-700', 'dot' => 'text-slate-500'],
                                     default => ['text' => 'text-theme-main', 'dot' => 'text-theme-main'],
                                 };
                             @endphp

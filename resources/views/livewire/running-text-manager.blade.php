@@ -50,10 +50,10 @@
                         @forelse($data->where('is_active', true) as $item)
                             @php
                                 $theme = match($item->tipe) {
-                                    'ayat'   => ['text' => 'text-cyan-400', 'dot' => 'bg-cyan-500 shadow-[0_0_10px_#22d3ee]'],
-                                    'hadits' => ['text' => 'text-purple-400', 'dot' => 'bg-purple-500 shadow-[0_0_10px_#c084fc]'],
-                                    'ucapan' => ['text' => 'text-amber-400', 'dot' => 'bg-amber-500 shadow-[0_0_10px_#fbbf24]'],
-                                    default  => ['text' => 'text-emerald-400', 'dot' => 'bg-emerald-500 shadow-[0_0_10px_#10b981]'],
+                                    'ayat'   => ['text' => 'text-cyan-700', 'dot' => 'bg-cyan-500 shadow-[0_0_10px_#22d3ee]'],
+                                    'hadits' => ['text' => 'text-purple-700', 'dot' => 'bg-purple-500 shadow-[0_0_10px_#c084fc]'],
+                                    'ucapan' => ['text' => 'text-slate-700', 'dot' => 'bg-slate-500 shadow-[0_0_10px_#6b7280]'],
+                                    default  => ['text' => 'text-emerald-700', 'dot' => 'bg-emerald-500 shadow-[0_0_10px_#10b981]'],
                                 };
                             @endphp
 
