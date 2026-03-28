@@ -776,6 +776,18 @@
                     Layar</h3>
 
                 <div class="space-y-8">
+                    <div class="relative group">
+                        <input type="text" wire:model="himbauan_iqomah" {{ !$canEdit ? 'disabled' : '' }}
+                            id="himbauan_iqomah"
+                            class="floating-input peer block w-full appearance-none rounded-xl border border-slate-300 bg-transparent px-4 py-3.5 text-slate-900 font-bold focus:border-slate-800 focus:outline-none focus:ring-0 placeholder-transparent transition-all"
+                            placeholder=" " />
+                        <label for="himbauan_iqomah"
+                            class="absolute top-3.5 left-4 text-slate-500 transition-all duration-200 ease-out pointer-events-none">Teks Himbauan Iqomah</label>
+                        @error('himbauan_iqomah')
+                            <span class="text-[10px] text-rose-500 font-bold absolute -bottom-5 left-0">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     <div x-data="{ val: @entangle('durasi_adzan').live }">
                         <div class="flex justify-between mb-3 items-center">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Durasi

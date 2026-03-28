@@ -30,6 +30,7 @@ class Settings extends Component
     public $nama_masjid, $alamat, $zona_waktu;
     public $latitude, $longitude;
     public $running_text_speed, $durasi_slide_foto, $durasi_adzan;
+    public $himbauan_iqomah;
 
     // Uploads
     public $logo, $background_image;
@@ -74,6 +75,7 @@ class Settings extends Component
             $this->running_text_speed = $settings->running_text_speed;
             $this->durasi_slide_foto  = $settings->durasi_slide_foto;
             $this->durasi_adzan       = $settings->durasi_adzan ?? 4;
+            $this->himbauan_iqomah    = $settings->himbauan_iqomah ?? 'Mohon isi shaf kosong di depan dan senyapkan alat komunikasi';
 
             // Media Lama
             $this->old_video       = $settings->video_playlist_url;
@@ -208,6 +210,7 @@ class Settings extends Component
             'latitude'         => 'required',
             'longitude'        => 'required',
             'theme_color'      => 'required|exists:theme_colors,name',
+            'himbauan_iqomah'  => 'nullable|string|max:255',
         ]);
 
         $settings = AppSetting::first();
@@ -238,6 +241,7 @@ class Settings extends Component
             'koreksi_maghrib'    => $this->koreksi['maghrib'],
             'koreksi_isya'       => $this->koreksi['isya'],
             'theme_color'        => $this->theme_color,
+            'himbauan_iqomah'    => $this->himbauan_iqomah,
         ]);
 
         $this->dispatch('theme-changed', color: $this->theme_color);

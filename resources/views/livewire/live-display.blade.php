@@ -355,7 +355,7 @@
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] md:text-[4vh] mt-[4vh] px-[10vw] text-center uppercase tracking-wider font-black animate-pulse transition-colors duration-500">Mohon isi shaf kosong di depan dan senyapkan alat komunikasi</p>
+        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] md:text-[4vh] mt-[4vh] px-[10vw] text-center uppercase tracking-wider font-black animate-pulse transition-colors duration-500">{{ $settings->himbauan_iqomah ?? 'Mohon isi shaf kosong di depan dan senyapkan alat komunikasi' }}</p>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
