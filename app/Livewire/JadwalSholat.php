@@ -231,6 +231,10 @@ class JadwalSholat extends Component
             if (strpos($hijriText, ', ') !== false) {
                 $hijriText = explode(', ', $hijriText)[1];
             }
+
+            // Hapus akhiran " H" atau " h" pada tahun Hijriah
+            $hijriText = preg_replace('/\s*H$/i', '', $hijriText);
+
             JadwalModel::create([
                 'tanggal'         => $dateStr,
                 'tanggal_hijriah' => $hijriText,
