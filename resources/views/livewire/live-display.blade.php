@@ -351,11 +351,11 @@
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
         :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] md:text-[8vh] mb-[4vh] tracking-[0.5em] text-center uppercase font-bold transition-colors duration-500">Menuju Iqomah:</h2>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25vh] font-black leading-none tabular-nums transition-colors duration-500"
+        <h2 :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] mb-[4vh] tracking-[0.5em] text-center uppercase font-bold transition-colors duration-500">Menuju Iqomah:</h2>
+        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[20vh] mb-[4vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
-        {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
-        <div class="h-[10vh] overflow-hidden mt-[4vh] px-[10vw] relative w-full flex items-center justify-center">
+        {{-- Konten Iqomah --}}
+        <div class="h-[10vh] mt-[4vh] px-[10vw] relative w-full flex items-center justify-center">
             <template x-if="iqomahContents.length > 0">
                 <template x-for="(content, index) in iqomahContents" :key="index">
                     <p x-show="activeIqomahContentIndex === index"
@@ -365,13 +365,13 @@
                        x-transition:leave="transition ease-in duration-1000 absolute"
                        x-transition:leave-start="opacity-100 translate-y-0"
                        x-transition:leave-end="opacity-0 -translate-y-full"
-                       :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'"
-                       class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 absolute w-full"
+                       :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-dark'"
+                       class="text-[3vh] md:text-[4vh] px-[10vw] text-center uppercase font-black transition-colors duration-500 absolute w-full"
                        x-text="content.teks"></p>
                 </template>
             </template>
             <template x-if="iqomahContents.length === 0">
-                <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
+                <p :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-dark'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
             </template>
         </div>
     </div>
@@ -471,7 +471,7 @@
                             if (!this.iqomahContentInterval && this.iqomahContents.length > 1) {
                                 this.iqomahContentInterval = setInterval(() => {
                                     this.activeIqomahContentIndex = (this.activeIqomahContentIndex + 1) % this.iqomahContents.length;
-                                }, 5000); // Ganti tiap 5 detik
+                                }, 10000); // Ganti tiap 10 detik
                             }
                         } else {
                             if (this.iqomahContentInterval) {

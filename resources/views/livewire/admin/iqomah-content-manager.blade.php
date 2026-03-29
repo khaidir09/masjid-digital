@@ -1,117 +1,132 @@
-<div>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Iqomah Content Manager') }}
-        </h2>
-    </x-slot>
+<div class="space-y-8 md:space-y-8 pb-20 work-sans-all">
+    <style>
+        .floating-input:focus ~ label, .floating-input:not(:placeholder-shown) ~ label {
+            transform: translateY(-1.25rem) scale(0.8); background-color: white; padding-left: 4px; padding-right: 4px; color: #10b981; font-weight: 800; text-transform: uppercase;
+        }
+    </style>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Daftar Himbauan Menuju Iqomah</h3>
-                        @if ($this->canEdit())
-                            <button wire:click="create()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Tambah Teks Baru
-                            </button>
-                        @endif
+    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl p-8 md:p-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2">Teks Iqomah</h1>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Manajemen Himbauan Menuju Iqomah</p>
+            </div>
+            @if($canEdit)
+            <button wire:click="create" class="bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl active:scale-95 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Tambah Teks
+            </button>
+            @else
+                <div class="flex items-center gap-3 bg-amber-50 border border-amber-100 px-5 py-3 rounded-2xl shadow-sm animate-fade-in w-full md:w-auto">
+                    <div class="p-2 bg-amber-500 rounded-lg text-white shadow-sm shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m0-8V7m0 0v2m-9 1l1 1h16l1-1v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4z"></path><circle cx="12" cy="11" r="9" stroke="currentColor" stroke-width="2"></circle></svg>
                     </div>
-
-                    @if (session()->has('message'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-                        <table class="w-full text-sm text-left text-gray-500">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Urutan</th>
-                                    <th scope="col" class="px-6 py-3">Teks</th>
-                                    <th scope="col" class="px-6 py-3 text-center">Status</th>
-                                    @if ($this->canEdit())
-                                        <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($iqomahContents as $ic)
-                                    <tr class="bg-white border-b hover:bg-gray-50">
-                                        <td class="px-6 py-4">{{ $ic->urutan }}</td>
-                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $ic->teks }}</td>
-                                        <td class="px-6 py-4 text-center">
-                                            @if ($this->canEdit())
-                                                <button wire:click="toggleStatus({{ $ic->id }})" class="relative inline-flex items-center h-6 rounded-full w-11 {{ $ic->is_active ? 'bg-green-500' : 'bg-gray-300' }}">
-                                                    <span class="inline-block w-4 h-4 transform bg-white rounded-full transition {{ $ic->is_active ? 'translate-x-6' : 'translate-x-1' }}"></span>
-                                                </button>
-                                            @else
-                                                <span class="px-2 py-1 rounded text-xs text-white {{ $ic->is_active ? 'bg-green-500' : 'bg-gray-500' }}">
-                                                    {{ $ic->is_active ? 'Aktif' : 'Non-Aktif' }}
-                                                </span>
-                                            @endif
-                                        </td>
-                                        @if ($this->canEdit())
-                                            <td class="px-6 py-4 text-center">
-                                                <button wire:click="edit({{ $ic->id }})" class="text-blue-600 hover:text-blue-900 mx-1">Edit</button>
-                                                <button wire:click="delete({{ $ic->id }})" onclick="confirm('Yakin ingin menghapus teks ini?') || event.stopImmediatePropagation()" class="text-red-600 hover:text-red-900 mx-1">Hapus</button>
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="{{ $this->canEdit() ? '4' : '3' }}" class="px-6 py-4 text-center text-gray-500">Tidak ada data teks.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest leading-none mb-1">Mode Lihat Saja</span>
+                        <p class="text-[10px] font-bold text-amber-700 leading-tight">
+                            Role kamu <span class="underline uppercase decoration-amber-300 decoration-2">{{ auth()->user()->role }}</span> (Read-only).
+                        </p>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 
-    <!-- Modal Form -->
-    @if($showModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <form wire:submit.prevent="{{ $editId ? 'update' : 'store' }}">
-                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-title">
-                                {{ $editId ? 'Edit' : 'Tambah' }} Teks Iqomah
-                            </h3>
-                            <div class="mb-4">
-                                <label for="teks" class="block text-sm font-medium text-gray-700">Teks</label>
-                                <input type="text" id="teks" wire:model="teks" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                @error('teks') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="urutan" class="block text-sm font-medium text-gray-700">Urutan Tampil (Opsional)</label>
-                                <input type="number" id="urutan" wire:model="urutan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                @error('urutan') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label class="flex items-center">
-                                    <input type="checkbox" wire:model="is_active" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    <span class="ml-2 text-sm text-gray-600">Aktif Tampil di Layar</span>
-                                </label>
-                            </div>
+    @if (session()->has('message'))
+        <div class="bg-emerald-500 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-center shadow-lg animate-fade-in">
+            {{ session('message') }}
+        </div>
+    @endif
+
+    <div class="grid grid-cols-1 gap-6">
+        @forelse($iqomahContents as $content)
+            <div class="group bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full {{ $content->is_active ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
+
+                <div class="flex flex-col md:flex-row justify-between gap-6">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-3">
+                            @if ($canEdit)
+                                <button wire:click="toggleStatus({{ $content->id }})" class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all {{ $content->is_active ? 'bg-emerald-100 text-emerald-600 hover:bg-rose-100 hover:text-rose-600' : 'bg-rose-100 text-rose-600 hover:bg-emerald-100 hover:text-emerald-600' }}">
+                                    {{ $content->is_active ? 'Status: Aktif' : 'Status: Non-Aktif' }}
+                                </button>
+                            @else
+                                <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {{ $content->is_active ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600' }}">
+                                    {{ $content->is_active ? 'Status: Aktif' : 'Status: Non-Aktif' }}
+                                </span>
+                            @endif
+                            <span class="text-slate-400 font-bold text-xs">Urutan: {{ $content->urutan }}</span>
                         </div>
-                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                {{ $editId ? 'Update' : 'Simpan' }}
-                            </button>
-                            <button type="button" wire:click="$set('showModal', false)" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                Batal
-                            </button>
-                        </div>
-                    </form>
+
+                        <p class="text-slate-800 font-black text-2xl tracking-tight leading-relaxed">
+                            {{ $content->teks }}
+                        </p>
+                    </div>
+                    @if($canEdit)
+                    <div class="flex md:flex-col gap-2 shrink-0">
+                        <button wire:click="edit({{ $content->id }})" class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-emerald-50 hover:text-emerald-500 transition-all"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                        <button wire:click="deleteId({{ $content->id }})" class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-rose-50 hover:text-rose-500 transition-all"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    </div>
+                    @endif
                 </div>
             </div>
+        @empty
+            <div class="py-20 text-center font-black text-slate-300 uppercase tracking-widest text-sm">Belum ada teks himbauan</div>
+        @endforelse
+
+        <div class="mt-8">
+            {{ $iqomahContents->links() }}
         </div>
+    </div>
+
+    @if($isModalOpen && $canEdit)
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 animate-fade-in">
+        <div class="bg-white rounded-[3.5rem] p-10 w-full max-w-2xl shadow-2xl relative overflow-hidden overflow-y-auto max-h-[90vh] custom-scrollbar">
+            <div class="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-emerald-500 to-emerald-300"></div>
+
+            <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tight mb-8">{{ $isEditMode ? 'Edit' : 'Tambah' }} Teks Iqomah</h3>
+
+            <div class="space-y-6">
+                <div class="relative">
+                    <textarea wire:model="teks" id="teks" rows="4" class="floating-input peer block w-full appearance-none rounded-2xl border border-slate-300 bg-white px-5 py-4 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent font-bold" placeholder=" "></textarea>
+                    <label for="teks" class="absolute top-4 left-5 text-slate-400 transition-all duration-200 ease-out pointer-events-none origin-left">Teks Himbauan</label>
+                    @error('teks') <span class="text-rose-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="relative">
+                    <input type="number" wire:model="urutan" id="urutan" class="floating-input peer block w-full appearance-none rounded-2xl border border-slate-300 bg-white px-5 py-4 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-0 placeholder-transparent font-bold" placeholder=" " />
+                    <label for="urutan" class="absolute top-4 left-5 text-slate-400 transition-all duration-200 ease-out pointer-events-none origin-left">Urutan Tampil</label>
+                    @error('urutan') <span class="text-rose-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <input type="checkbox" wire:model="is_active" id="is_active" class="w-5 h-5 rounded text-emerald-500 border-slate-300 focus:ring-emerald-500 bg-white">
+                    <label for="is_active" class="text-sm font-bold text-slate-700 select-none">Aktif (Tampil di Layar)</label>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-12 border-t border-slate-100 pt-8">
+                <button wire:click="closeModal" class="flex-1 py-4 rounded-xl font-black text-slate-400 text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">Batal</button>
+                <button wire:click="{{ $isEditMode ? 'update' : 'store' }}" class="flex-1 py-4 bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-emerald-600 shadow-lg shadow-emerald-200 transition-all">Simpan Teks</button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @if($isDeleteModalOpen && $canEdit)
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-rose-900/90 backdrop-blur-sm p-4 animate-fade-in">
+        <div class="bg-white rounded-[3rem] p-10 w-full max-w-md text-center shadow-2xl relative overflow-hidden">
+            <div class="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6 text-rose-500 shadow-inner">
+                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </div>
+            <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tight mb-2">Hapus Teks?</h3>
+            <p class="text-slate-500 font-medium text-sm mb-8">Data ini tidak akan muncul lagi di display.</p>
+            <div class="flex gap-4">
+                <button wire:click="closeModal" class="flex-1 py-4 rounded-xl font-black text-slate-400 text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">Batal</button>
+                <button wire:click="delete" class="flex-1 py-4 bg-rose-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-rose-600 shadow-lg shadow-rose-200 transition-all">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
     @endif
 </div>
