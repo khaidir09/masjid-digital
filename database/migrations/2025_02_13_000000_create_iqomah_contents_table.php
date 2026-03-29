@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('app_settings', function (Blueprint $table) {
-            $table->string('himbauan_iqomah')->nullable()->default('Mohon isi shaf kosong di depan dan senyapkan alat komunikasi');
+        Schema::create('iqomah_contents', function (Blueprint $table) {
+            $table->id();
+            $table->string('teks');
+            $table->boolean('is_active')->default(true);
+            $table->integer('urutan')->default(0);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('app_settings', function (Blueprint $table) {
-            $table->dropColumn('himbauan_iqomah');
-        });
+        Schema::dropIfExists('iqomah_contents');
     }
 };

@@ -4,6 +4,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Auth\Login;
 use App\Livewire\BannerManager;
 use App\Livewire\ContentManager;
+use App\Livewire\Admin\IqomahContentManager;
 use App\Livewire\GalleryManager;
 use App\Livewire\Settings;
 use App\Livewire\JadwalSholat;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/banner', BannerManager::class)->name('banner');
     Route::get('/doa-hadist', ContentManager::class)->name('doa.hadist');
     Route::get('/settings/themes', ThemeColorManager::class)->name('settings.themes');
+    Route::get('/iqomah-content', IqomahContentManager::class)->name('iqomah-content');
 
     // ROUTE LOGOUT (BARU)
     Route::get('/logout', function () {

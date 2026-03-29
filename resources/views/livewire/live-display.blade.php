@@ -355,7 +355,25 @@
         <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[25vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Himbauan Isi Shaf Kosong, Luruskan dan Rapatkan --}}
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] md:text-[4vh] mt-[4vh] px-[10vw] text-center uppercase tracking-wider font-black animate-pulse transition-colors duration-500">{{ $settings->himbauan_iqomah ?? 'Mohon isi shaf kosong di depan dan senyapkan alat komunikasi' }}</p>
+        <div class="h-[10vh] overflow-hidden mt-[4vh] px-[10vw] relative w-full flex items-center justify-center">
+            <template x-if="iqomahContents.length > 0">
+                <template x-for="(content, index) in iqomahContents" :key="index">
+                    <p x-show="activeIqomahContentIndex === index"
+                       x-transition:enter="transition ease-out duration-1000"
+                       x-transition:enter-start="opacity-0 translate-y-full"
+                       x-transition:enter-end="opacity-100 translate-y-0"
+                       x-transition:leave="transition ease-in duration-1000 absolute"
+                       x-transition:leave-start="opacity-100 translate-y-0"
+                       x-transition:leave-end="opacity-0 -translate-y-full"
+                       :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'"
+                       class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 absolute w-full"
+                       x-text="content.teks"></p>
+                </template>
+            </template>
+            <template x-if="iqomahContents.length === 0">
+                <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
+            </template>
+        </div>
     </div>
 
     <div x-show="mode === 'sholat'" style="display: none;"
@@ -395,6 +413,9 @@
                 rekeningCount: Number("{{ $rekenings->count() }}"),
                 countdownAdzanDisplay: '00:00',
                 countdownIqomahDisplay: '00:00',
+                iqomahContents: @js($iqomahContents),
+                activeIqomahContentIndex: 0,
+                iqomahContentInterval: null,
                 countdownSholatDisplay: '00:00',
                 durasiSholat: {
                     'Subuh': 10,
@@ -445,6 +466,22 @@
                 },
 
                 initSystem() {
+                    this.$watch('mode', value => {
+                        if (value === 'waiting_iqomah') {
+                            if (!this.iqomahContentInterval && this.iqomahContents.length > 1) {
+                                this.iqomahContentInterval = setInterval(() => {
+                                    this.activeIqomahContentIndex = (this.activeIqomahContentIndex + 1) % this.iqomahContents.length;
+                                }, 5000); // Ganti tiap 5 detik
+                            }
+                        } else {
+                            if (this.iqomahContentInterval) {
+                                clearInterval(this.iqomahContentInterval);
+                                this.iqomahContentInterval = null;
+                            }
+                            this.activeIqomahContentIndex = 0;
+                        }
+                    });
+
                     document.addEventListener('visibilitychange', async () => {
                         if (this.wakeLock !== null && document.visibilityState === 'visible' && this.started) {
                             await this.requestWakeLock();
