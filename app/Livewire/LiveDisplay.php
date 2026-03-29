@@ -15,6 +15,7 @@ use Livewire\Component;
 use App\Models\AppSetting;
 use App\Models\JadwalSholat;
 use App\Models\RunningText;
+use App\Models\IqomahContent;
 use App\Models\Banner;
 use App\Models\PetugasJumat;
 use App\Models\PetugasRamadhan;
@@ -52,6 +53,7 @@ class LiveDisplay extends Component
         }
 
         $runningTexts = RunningText::where('is_active', true)->orderBy('urutan')->get();
+        $iqomahContents = IqomahContent::where('is_active', true)->orderBy('urutan')->get();
 
         $banners = Banner::where('is_active', true)
             ->whereDate('tgl_mulai', '<=', $today)
@@ -139,6 +141,7 @@ class LiveDisplay extends Component
             'tipeTempat' => $tipeTempat,
             'jadwal' => $jadwal,
             'runningTexts' => $runningTexts,
+            'iqomahContents' => $iqomahContents,
             'banners' => $banners,
             'contents' => $contents,
             'ceramah' => $ceramah,
