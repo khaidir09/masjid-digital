@@ -306,7 +306,7 @@
                         : '{{ $bgDark }} border-white/10'
                 ]">
                 
-                <span class="text-[6vh] font-bold uppercase transition-colors duration-500"
+                <span class="text-[5vh] font-bold uppercase transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white drop-shadow-md' 
@@ -317,7 +317,7 @@
                     {{ $waktu }}
                 </span>
 
-                <span class="text-[6vh] font-black tabular-nums transition-colors duration-500"
+                <span class="text-[5vh] font-black tabular-nums transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white drop-shadow-md' 
