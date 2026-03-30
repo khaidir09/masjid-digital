@@ -197,7 +197,7 @@
     <main class="relative z-10 w-full flex-1 flex overflow-hidden p-[2vh] gap-[2vh]" 
       x-show="mode === 'standby'">
     
-    <div class="w-full max-w-[1280px] min-w-[640px] flex flex-col gap-[2vh]">
+    <div class="w-full max-w-[1080px] min-w-[640px] flex flex-col gap-[2vh]">
         <div class="relative aspect-video w-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 bg-black flex flex-col">
             
             <div class="absolute inset-0 z-0">
@@ -262,7 +262,7 @@
         </div>
     </div>
 
-    <div class="w-[30vw] flex flex-col gap-[2vh] h-full min-w-0">
+    <div class="w-[35vw] flex flex-col gap-[2vh] h-full min-w-0">
     
     <div class="flex-1 flex flex-col min-h-0 rounded-[2vh] border-4 transition-colors duration-500 overflow-hidden"
         :class="themeMode === 'light' ? 'border-slate-300 shadow-2xl' : 'border-white/20 shadow-2xl'">
