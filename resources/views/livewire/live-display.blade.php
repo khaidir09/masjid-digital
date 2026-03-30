@@ -169,9 +169,9 @@
 
     <header x-show="mode === 'standby'"
         :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
-        class="relative w-full z-20 grid grid-cols-3 items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
+        class="relative w-full z-20 grid grid-cols-12 items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
 
-        <div class="overflow-hidden flex items-center justify-start h-full w-full">
+        <div class="overflow-hidden flex items-center justify-start h-full w-full col-span-3">
             <div class="marquee-preview w-full">
                 <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[3.5vh]"
                      style="animation-duration: 20s;">
@@ -183,7 +183,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-center justify-center text-center">
+        <div class="flex flex-col items-center justify-center text-center col-span-5">
             <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
                 class="text-[4.5vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
                 {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
@@ -194,7 +194,7 @@
             </p>
         </div>
 
-        <div class="flex items-center justify-end">
+        <div class="flex items-center justify-end col-span-4">
             <div :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
                  class="text-[7vh] font-black tracking-widest leading-none drop-shadow-2xl tabular-nums transition-colors duration-500"
                 x-text="time">00:00:00</div>
