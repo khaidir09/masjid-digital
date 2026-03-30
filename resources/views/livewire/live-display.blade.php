@@ -264,9 +264,10 @@
 
     <div class="w-[30vw] flex flex-col gap-[2vh] h-full min-w-0">
     
-    <div class="flex-1 flex flex-col gap-[1.5vh] min-h-0">
+    <div class="flex-1 flex flex-col min-h-0 rounded-[2vh] border-4 transition-colors duration-500 overflow-hidden"
+        :class="themeMode === 'light' ? 'border-slate-300 shadow-2xl' : 'border-white/20 shadow-2xl'">
         @php $waktuSholat = ['Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
-        @foreach ($waktuSholat as $waktu)
+        @foreach ($waktuSholat as $index => $waktu)
             @php
                 $field = strtolower($waktu);
                 $jamFormatted = ($waktu === 'Isyraq') 
@@ -274,52 +275,55 @@
                     : \Carbon\Carbon::parse($jadwal->$field ?? '00:00:00')->format('H:i');
                 $isSunnah = in_array($waktu, ['Isyraq', 'Dhuha']);
 
-                $lightBorder = match($waktu) {
-                    'Subuh' => 'border-cyan-500/50',
-                    'Dzuhur' => 'border-emerald-500/50',
-                    'Ashar' => 'border-orange-500/50',
-                    'Maghrib' => 'border-rose-500/50',
-                    'Isya' => 'border-indigo-500/50',
-                    default => 'border-slate-200'
+                $bgLight = match($waktu) {
+                    'Subuh' => 'bg-cyan-600',
+                    'Dzuhur' => 'bg-emerald-600',
+                    'Ashar' => 'bg-orange-600',
+                    'Maghrib' => 'bg-rose-600',
+                    'Isya' => 'bg-indigo-600',
+                    default => 'bg-slate-100'
                 };
                 
-                $darkBorder = match($waktu) {
-                    'Subuh' => 'border-cyan-500/30',
-                    'Dzuhur' => 'border-emerald-500/30',
-                    'Ashar' => 'border-orange-500/30',
-                    'Maghrib' => 'border-rose-500/30',
-                    'Isya' => 'border-indigo-500/30',
-                    default => 'border-white/10'
+                $bgDark = match($waktu) {
+                    'Subuh' => 'bg-cyan-900',
+                    'Dzuhur' => 'bg-emerald-900',
+                    'Ashar' => 'bg-orange-900',
+                    'Maghrib' => 'bg-rose-900',
+                    'Isya' => 'bg-indigo-900',
+                    default => 'bg-slate-900'
                 };
+
+                $borderClass = $index < count($waktuSholat) - 1 ? "border-b-2" : "";
             @endphp
 
-            <div class="flex-1 flex justify-between items-center px-[2vw] rounded-[2vh] border-4 transition-all duration-500 relative overflow-hidden backdrop-blur-md"
+            <div class="flex-1 flex justify-between items-center px-[1vw] transition-all duration-500 relative {{ $borderClass }}"
                 :class="[
                     nextPrayerName === '{{ $waktu }}' 
-                        ? 'bg-theme-main border-theme-main shadow-theme-glow z-10 scale-[1.03]' 
-                        : (themeMode === 'light' 
-                            ? ('{{ $isSunnah }}' ? 'border-amber-500/30 bg-amber-50' : 'bg-white/80 {{ $lightBorder }}')
-                            : ('{{ $isSunnah }}' ? 'border-amber-500/20 bg-amber-950/20' : 'bg-black/40 {{ $darkBorder }}'))
+                        ? 'ring-inset ring-4 ring-yellow-400 z-10' 
+                        : '',
+                    themeMode === 'light' 
+                        ? '{{ $bgLight }} border-slate-300'
+                        : '{{ $bgDark }} border-white/10'
                 ]">
                 
-                <span class="text-[3vh] font-bold uppercase tracking-wider transition-colors duration-500"
+                <span class="text-[6vh] font-bold uppercase transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
-                            ? 'text-white' 
+                            ? 'text-white drop-shadow-md' 
                             : (themeMode === 'light' 
-                                ? ('{{ $isSunnah }}' ? 'text-amber-600' : 'text-slate-600')
-                                : ('{{ $isSunnah }}' ? 'text-amber-600' : 'text-slate-300'))
+                                ? ('{{ $isSunnah }}' ? 'text-slate-600' : 'text-white')
+                                : ('{{ $isSunnah }}' ? 'text-slate-300' : 'text-slate-200'))
                     ]">
                     {{ $waktu }}
                 </span>
 
-                <span class="text-[5vh] font-black tabular-nums transition-colors duration-500"
+                <span class="text-[6vh] font-black tabular-nums transition-colors duration-500"
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
-                            ? 'text-white' 
+                            ? 'text-white drop-shadow-md' 
                             : (themeMode === 'light'
-                                ? ('{{ $isSunnah }}' ? 'text-amber-500' : 'text-theme-dark')
-                                : ('{{ $isSunnah }}' ? 'text-amber-400' : 'text-theme-main'))
+                                ? ('{{ $isSunnah }}' ? 'text-slate-700' : 'text-white')
+                                : ('{{ $isSunnah }}' ? 'text-slate-200' : 'text-slate-100'))
                     ]">
                     {{ $jamFormatted }}
                 </span>
