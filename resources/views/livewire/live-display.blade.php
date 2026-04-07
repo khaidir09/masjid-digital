@@ -171,15 +171,17 @@
         :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
         class="relative w-full z-20 grid grid-cols-12 items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
         
-        <div class="overflow-hidden flex items-center justify-start h-full w-full col-span-3">
-            <div class="marquee-preview w-full">
+        <div class="overflow-hidden flex flex-col justify-center h-full w-full col-span-3">
+            <div class="marquee-preview w-full h-auto">
                 <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[3.5vh]"
                      style="animation-duration: 20s;">
                     <div class="marquee-item">
-                        <span x-text="dateGregorian" :class="themeMode === 'light' ? 'text-slate-900' : 'text-slate-300'" class="font-bold"></span> 
-                        <span :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'">/ {{ $jadwal->tanggal_hijriah ?? '' }}</span>
+                        <span x-text="dateGregorian" :class="themeMode === 'light' ? 'text-slate-900' : 'text-slate-300'" class="font-bold"></span>
                     </div>
                 </div>
+            </div>
+            <div class="w-full text-left font-bold uppercase tracking-wide leading-tight text-[2.5vh] mt-[0.5vh]">
+                <span :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'">{{ $jadwal->tanggal_hijriah ?? '' }}</span>
             </div>
         </div>
 
