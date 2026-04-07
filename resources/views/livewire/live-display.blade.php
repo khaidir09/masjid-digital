@@ -176,7 +176,7 @@
                 <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[3.5vh]"
                      style="animation-duration: 20s;">
                     <div class="marquee-item">
-                        <span x-text="dateGregorian" class="text-theme-main"></span> 
+                        <span x-text="dateGregorian" :class="themeMode === 'light' ? 'text-slate-900' : 'text-slate-300'" class="font-bold"></span> 
                         <span :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'">/ {{ $jadwal->tanggal_hijriah ?? '' }}</span>
                     </div>
                 </div>
