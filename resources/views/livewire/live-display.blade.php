@@ -376,13 +376,13 @@
                        x-transition:leave="transition ease-in duration-1000 absolute"
                        x-transition:leave-start="opacity-100 translate-y-0"
                        x-transition:leave-end="opacity-0 -translate-y-full"
-                       :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-dark'"
+                       :class="themeMode === 'light' ? 'text-slate-900' : 'text-theme-dark'"
                        class="text-[3vh] md:text-[4vh] px-[10vw] text-center uppercase font-black transition-colors duration-500 absolute w-full"
                        x-text="content.teks"></p>
                 </template>
             </template>
             <template x-if="iqomahContents.length === 0">
-                <p :class="themeMode === 'light' ? 'text-theme-main' : 'text-theme-dark'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
+                <p :class="themeMode === 'light' ? 'text-slate-900' : 'text-theme-dark'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
             </template>
         </div>
     </div>
