@@ -5,11 +5,11 @@
         <div class="absolute inset-0 islamic-pattern-light"></div>
     </div>
     <header x-show="mode === 'standby'"
-        class="bg-white/80 border-slate-200 relative w-full z-20 grid grid-cols-12 items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
+        class="bg-white/80 border-slate-200 relative w-full z-20 grid grid-cols-12 items-center px-[2vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
 
         <div class="overflow-hidden flex items-center justify-start h-full w-full col-span-3">
             <div class="marquee-preview w-full">
-                <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[3.5vh]"
+                <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[7vh]"
                      style="animation-duration: 20s;">
                     <div class="marquee-item">
                         <span x-text="dateGregorian" class="text-slate-900 font-bold"></span>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="flex flex-col items-center justify-center text-center col-span-5">
-            <h1 class="text-slate-900 shadow-none text-[4.5vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
+            <h1 class="text-slate-900 shadow-none text-[4vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
                 {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
             </h1>
             <p class="text-slate-600 text-[3vh] font-medium mt-1 opacity-90 line-clamp-1 transition-colors duration-500">
