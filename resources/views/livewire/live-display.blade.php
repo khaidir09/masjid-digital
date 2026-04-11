@@ -1,5 +1,5 @@
 <div x-data="displaySystem()" x-init="initSystem()"
-    :class="themeMode === 'light' ? 'bg-slate-50 text-slate-800' : 'bg-slate-950 text-white'"
+    :class="layoutMode === 'layout-2' ? 'bg-slate-50 text-slate-800' : 'bg-slate-950 text-white'"
     class="relative w-full h-screen font-sans overflow-hidden flex flex-col transition-colors duration-500">
 
     @php
@@ -142,17 +142,17 @@
             </button>
             
             <div class="mt-8 flex items-center justify-center gap-4">
-                <button @click="setTheme('dark')"
-                    :class="themeMode === 'dark' ? 'ring-2 ring-theme-main bg-slate-800' : 'bg-slate-900/50 hover:bg-slate-800'"
+                <button @click="setLayout('layout-1')"
+                    :class="layoutMode === 'layout-1' ? 'ring-2 ring-theme-main bg-slate-800' : 'bg-slate-900/50 hover:bg-slate-800'"
                     class="px-6 py-3 rounded-xl font-bold text-white transition-all flex items-center gap-2 border border-white/10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    Dark Mode
+                    Layout 1
                 </button>
-                <button @click="setTheme('light')"
-                    :class="themeMode === 'light' ? 'ring-2 ring-theme-main bg-white text-slate-900' : 'bg-slate-900/50 text-slate-300 hover:bg-slate-800'"
+                <button @click="setLayout('layout-2')"
+                    :class="layoutMode === 'layout-2' ? 'ring-2 ring-theme-main bg-white text-slate-900' : 'bg-slate-900/50 text-slate-300 hover:bg-slate-800'"
                     class="px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 border border-white/10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Light Mode
+                    Layout 2
                 </button>
             </div>
         </div>
@@ -160,15 +160,15 @@
 
     <div class="absolute inset-0 z-0 transition-opacity duration-500">
         <div class="w-full h-full"
-             :style="themeMode === 'light' 
+             :style="layoutMode === 'layout-2'
                 ? 'background: radial-gradient(ellipse at top right, var(--theme-light), #f8fafc, #f1f5f9); opacity: 0.3;' 
                 : 'background: radial-gradient(ellipse at top right, var(--theme-dark), #0f172a, #000000);'">
         </div>
-        <div class="absolute inset-0" :class="themeMode === 'light' ? 'islamic-pattern-light' : 'islamic-pattern'"></div>
+        <div class="absolute inset-0" :class="layoutMode === 'layout-2' ? 'islamic-pattern-light' : 'islamic-pattern'"></div>
     </div>
 
     <header x-show="mode === 'standby'"
-        :class="themeMode === 'light' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
+        :class="layoutMode === 'layout-2' ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-white/10'"
         class="relative w-full z-20 grid grid-cols-12 items-center px-[3vw] py-[1.5vh] backdrop-blur-xl border-b shadow-xl shrink-0 transition-colors duration-500 gap-4">
         
         <div class="overflow-hidden flex items-center justify-start h-full w-full col-span-3">
@@ -176,26 +176,26 @@
                 <div class="marquee-content font-bold uppercase tracking-wide leading-tight text-[3.5vh]"
                      style="animation-duration: 20s;">
                     <div class="marquee-item">
-                        <span x-text="dateGregorian" :class="themeMode === 'light' ? 'text-slate-900' : 'text-slate-300'" class="font-bold"></span> 
-                        <span :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'">/ {{ $jadwal->tanggal_hijriah ?? '' }}</span>
+                        <span x-text="dateGregorian" :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-slate-300'" class="font-bold"></span>
+                        <span :class="layoutMode === 'layout-2' ? 'text-slate-600' : 'text-slate-300'">/ {{ $jadwal->tanggal_hijriah ?? '' }}</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="flex flex-col items-center justify-center text-center col-span-5">
-            <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
+            <h1 :class="layoutMode === 'layout-2' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'"
                 class="text-[4.5vh] font-black tracking-tighter uppercase leading-none transition-colors duration-500">
                 {{ $settings->nama_masjid ?? 'MASJID DIGITAL' }}
             </h1>
-            <p :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-300'"
+            <p :class="layoutMode === 'layout-2' ? 'text-slate-600' : 'text-slate-300'"
                class="text-[3vh] font-medium mt-1 opacity-90 line-clamp-1 transition-colors duration-500">
                 {{ $settings->alamat ?? 'Alamat tempat belum dikonfigurasi' }}
             </p>
         </div>
 
         <div class="flex items-center justify-end col-span-4">
-            <div :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'"
+            <div :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-white'"
                  class="text-[7vh] font-black tracking-widest leading-none drop-shadow-2xl tabular-nums transition-colors duration-500"
                 x-text="time">00:00:00</div>
         </div>
@@ -223,10 +223,10 @@
 
         <div class="relative w-full z-20 shrink-0">
             <div
-                :class="themeMode === 'light' ? 'bg-white/90 border-slate-800 shadow-xl ring-slate-700' : 'bg-black/60 border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-white/10'"
+                :class="layoutMode === 'layout-2' ? 'bg-white/90 border-slate-800 shadow-xl ring-slate-700' : 'bg-black/60 border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.6)] ring-white/10'"
                 class="h-[8vh] backdrop-blur-2xl border rounded-[4vh] flex items-center overflow-hidden ring-1 transition-colors duration-500">
                 <div
-                    :class="themeMode === 'light' ? 'border-slate-200 shadow-[10px_0_30px_rgba(0,0,0,0.1)]' : 'border-white/20 shadow-[10px_0_30px_rgba(0,0,0,0.8)]'"
+                    :class="layoutMode === 'layout-2' ? 'border-slate-200 shadow-[10px_0_30px_rgba(0,0,0,0.1)]' : 'border-white/20 shadow-[10px_0_30px_rgba(0,0,0,0.8)]'"
                     class="bg-theme-main h-full flex items-center px-[2vw] z-30 border-r relative transition-colors duration-500">
                     <span class="text-white font-black uppercase tracking-[0.1em] text-[2.5vh] relative z-10">Informasi</span>
                 </div>
@@ -253,8 +253,8 @@
                                 <span class="px-4">{{ $item->teks }}</span>
                             </div>
                         @empty
-                            <div :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="marquee-item transition-colors duration-500">
-                                <svg :class="themeMode === 'light' ? 'text-slate-400' : 'text-slate-500'" class="w-[4vh] h-[4vh] animate-spin-slow shrink-0 transition-colors duration-500" viewBox="0 0 24 24"
+                            <div :class="layoutMode === 'layout-2' ? 'text-slate-600' : 'text-slate-400'" class="marquee-item transition-colors duration-500">
+                                <svg :class="layoutMode === 'layout-2' ? 'text-slate-400' : 'text-slate-500'" class="w-[4vh] h-[4vh] animate-spin-slow shrink-0 transition-colors duration-500" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path
                                         d="M12,2L14.47,4.53L17.94,3.53L18.94,7.06L22.47,8.53L21.47,12L22.47,15.47L18.94,16.94L17.94,20.47L14.47,19.47L12,22L9.53,19.47L6.06,20.47L5.06,16.94L1.53,15.47L2.53,12L1.53,8.53L5.06,7.06L6.06,3.53L9.53,4.53L12,2Z" />
@@ -272,7 +272,7 @@
     <div class="w-[35vw] flex flex-col gap-[2vh] h-full min-w-0">
     
     <div class="flex-1 flex flex-col min-h-0 rounded-[2vh] border-4 transition-colors duration-500 overflow-hidden"
-        :class="themeMode === 'light' ? 'border-slate-300 shadow-2xl' : 'border-white/20 shadow-2xl'">
+        :class="layoutMode === 'layout-2' ? 'border-slate-300 shadow-2xl' : 'border-white/20 shadow-2xl'">
         @php $waktuSholat = ['Subuh', 'Isyraq', 'Dhuha', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya']; @endphp
         @foreach ($waktuSholat as $index => $waktu)
             @php
@@ -308,7 +308,7 @@
                     nextPrayerName === '{{ $waktu }}' 
                         ? 'ring-inset ring-4 ring-yellow-400 z-10' 
                         : '',
-                    themeMode === 'light' 
+                    layoutMode === 'layout-2'
                         ? '{{ $bgLight }} border-slate-300'
                         : '{{ $bgDark }} border-white/10'
                 ]">
@@ -317,7 +317,7 @@
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white drop-shadow-md' 
-                            : (themeMode === 'light' 
+                            : (layoutMode === 'layout-2'
                                 ? ('{{ $isSunnah }}' ? 'text-slate-600' : 'text-white')
                                 : ('{{ $isSunnah }}' ? 'text-slate-300' : 'text-slate-200'))
                     ]">
@@ -328,7 +328,7 @@
                     :class="[
                         nextPrayerName === '{{ $waktu }}' 
                             ? 'text-white drop-shadow-md' 
-                            : (themeMode === 'light'
+                            : (layoutMode === 'layout-2'
                                 ? ('{{ $isSunnah }}' ? 'text-slate-700' : 'text-white')
                                 : ('{{ $isSunnah }}' ? 'text-slate-200' : 'text-slate-100'))
                     ]">
@@ -342,28 +342,28 @@
 </main>
 
     <div x-show="mode === 'menuju_adzan'" style="display: none;"
-        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        :class="layoutMode === 'layout-2' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame absolute inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] text-center font-bold uppercase tracking-[0.5em] mb-[1vh] transition-colors duration-500">Menjelang</h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] md:text-[8vh] mb-[3vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan <span
-                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></p>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[25vh] font-black leading-none tabular-nums transition-colors duration-500"
+        <h2 :class="layoutMode === 'layout-2' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] text-center font-bold uppercase tracking-[0.5em] mb-[1vh] transition-colors duration-500">Menjelang</h2>
+        <p :class="layoutMode === 'layout-2' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] md:text-[8vh] mb-[3vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Adzan <span
+                x-text="currentPrayerName" :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></p>
+        <h1 :class="layoutMode === 'layout-2' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]'" class="text-[25vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownAdzanDisplay">00:00</h1>
     </div>
 
     <div x-show="mode === 'adzan'" style="display: none;"
-        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        :class="layoutMode === 'layout-2' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Adzan <span
-                x-text="currentPrayerName" :class="themeMode === 'light' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
-        <p :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] md:text-[8vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Telah Masuk</p>
+        <h2 :class="layoutMode === 'layout-2' ? 'text-slate-600' : 'text-slate-400'" class="text-[6vh] md:text-[8vh] text-center font-bold uppercase tracking-[0.5em] mb-[3vh] transition-colors duration-500">Adzan <span
+                x-text="currentPrayerName" :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-white'" class="transition-colors duration-500"></span></h2>
+        <p :class="layoutMode === 'layout-2' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] md:text-[8vh] tracking-widest uppercase font-black animate-pulse transition-colors duration-500">Telah Masuk</p>
     </div>
 
     <div x-show="mode === 'waiting_iqomah'" style="display: none;"
-        :class="themeMode === 'light' ? 'bg-white/95' : 'bg-black/95'"
+        :class="layoutMode === 'layout-2' ? 'bg-white/95' : 'bg-black/95'"
         class="bg-frame fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-3xl transition-colors duration-500">
-        <h2 :class="themeMode === 'light' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] mb-[4vh] tracking-[0.5em] text-center uppercase font-bold transition-colors duration-500">Menuju Iqomah:</h2>
-        <h1 :class="themeMode === 'light' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[20vh] mb-[4vh] font-black leading-none tabular-nums transition-colors duration-500"
+        <h2 :class="layoutMode === 'layout-2' ? 'text-theme-dark' : 'text-theme-main'" class="text-[6vh] mb-[4vh] tracking-[0.5em] text-center uppercase font-bold transition-colors duration-500">Menuju Iqomah:</h2>
+        <h1 :class="layoutMode === 'layout-2' ? 'text-slate-900 shadow-none' : 'text-white shadow-theme-text'" class="text-[20vh] mb-[4vh] font-black leading-none tabular-nums transition-colors duration-500"
             x-text="countdownIqomahDisplay">00:00</h1>
         {{-- Konten Iqomah --}}
         <div class="h-[10vh] mt-[4vh] px-[10vw] relative w-full flex items-center justify-center">
@@ -376,13 +376,13 @@
                        x-transition:leave="transition ease-in duration-1000 absolute"
                        x-transition:leave-start="opacity-100 translate-y-0"
                        x-transition:leave-end="opacity-0 -translate-y-full"
-                       :class="themeMode === 'light' ? 'text-slate-900' : 'text-theme-dark'"
+                       :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-theme-dark'"
                        class="text-[3vh] md:text-[4vh] px-[10vw] text-center uppercase font-black transition-colors duration-500 absolute w-full"
                        x-text="content.teks"></p>
                 </template>
             </template>
             <template x-if="iqomahContents.length === 0">
-                <p :class="themeMode === 'light' ? 'text-slate-900' : 'text-theme-dark'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
+                <p :class="layoutMode === 'layout-2' ? 'text-slate-900' : 'text-theme-dark'" class="text-[3vh] md:text-[4vh] text-center uppercase tracking-wider font-black transition-colors duration-500 w-full animate-pulse">LURUSKAN DAN RAPATKAN SHAF</p>
             </template>
         </div>
     </div>
@@ -403,7 +403,7 @@
     <script>
         function displaySystem() {
             return {
-                themeMode: localStorage.getItem('liveDisplayTheme') || 'dark',
+                layoutMode: localStorage.getItem('liveDisplayLayout') || 'layout-1',
                 started: false,
                 wakeLock: null,
                 time: '00:00:00',
@@ -455,9 +455,9 @@
                     }
                 },
 
-                setTheme(mode) {
-                    this.themeMode = mode;
-                    localStorage.setItem('liveDisplayTheme', mode);
+                setLayout(mode) {
+                    this.layoutMode = mode;
+                    localStorage.setItem('liveDisplayLayout', mode);
                 },
 
                 async requestWakeLock() {
