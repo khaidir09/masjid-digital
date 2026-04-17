@@ -52,6 +52,8 @@ class UserPengurus extends Component
     public function render()
     {
         $data = [];
+        $searchTerm = '%' . $this->search . '%';
+
         if ($this->activeTab == 'users') {
             // Proteksi: Hanya superadmin yang boleh lihat tab ini
             if (Auth::user()->role !== 'superadmin') {
@@ -59,17 +61,17 @@ class UserPengurus extends Component
             } else {
                 // Tampilkan hanya superadmin murni
                 $data = User::where('role', 'superadmin')
-                    ->where(function($q) {
-                        $q->where('name', 'like', '%'.$this->search.'%')
-                          ->orWhere('email', 'like', '%'.$this->search.'%');
+                    ->where(function($q) use ($searchTerm) {
+                        $q->where('name', 'like', $searchTerm)
+                          ->orWhere('email', 'like', $searchTerm);
                     })->latest()->paginate(10);
             }
         }
 
         if ($this->activeTab == 'pengurus') {
             $data = Pengurus::with('user')
-                ->where('nama', 'like', '%'.$this->search.'%')
-                ->orWhere('jabatan', 'like', '%'.$this->search.'%')
+                ->where('nama', 'like', $searchTerm)
+                ->orWhere('jabatan', 'like', $searchTerm)
                 ->latest()->paginate(10);
         }
 
